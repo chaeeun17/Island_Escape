@@ -14,7 +14,7 @@ public class Tent : MonoBehaviour, IInteractable
         }
         else
         {
-            return "Sleep";
+            return "잠자기";
         }
     }
 
