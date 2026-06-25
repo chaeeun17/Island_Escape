@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MouthController : MonoBehaviour
+public class MouthZone : MonoBehaviour
 {
 
     private void OnTriggerEnter(Collider other)
