@@ -9,9 +9,6 @@ public class CraftingManager : MonoBehaviour
     [Header("등록된 조합법 목록")]
     public List<CraftingRecipe> availableRecipes;
 
-    /// <summary>
-    /// UI 버튼의 OnClick 이벤트에 연결할 메서드입니다.
-    /// </summary>
     public void OnCraftButtonClick()
     {
         // 1. 결과 슬롯이 이미 차있다면 조합을 진행하지 않음
