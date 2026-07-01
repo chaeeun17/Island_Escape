@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 122975474284946814}
   - component: {fileID: 7213927180010903554}
   m_Layer: 0
-  m_Name: TestItem
+  m_Name: item_cotton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d942ab5e849944996256aa981ea7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  ItemNumber: 1
-  ItemName: "\uD14C\uC2A4\uD2B8\uC6A9"
+  ItemNumber: 3
+  ItemName: cotton
   ItemImage: {fileID: 8107159028571459136, guid: 50113e09143691b4f83b6e515022c313, type: 3}
-  ItemSprite: {fileID: 21300000, guid: 11aea82b98ef2024381a496f8a0c95d7, type: 3}
+  ItemSprite: {fileID: 21300000, guid: cb2d21eb720094f49b3a8277b7d6a93c, type: 3}

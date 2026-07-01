@@ -11,27 +11,39 @@ public class CraftingManager : MonoBehaviour
 
     public void OnCraftButtonClick()
     {
-        // 1. 결과 슬롯이 이미 차있다면 조합을 진행하지 않음
-        if (resultSlot.item != null)
-        {
-            Debug.Log("결과 슬롯이 비어있지 않습니다. 아이템을 먼저 수령하세요.");
-            return;
-        }
-
-        // 2. 현재 올려둔 재료와 일치하는 조합법이 있는지 확인
+        // 1. 현재 올려둔 재료와 일치하는 조합법이 있는지 확인
         CraftingRecipe matchedRecipe = GetMatchingRecipe();
 
         if (matchedRecipe != null)
         {
-            // 3. 일치하는 조합법이 있다면 재료를 먼저 소모
+            if (resultSlot.item != null)
+            {
+                if (resultSlot.item.getItemName() != matchedRecipe.resultPrefab.getItemName())
+                {
+                    Debug.Log("결과 슬롯에 다른 아이템이 있습니다. 아이템을 먼저 수령하세요.");
+                    return;
+                }
+            }
+
+            // 3. 일치하는 조합법이 있고, 결과 슬롯도 비어있거나 같은 아이템이라면 재료 소모
             ConsumeIngredients(matchedRecipe);
 
-            // 4. 결과 슬롯에 아이템 생성 및 배치
-            Item craftedItem = Instantiate(matchedRecipe.resultPrefab);
-            craftedItem.set_Item_Count(matchedRecipe.resultAmount);
-            resultSlot.SetSlot(craftedItem, true);
+            // 4. 결과 슬롯에 아이템 생성 또는 누적
+            if (resultSlot.item == null)
+            {
+                // 결과 슬롯이 비어있을 때는 새로 생성해서 넣습니다.
+                Item craftedItem = Instantiate(matchedRecipe.resultPrefab);
+                craftedItem.set_Item_Count(matchedRecipe.resultAmount);
+                resultSlot.SetSlot(craftedItem, false);
+            }
+            else
+            {
+                // 이미 슬롯에 동일한 아이템이 있다면 새로 만들지 않고 개수만 더해줍니다.
+                resultSlot.item.add_Item_Count(matchedRecipe.resultAmount);
+                resultSlot.Update_Count_text(); // UI 숫자 갱신
+            }
 
-            Debug.Log("조합 성공: " + matchedRecipe.resultPrefab.getItemName());
+            Debug.Log("조합 성공: " + matchedRecipe.resultPrefab.getItemName() + " (현재 누적 개수: " + resultSlot.item.get_Item_Count() + ")");
         }
         else
         {
@@ -66,6 +78,13 @@ public class CraftingManager : MonoBehaviour
             }
         }
 
+       
+        if (currentIngredients.Count != recipe.requiredIngredients.Count) 
+        {
+            return false;
+        }
+
+        // 각 재료의 개수가 충분한지 확인
         foreach (var req in recipe.requiredIngredients)
         {
             if (!currentIngredients.ContainsKey(req.itemName) || currentIngredients[req.itemName] < req.amount)

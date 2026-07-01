@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9a096c415d8fa4b99e2ce600002f31, type: 3}
+  m_Name: Create_fire
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingRecipe
+  requiredIngredients:
+  - itemName: branch
+    amount: 3
+  resultPrefab: {fileID: 7213927180010903554, guid: 45d907ecd7d876349b55b7a34ed20f03, type: 3}
+  resultAmount: 1

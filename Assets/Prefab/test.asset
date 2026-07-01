@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f9a096c415d8fa4b99e2ce600002f31, type: 3}
-  m_Name: New Crafting Recipe
+  m_Name: test
   m_EditorClassIdentifier: Assembly-CSharp::CraftingRecipe
   requiredIngredients:
-  - itemName: "\uD14C\uC2A4\uD2B8\uC6A9"
-    amount: 4
-  - itemName: "\uD14C\uC2A4\uD2B8\uC6A92"
-    amount: 4
-  resultPrefab: {fileID: 7213927180010903554, guid: 60e11e925cfa61744a591d446bceb2c8, type: 3}
-  resultAmount: 10
+  - itemName: 
+    amount: 0
+  resultPrefab: {fileID: 0}
+  resultAmount: 0
