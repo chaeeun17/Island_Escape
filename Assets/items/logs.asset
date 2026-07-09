@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d942ab5e849944996256aa981ea7c6, type: 3}
   m_Name: logs
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  ItemNumber: 0
-  ItemName: 
+  ItemNumber: 1
+  ItemName: logs
   ItemSprite: {fileID: 0}
