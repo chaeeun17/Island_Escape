@@ -11,7 +11,6 @@ public class CraftingManager : MonoBehaviour
 
     public void OnCraftButtonClick()
     {
-        // 1. 현재 올려둔 재료와 일치하는 조합법이 있는지 확인
         CraftingRecipe matchedRecipe = GetMatchingRecipe();
 
         if (matchedRecipe != null)
@@ -25,22 +24,19 @@ public class CraftingManager : MonoBehaviour
                 }
             }
 
-            // 3. 일치하는 조합법이 있고, 결과 슬롯도 비어있거나 같은 아이템이라면 재료 소모
             ConsumeIngredients(matchedRecipe);
 
-            // 4. 결과 슬롯에 아이템 생성 또는 누적
             if (resultSlot.item == null)
             {
-                // 결과 슬롯이 비어있을 때는 새로 생성해서 넣습니다.
+                // ScriptableObject 원본 에셋을 복제(Instance)하여 사용
                 Item craftedItem = Instantiate(matchedRecipe.resultPrefab);
                 craftedItem.set_Item_Count(matchedRecipe.resultAmount);
                 resultSlot.SetSlot(craftedItem, false);
             }
             else
             {
-                // 이미 슬롯에 동일한 아이템이 있다면 새로 만들지 않고 개수만 더해줍니다.
                 resultSlot.item.add_Item_Count(matchedRecipe.resultAmount);
-                resultSlot.Update_Count_text(); // UI 숫자 갱신
+                resultSlot.Update_Count_text();
             }
 
             Debug.Log("조합 성공: " + matchedRecipe.resultPrefab.getItemName() + " (현재 누적 개수: " + resultSlot.item.get_Item_Count() + ")");
@@ -51,7 +47,6 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
-    // 등록된 레시피 중 현재 올려둔 재료와 일치하는 레시피를 찾습니다.
     private CraftingRecipe GetMatchingRecipe()
     {
         foreach (CraftingRecipe recipe in availableRecipes)
@@ -62,7 +57,6 @@ public class CraftingManager : MonoBehaviour
         return null;
     }
 
-    // 슬롯에 올라간 아이템들이 특정 레시피의 조건을 만족하는지 검사합니다.
     private bool IsRecipeMatch(CraftingRecipe recipe)
     {
         Dictionary<string, int> currentIngredients = new Dictionary<string, int>();
@@ -78,25 +72,22 @@ public class CraftingManager : MonoBehaviour
             }
         }
 
-       
-        if (currentIngredients.Count != recipe.requiredIngredients.Count) 
+        if (currentIngredients.Count != recipe.requiredIngredients.Count)
         {
             return false;
         }
 
-        // 각 재료의 개수가 충분한지 확인
         foreach (var req in recipe.requiredIngredients)
         {
             if (!currentIngredients.ContainsKey(req.itemName) || currentIngredients[req.itemName] < req.amount)
             {
-                return false; // 재료 부족 혹은 없음
+                return false;
             }
         }
 
         return true;
     }
 
-    // 조합법에 맞게 재료 슬롯의 아이템 개수를 차감합니다.
     private void ConsumeIngredients(CraftingRecipe recipe)
     {
         Dictionary<string, int> remainingToConsume = new Dictionary<string, int>();
@@ -119,7 +110,7 @@ public class CraftingManager : MonoBehaviour
 
                     if (slot.item.get_Item_Count() <= 0)
                     {
-                        Destroy(slot.item.gameObject);
+                        Destroy(slot.item);
                         slot.Clear_Slot();
                     }
                     else
