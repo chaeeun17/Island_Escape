@@ -36,6 +36,7 @@ public class PlayerStats : MonoBehaviour
     private float staminaTimer;
 
     private bool isFainted = false; 
+    private bool isSurvivalStarted = false;
 
     private void Awake()
     {
@@ -56,6 +57,25 @@ public class PlayerStats : MonoBehaviour
         currentHunger = maxHunger;
         currentThirst = maxThirst;
         currentStamina = maxStamina;
+
+        if (TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.OnTutorialCompleted -= StartSurvivalTimer;
+        }
+    }
+
+    private void StartSurvivalTimer()
+    {
+        isSurvivalStarted = true;
+        Debug.Log("[PlayerStats] 튜토리얼 완료 이벤트 수신! 생존 스탯 감소를 시작합니다.");
     }
 
     void Update()
@@ -66,11 +86,14 @@ public class PlayerStats : MonoBehaviour
         // 인스펙터에서 실시간 수정을 방어하기 위한 제한
         ClampInspectorValues();
 
-        // 시간에 따른 감소 처리
-        HandleTimedDecrease();
+        if (isSurvivalStarted)
+        {
+            // 시간에 따른 감소 처리
+            HandleTimedDecrease();
 
-        // 수치가 0이 되었는지 체크
-        CheckFaintConditions();
+            // 수치가 0이 되었는지 체크
+            CheckFaintConditions();
+        }
 
         // ui 반영
         UpdateStatTexts();

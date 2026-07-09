@@ -21,18 +21,18 @@ public class SurvivalCountdown : MonoBehaviour
         if (countdownText != null) countdownText.gameObject.SetActive(false);
 
         // 완성 이벤트를 구독
-        if (SOSManager.Instance != null)
+        if (TutorialManager.Instance != null)
         {
-            SOSManager.Instance.OnSOSCompleted += StartCountdown;
+            TutorialManager.Instance.OnTutorialCompleted += StartCountdown;
         }
     }
 
     // 오브젝트가 파괴되거나 꺼질 때 메모리 누수 방지를 위해 반드시 구독을 해제해 줍니다.
     void OnDestroy()
     {
-        if (SOSManager.Instance != null)
+        if (TutorialManager.Instance != null)
         {
-            SOSManager.Instance.OnSOSCompleted -= StartCountdown;
+            TutorialManager.Instance.OnTutorialCompleted -= StartCountdown;
         }
     }
 
