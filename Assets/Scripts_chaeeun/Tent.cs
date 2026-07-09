@@ -1,9 +1,14 @@
 using UnityEngine;
+using System.Collections;
 
 public class Tent : MonoBehaviour, IInteractable
 {
     // 현재 플레이어가 잠든 상태인지를 기억하는 변수
     private bool isPlayerSleeping = false;
+
+    [Header("페이드 연출 시간 설정")]
+    [SerializeField] private float fadeDuration = 1.0f; // 화면이 닫히고 열리는 시간(초)
+    [SerializeField] private float sleepDelay = 5.0f;    // 암전된 상태로 유지될 시간(자는 시간)
 
     public string GetInteractText()
     {
@@ -20,22 +25,39 @@ public class Tent : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        // X 버튼을 누를 때마다 상태를 반대로 뒤집고 로그를 찍습니다.
-        if (!isPlayerSleeping)
-        {
-            // 깨어있는 상태에서 X를 누름 ➔ 잠들기
-            isPlayerSleeping = true;
-            
-            Debug.Log("[텐트 상호작용] 플레이어가 잠을 자러 들어갔습니다.");
-            // 💡 추후 여기에 시간 경과 로직이나 플레이어 이동 정지 코드를 넣으시면 됩니다.
-        }
-        else
-        {
-            // 자고 있는 상태에서 X를 누름 ➔ 깨어나기
-            isPlayerSleeping = false;
+        if (isPlayerSleeping) return;
 
-            Debug.Log("[텐트 상호작용] 잠에서 깨어났습니다!");
-            // 💡 추후 여기에 체력 회복 로직이나 플레이어 이동 재개 코드를 넣으시면 됩니다.
+        // 수면 코루틴 시작!
+        StartCoroutine(SleepRoutine());
+    }
+
+    private IEnumerator SleepRoutine()
+    {
+        isPlayerSleeping = true;
+        Debug.Log("[텐트] 수면 시퀀스 시작...");
+
+        // 화면 암전 (Fade Out) 시작하고 완전히 까매질 때까지 대기
+        if (FadeManager.Instance != null)
+        {
+            yield return FadeManager.Instance.FadeOut(fadeDuration);
         }
+
+        // 완전히 암전된 상태에서 스탯 정산 (플레이어 눈에는 안 보임)
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.RestoreStamina(10);
+        }
+
+        // 까만 화면 상태로 지정한 시간만큼 대기 (쿨쿨 자는 느낌 연출)
+        yield return new WaitForSeconds(sleepDelay);
+
+        // 잠에서 깨어나며 화면 밝아지기 (Fade In)
+        if (FadeManager.Instance != null)
+        {
+            yield return FadeManager.Instance.FadeIn(fadeDuration);
+        }
+
+        isPlayerSleeping = false;
+        Destroy(gameObject);
     }
 }

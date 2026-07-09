@@ -58,23 +58,25 @@ public class XRRayInteractionDetector : MonoBehaviour
 
     private void OnHoverEntered(HoverEnterEventArgs args)
     {
-        var grabObject = args.interactableObject as UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable;
+        var grabObject = args.interactableObject.transform.gameObject;
         if (grabObject == null) return;
 
-        // 하이라이트 토글
         MeshRenderer targetRenderer = grabObject.GetComponentInChildren<MeshRenderer>();
+        IInteractable targetInteractable = grabObject.GetComponent<IInteractable>();
+
+        ResetDetectorState(); 
+
+        // 하이라이트 머티리얼 교체
         if (targetRenderer != null && highlightMaterial != null)
         {
-            ResetDetectorState(); // 혹시 남아있을 잔상 제거
-
             previousRenderer = targetRenderer;
-            previousOriginalMaterial = targetRenderer.material; // 원래 머티리얼 기억
+            previousOriginalMaterial = targetRenderer.material; // 원본 저장
             
-            targetRenderer.material = highlightMaterial; // 빛나는 머티리얼로 교체
+            targetRenderer.material = highlightMaterial; // 하이라이트 적용
         }
 
         // 상호작용 UI 가이드 출력
-        currentTargetInteractable = grabObject.GetComponent<IInteractable>();
+        currentTargetInteractable = targetInteractable;
         if (currentTargetInteractable != null && guideUI != null)
         {
             guideUI.ShowUI(true, grabObject.transform);
