@@ -80,7 +80,7 @@ public class GrassSpawner : MonoBehaviour
 
                 float noiseDensity = Mathf.PerlinNoise(worldPos.x * 0.03f, worldPos.z * 0.03f);
 
-                float density = color.g * noiseDensity;
+                float density = color.g * color.g * noiseDensity;
                 // float density = color.g;
 
                 if (Random.value > density)

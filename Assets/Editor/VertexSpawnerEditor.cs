@@ -148,7 +148,7 @@ public class VertexSpawnerEditor : EditorWindow
                     spawned.transform.position = worldPos + new Vector3(Random.Range(0f, 1f), 0, Random.Range(0f, 1f)); //+ new Vector3(0, -0.1f, 0);
                     spawned.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
 
-                    float scale = Random.Range(2f, 4f);
+                    float scale = Random.Range(0.8f, 1.2f);
                     spawned.transform.localScale = new Vector3(scale, scale, scale);
                     spawned.transform.parent = terrainMeshObject.transform;
 
