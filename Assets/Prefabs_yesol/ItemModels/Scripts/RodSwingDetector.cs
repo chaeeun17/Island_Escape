@@ -55,9 +55,9 @@ public class RodSwingDetector : MonoBehaviour
     {
         Debug.Log("버튼이 해제되었습니다!");
 
-        Vector3 dir = (rodTip.forward * 0.7f + CurrentVelocity.normalized * 0.3f).normalized;
+        Vector3 dir = (rodTip.forward * 0.9f + CurrentVelocity.normalized * 0.1f).normalized;
 
-        caster.Cast(CurrentVelocity * 1.8f);
+        caster.Cast(dir * CurrentSpeed * 2f);
         // Rigidbody rb = GetComponent<Rigidbody>();
 
         //rb.linearVelocity = dir * CurrentSpeed * 1.8f;

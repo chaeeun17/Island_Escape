@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Water
   - Fishingrod
+  - Bow
   layers:
   - Default
   - TransparentFX
