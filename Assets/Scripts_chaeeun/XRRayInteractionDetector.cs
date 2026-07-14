@@ -69,8 +69,11 @@ public class XRRayInteractionDetector : MonoBehaviour
         // 하이라이트 머티리얼 교체
         if (targetRenderer != null && highlightMaterial != null)
         {
-            previousRenderer = targetRenderer;
-            previousOriginalMaterial = targetRenderer.material; // 원본 저장
+            if (targetRenderer.sharedMaterial != highlightMaterial)
+            {
+                previousRenderer = targetRenderer;
+                previousOriginalMaterial = targetRenderer.material; // 원본 저장
+            }
             
             targetRenderer.material = highlightMaterial; // 하이라이트 적용
         }
