@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class FishingLine : MonoBehaviour
 {
-    [Header("낚싯줄 마디들을 순서대로 넣어주세요")]
     [SerializeField] private Transform[] lineSegments;
 
     private LineRenderer lineRenderer;

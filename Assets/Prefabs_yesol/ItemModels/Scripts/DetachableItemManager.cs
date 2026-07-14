@@ -54,6 +54,7 @@ public class DetachableItemManager : MonoBehaviour
         mainInteractable.enabled = false;
 
         if (TryGetComponent<Collider>(out var mainCollider)) mainCollider.enabled = false;
+        Destroy(mainInteractable);
         Destroy(mainRigidbody);
     }
 

@@ -8,7 +8,7 @@ public class RodSwingDetector : MonoBehaviour
     // 인스펙터에서 Input Action Reference를 할당합니다.
     [SerializeField] private InputActionReference triggerActionReference;
     public Transform rodTip;
-
+    
     public float CurrentSpeed { get; private set; }
     public Vector3 CurrentVelocity { get; private set; }
 
@@ -53,25 +53,22 @@ public class RodSwingDetector : MonoBehaviour
 
     private void OnTriggerReleased(InputAction.CallbackContext context)
     {
-        Debug.Log("버튼이 해제되었습니다!");
+        if (caster.state == FloatState.Floating)
+        {
+            Debug.Log("낚싯줄 회수!");
+            caster.StartReeling();
+        }
+        else
+        {
+            Debug.Log("버튼이 해제되었습니다!");
 
-        Vector3 dir = (rodTip.forward * 0.9f + CurrentVelocity.normalized * 0.1f).normalized;
-
-        caster.Cast(dir * CurrentSpeed * 2f);
-        // Rigidbody rb = GetComponent<Rigidbody>();
-
-        //rb.linearVelocity = dir * CurrentSpeed * 1.8f;
-        // rb.linearVelocity = CurrentVelocity * 1.8f;
+            Vector3 dir = (rodTip.forward * 0.9f + CurrentVelocity.normalized * 0.1f).normalized;
+            caster.Cast(dir * CurrentSpeed * 2f);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-        if (other.CompareTag("Fishingrod"))
-        {
-            return;
-        }
-
         if (!other.CompareTag("Water"))
         {
             caster.ResetFloat();
