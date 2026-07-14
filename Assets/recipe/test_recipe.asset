@@ -17,5 +17,9 @@ MonoBehaviour:
     amount: 1
   - itemName: rocks
     amount: 1
+  - itemName: branchs
+    amount: 1
+  - itemName: can
+    amount: 1
   resultPrefab: {fileID: 11400000, guid: a9e9c5cbb76e059499bfa8f0cae89acb, type: 2}
   resultAmount: 4
