@@ -24,6 +24,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 163562fe962daa644b565ee66ae1d2fd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -38,13 +42,25 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FadeDistance: 0.04
+    - _FadeDistance: 0.461
+    - _FoamAmount: 1.1
+    - _FoamCutoff: 9
+    - _FoamScale: 300
+    - _FoamSpeed: 0.007
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _SoftEdge: 20
     - _Speed: 0.01
+    - _WaveHeight: 0.01
+    - _WaveSize: 10
     m_Colors:
+    - _BaseColor: {r: 0.22467962, g: 0.87652767, b: 0.8820755, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainTexColor: {r: 0.20914915, g: 0.4262569, b: 0.4716981, a: 0.5568628}
+    - _MainTexSpeed: {r: -0.02, g: 0.02, b: 0, a: 0}
+    - _MainTexTiling: {r: 20, g: 20, b: 0, a: 0}
     - _WaterColor: {r: 0.18409576, g: 0.6414362, b: 0.9292453, a: 1}
+    - _WaveSpeed: {r: 0, g: 0.01, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2924347007429222243
