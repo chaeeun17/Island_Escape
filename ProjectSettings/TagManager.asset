@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Food
   - Stone
+  - XROrigin
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Interactable
+  - Player
   - 
   - 
   - 
