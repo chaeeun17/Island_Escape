@@ -89,7 +89,7 @@ public class GrassSpawner : MonoBehaviour
 
                 float noiseScale = Mathf.PerlinNoise(worldPos.x * 0.1f, worldPos.z * 0.1f);
 
-                float scale = Mathf.Lerp(0.5f, 1.0f, noiseScale);
+                float scale = Mathf.Lerp(0.4f, 0.8f, noiseScale);
                 //float scale = Random.Range(0.8f, 1.3f);
 
                 Quaternion rot = Quaternion.Euler(0, Random.Range(0, 360), 0);

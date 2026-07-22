@@ -43,8 +43,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _FadeDistance: 0.461
-    - _FoamAmount: 1.1
-    - _FoamCutoff: 9
+    - _FoamAmount: 1
+    - _FoamCutoff: 12
     - _FoamScale: 300
     - _FoamSpeed: 0.007
     - _QueueControl: 0
