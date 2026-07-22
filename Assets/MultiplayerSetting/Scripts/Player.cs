@@ -1,4 +1,4 @@
-using System.Threading.Tasks; // ÇÊ¼ö Ãß°¡
+using System.Threading.Tasks; // ï¿½Ê¼ï¿½ ï¿½ß°ï¿½
 using Fusion;
 using UnityEngine;
 
@@ -10,12 +10,12 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
 
-    [SerializeField] private float _followAngle = 45f; // ¸öÅëÀÌ µû¶ó¿À±â ½ÃÀÛÇÏ´Â °¢µµ
-    [SerializeField] private float _rotateSpeed = 8f; // È¸Àü ¼Óµµ
+    [SerializeField] private float _followAngle = 45f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float _rotateSpeed = 8f; // È¸ï¿½ï¿½ ï¿½Óµï¿½
 
     private CustomNetworkCharacterController _cc;
-    [SerializeField] private float _jumpForce = 5f; // Á¡ÇÁ Èû
-    [SerializeField] private float _snapTurnAngle = 45f; // ÇÑ ¹ø¿¡ È¸ÀüÇÒ °¢µµ
+    [SerializeField] private float _jumpForce = 5f; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    [SerializeField] private float _snapTurnAngle = 45f; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private NetworkButtons _previousButtons;
 
@@ -26,10 +26,10 @@ public class Player : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        // °¢ Æ½¸¶´Ù ÀÔ·ÂÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+        // ï¿½ï¿½ Æ½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         if (GetInput(out NetworkInputData data))
         {
-            // 0. Àü´Þ¹ÞÀº ·ÎÄÃ Æ®·¡Å· ÁÂÇ¥¸¦ ³×Æ®¿öÅ© ¾Æ¹ÙÅ¸ ÀÚ½Äµé¿¡°Ô ±×´ë·Î ´ëÀÔÇÕ´Ï´Ù.
+            // 0. ï¿½ï¿½ï¿½Þ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½Å· ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½Æ¹ï¿½Å¸ ï¿½Ú½Äµé¿¡ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
             _netHead.localPosition = data.headPos;
             _netHead.localRotation = data.headRot;
 
@@ -39,14 +39,14 @@ public class Player : NetworkBehaviour
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
 
-            // 1. ÀÔ·Â º¯È­·®(Pressed) °è»ê
-            // ÀÌÀü Æ½ÀÇ ÀÔ·ÂÀ» °¡Á®¿Í ÀÌ¹ø Æ½¿¡ '»õ·Î ´­¸°' ¹öÆ°À» ÆÇº°ÇÕ´Ï´Ù.
+            // 1. ï¿½Ô·ï¿½ ï¿½ï¿½È­ï¿½ï¿½(Pressed) ï¿½ï¿½ï¿½
+            // ï¿½ï¿½ï¿½ï¿½ Æ½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ Æ½ï¿½ï¿½ 'ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½' ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½Çºï¿½ï¿½Õ´Ï´ï¿½.
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 
             Vector3 pivot = _netHead.position;
-            // 2. ½º³À ÅÏ Ã³¸®
-            // Á¶ÀÌ½ºÆ½À» ¿ÞÂÊÀÌ³ª ¿À¸¥ÂÊÀ¸·Î Åö ¹Ð¾úÀ» ¶§ µü ÇÑ ¹ø¸¸ È¸ÀüÇÕ´Ï´Ù.
+            // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã³ï¿½ï¿½
+            // ï¿½ï¿½ï¿½Ì½ï¿½Æ½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
             if (pressed.IsSet(MyButtons.TurnLeft))
             {
                 _cc.Rotate(-_snapTurnAngle);
@@ -58,13 +58,13 @@ public class Player : NetworkBehaviour
             Vector3 offset = pivot - _netHead.position;
             _cc.Move(offset);
 
-            // data.direction¿¡´Â Á¶ÀÌ½ºÆ½ÀÇ ¼ø¼ö °ª (X=ÁÂ¿ì, Z=¾ÕµÚ)ÀÌ µé¾îÀÖ½À´Ï´Ù.
+            // data.directionï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½Æ½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ (X=ï¿½Â¿ï¿½, Z=ï¿½Õµï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½Ï´ï¿½.
             Vector3 rawInput = new Vector3(data.direction.x, 0, data.direction.y);
             Vector3 moveDir = Vector3.zero;
 
             if (rawInput.sqrMagnitude > 0.001f)
             {
-                // ÇöÀç ¸Ó¸® ¹æÇâ ±âÁØ º¤ÅÍ ÃßÃâ
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 Vector3 forward = _netHead.forward;
                 forward.y = 0;
                 forward.Normalize();
@@ -73,18 +73,18 @@ public class Player : NetworkBehaviour
                 right.y = 0;
                 right.Normalize();
 
-                // ¼ø¼ö Á¶ÀÌ½ºÆ½ X(ÁÂ¿ì)¿Í Z(¾ÕµÚ)¿¡ ¸Ó¸® ¹æÇâÀ» ÀÔÇô ÃÖÁ¾ ¿ùµå ÀÌµ¿ ¹æÇâ ¿Ï¼º!
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½Æ½ X(ï¿½Â¿ï¿½)ï¿½ï¿½ Z(ï¿½Õµï¿½)ï¿½ï¿½ ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¼ï¿½!
                 moveDir = (forward * rawInput.z) + (right * rawInput.x);
             }
 
-            // ¼öÁ¤ÇÑ ÀÌµ¿ ¹æÇâÀ» NCC¿¡ Àü´Þ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ NCCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             _cc.Move(moveDir);
 
-            // 3. Á¡ÇÁ (Jump) Ã³¸®
-            // ÀÌ¹ø Æ½¿¡ "Jump" ¹öÆ°ÀÌ »õ·Î ´­·È°í, Ä³¸¯ÅÍ°¡ ¶¥¿¡ ÀÖ´Ù¸é
+            // 3. ï¿½ï¿½ï¿½ï¿½ (Jump) Ã³ï¿½ï¿½
+            // ï¿½Ì¹ï¿½ Æ½ï¿½ï¿½ "Jump" ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½È°ï¿½, Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½
             if (pressed.IsSet(MyButtons.Jump) && _cc.Grounded)
             {
-                // NCC¿¡°Ô Á¡ÇÁ ¸í·ÉÀ» ³»¸³´Ï´Ù.
+                // NCCï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
                 _cc.Jump(ignoreGrounded: false, overrideImpulse: _jumpForce);
             }
         }
@@ -92,24 +92,24 @@ public class Player : NetworkBehaviour
 
     public override async void Spawned()
     {
-        // 1. ¾ÆÁÖ Àá±ñ(¿¹: 100ms = 0.1ÃÊ) ´ë±âÇÏ¿© FusionÀÌ ±ÇÇÑ(Authority)À» ¿ÏÀüÈ÷ ¼¼ÆÃÇÒ ½Ã°£À» ÁÝ´Ï´Ù.
+        // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(ï¿½ï¿½: 100ms = 0.1ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ Fusionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(Authority)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½Ý´Ï´ï¿½.
         await Task.Delay(100);
-        // ÀÌ ¾Æ¹ÙÅ¸ ¿ÀºêÁ§Æ®°¡ ³» ÄÄÇ»ÅÍ ÀÎÇ² ±ÇÇÑÀ» °¡Áø '³ªÀÇ ÁøÂ¥ ¾Æ¹ÙÅ¸'¶ó¸é?
+        // ï¿½ï¿½ ï¿½Æ¹ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ç»ï¿½ï¿½ ï¿½ï¿½Ç² ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 'ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½Æ¹ï¿½Å¸'ï¿½ï¿½ï¿½?
         if (HasInputAuthority)
         {
-            // ³»(·ÎÄÃ ÇÃ·¹ÀÌ¾î)°¡ Á¶Á¾ÇÏ´Â Ä³¸¯ÅÍÀÏ ¶§¸¸ ½ÇÇà
+            // ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (HasInputAuthority)
             {
-                // 1. ¾À¿¡ ÀÖ´Â XR Origin ¿ÀºêÁ§Æ®¸¦ Ã£½À´Ï´Ù.
-                // (XR Origin ÄÄÆ÷³ÍÆ®³ª UnityÀÇ ½ÅÇü XR Origin (XR Interaction Toolkit) ÄÄÆ÷³ÍÆ® ±âÁØ)
+                // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ XR Origin ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã£ï¿½ï¿½ï¿½Ï´ï¿½.
+                // (XR Origin ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Unityï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ XR Origin (XR Interaction Toolkit) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½)
                 GameObject xrOrigin = GameObject.FindWithTag("XROrigin");
 
                 if (xrOrigin != null)
                 {
-                    // 2. XR OriginÀÇ ºÎ¸ð¸¦ ÀÌ Player Prefab(ÀÚ½Å)À¸·Î ¼³Á¤ÇÕ´Ï´Ù.
+                    // 2. XR Originï¿½ï¿½ ï¿½Î¸ï¿½ ï¿½ï¿½ Player Prefab(ï¿½Ú½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
                     xrOrigin.transform.SetParent(transform);
 
-                    // 3. ·ÎÄÃ ÁÂÇ¥¸¦ (0, 0, 0)À¸·Î ¸ÂÃß¾î ³» Ä³¸¯ÅÍ À§Ä¡¿Í Á¤È®È÷ ÀÏÄ¡½ÃÅµ´Ï´Ù.
+                    // 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ (0, 0, 0)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¾ï¿½ ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½Åµï¿½Ï´ï¿½.
                     xrOrigin.transform.localPosition = Vector3.zero;
                     xrOrigin.transform.localRotation = Quaternion.identity;
 
@@ -121,16 +121,32 @@ public class Player : NetworkBehaviour
                     Debug.Log("XR Origin : " + xrOrigin.transform.position);
                     Debug.Log("Main Camera : " + InputHandler.Instance._localHead.position);
 
-                    // Debug.Log("XR OriginÀÌ ¼º°øÀûÀ¸·Î Player Prefab ÇÏÀ§·Î °áÇÕµÇ¾ú½À´Ï´Ù.");
+                    // Debug.Log("XR Originï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Player Prefab ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÕµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
                 }
                 else
                 {
-                    // Debug.LogError("¾À¿¡¼­ XR OriginÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+                    // Debug.LogError("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ XR Originï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
                 }
+
+                InitPlayerStats();
             }
         }
     }
 
+    private void InitPlayerStats()
+    {
+        NetworkPlayerStats stats = GetComponent<NetworkPlayerStats>();
+        if (stats != null)
+        {
+            // PlayerStats ìŠ¤í¬ë¦½íŠ¸ì— ë§Œë“  StartSurvival() í•¨ìˆ˜ í˜¸ì¶œ!
+            stats.StartSurvival();
+            Debug.Log("âœ… [Player] PlayerStats ìƒì¡´ ìŠ¤íƒ¯ ê°ì†Œ ì‹œìž‘ í•¨ìˆ˜ í˜¸ì¶œ ì„±ê³µ!");
+        }
+        else
+        {
+            Debug.LogWarning("âš ï¸ [Player] ì´ í”„ë¦¬íŒ¹ì— PlayerStats ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
+        }
+    }
     public override void Render()
     {
         UpdateBodyRotation();
@@ -141,7 +157,7 @@ public class Player : NetworkBehaviour
         if (_netBody == null || _netHead == null)
             return;
 
-        // ¸Ó¸®ÀÇ ¼öÆò ¹æÇâ¸¸ »ç¿ë
+        // ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¸¸ ï¿½ï¿½ï¿½
         Vector3 headForward = _netHead.forward;
         headForward.y = 0f;
 
@@ -150,15 +166,15 @@ public class Player : NetworkBehaviour
 
         headForward.Normalize();
 
-        // ¸öÅëÀÇ ÇöÀç ¼öÆò ¹æÇâ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Vector3 bodyForward = _netBody.forward;
         bodyForward.y = 0f;
         bodyForward.Normalize();
 
-        // ¸öÅë°ú ¸Ó¸®ÀÇ YÃà °¢µµ Â÷ÀÌ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ï¿½ï¿½ Yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         float angle = Vector3.SignedAngle(bodyForward, headForward, Vector3.up);
 
-        // ÀÏÁ¤ °¢µµ ÀÌ»ó Â÷ÀÌ³ª¸é ¸öÅë È¸Àü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
         if (Mathf.Abs(angle) > _followAngle)
         {
             Quaternion targetRotation = Quaternion.LookRotation(headForward, Vector3.up);

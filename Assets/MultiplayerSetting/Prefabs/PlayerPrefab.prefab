@@ -366,6 +366,7 @@ GameObject:
   - component: {fileID: 5294166491441838424}
   - component: {fileID: 5631152598068217068}
   - component: {fileID: 7451684527670044244}
+  - component: {fileID: 4582099451257597219}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -411,6 +412,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 5294166491441838424}
   - {fileID: 7451684527670044244}
+  - {fileID: 4582099451257597219}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
   ForceRemoteRenderTimeframe: 0
@@ -478,6 +480,33 @@ MonoBehaviour:
   braking: 10
   maxSpeed: 2
   rotationSpeed: 15
+--- !u!114 &4582099451257597219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4657577435369037573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24b294693c14644cbec681762e85dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerStats
+  maxHunger: 100
+  maxThirst: 100
+  maxStamina: 100
+  _CurrentHunger: 0
+  _CurrentThirst: 0
+  _CurrentStamina: 0
+  hungerDecreaseInterval: 2
+  thirstDecreaseInterval: 1.5
+  staminaDecreaseInterval: 3
+  hungerText: {fileID: 0}
+  thirstText: {fileID: 0}
+  staminaText: {fileID: 0}
+  warningThreshold: 20
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  warningColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &4664735668597634432
 GameObject:
   m_ObjectHideFlags: 0
