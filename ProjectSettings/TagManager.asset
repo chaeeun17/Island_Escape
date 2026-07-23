@@ -4,9 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Water
-  - Fishingrod
-  - Bow
+  - Food
+  - Stone
   - XROrigin
   layers:
   - Default
@@ -15,10 +14,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - Item
   - Interactable
   - Player
+  - 
   - 
   - 
   - 
@@ -45,9 +43,6 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: UpperMain
-    uniqueID: 1752934789
     locked: 0
   m_RenderingLayers:
   - Default
