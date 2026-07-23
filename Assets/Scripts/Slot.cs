@@ -1,16 +1,10 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
-using UnityEngine.ParticleSystemJobs;
 
-public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public PointerEventData.InputButton dragButton;
     public bool isResultSlot = false;
     public System.Action OnSlotChanged;
 
@@ -19,15 +13,11 @@ public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IB
     [SerializeField] private Image Event_Image;
     [SerializeField] private TMP_Text slot_Item_Count_TXT;
     private bool isIn = false;
-
-    private Canvas canvas;
-    private GameObject draggingIcon;
-    private RectTransform draggingPlane;
+    public static Item currentlyHeldItem;
+    public static SLot sourceSlot;
 
     void Awake()
     {
-        canvas = FindObjectOfType<Canvas>();
-        draggingPlane = canvas.transform as RectTransform;
         slot_Item_Count_TXT.text = "";
     }
 
@@ -50,7 +40,7 @@ public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IB
         get_item.set_isGet(true);
     }
 
-    private void Slot_Update(Item get_item)
+    public void Slot_Update(Item get_item)
     {
         this.item = get_item;
         this.slot_Item_Image.sprite = get_item.get_Item_Sprite();
@@ -91,11 +81,13 @@ public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IB
 
     private void SetColor(float alpha, Image setImage)
     {
-        Color color = setImage.color;
-        color.a = alpha;
-        setImage.color = color;
+        if (setImage != null)
+        {
+            Color color = setImage.color;
+            color.a = alpha;
+            setImage.color = color;
+        }
     }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         SetColor(1f, Event_Image);
@@ -106,126 +98,67 @@ public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IB
         SetColor(0f, Event_Image);
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (this.item != null && slot_Item_Image.sprite != null)
+        if (currentlyHeldItem == null)
         {
-            dragButton = eventData.button;
-            if (dragButton == PointerEventData.InputButton.Right && this.item.get_Item_Count() <= 1)
+            if (this.item != null)
             {
-                dragButton = PointerEventData.InputButton.Left;
-            }
+                currentlyHeldItem = this.item;
+                sourceSlot = this;
 
-            draggingIcon = new GameObject("dragging icon");
-            draggingIcon.transform.SetParent(canvas.transform, false);
-            draggingIcon.transform.SetAsLastSibling();
-            var image = draggingIcon.AddComponent<Image>();
-            image.sprite = slot_Item_Image.sprite;
-            image.SetNativeSize();
-            image.raycastTarget = false;
-
-            RectTransform slotRectTransform = GetComponent<RectTransform>();
-            RectTransform imageRectTransform = image.GetComponent<RectTransform>();
-            imageRectTransform.sizeDelta = slotRectTransform.sizeDelta;
-
-            slot_Item_Image.color = new Color(slot_Item_Image.color.r, slot_Item_Image.color.g, slot_Item_Image.color.b, 0.5f);
-
-            SetDraggedPosition(eventData);
-        }
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (draggingIcon != null)
-        {
-            SetDraggedPosition(eventData);
-        }
-    }
-
-    public void SetDraggedPosition(PointerEventData eventData)
-    {
-        if (eventData.pointerEnter != null && draggingPlane != null)
-        {
-            Vector2 globalMousePos;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(draggingPlane, eventData.position, eventData.pressEventCamera, out globalMousePos))
-            {
-                draggingIcon.transform.localPosition = globalMousePos;
+                SetColor(0.5f, slot_Item_Image);
             }
         }
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if (draggingIcon != null)
+        else
         {
-            Destroy(draggingIcon);
-        }
+            if (this == sourceSlot)
+            {
+                SetColor(1f, sourceSlot.slot_Item_Image); 
+                ClearHeldItem();
+                return;
+            }
 
-        if (item != null)
-        {
-            slot_Item_Image.color = new Color(slot_Item_Image.color.r, slot_Item_Image.color.g, slot_Item_Image.color.b, 1f);
-        }
-    }
+            if (isResultSlot) return;
 
-    public void OnDrop(PointerEventData eventData)
-    {
-        if (isResultSlot) return;
-
-        if (eventData.pointerDrag != null)
-        {
-            SLot draggedSlot = eventData.pointerDrag.GetComponent<SLot>();
-
-            if (draggedSlot == this || draggedSlot == null || draggedSlot.item == null) return;
-
-            int moveCount = (draggedSlot.dragButton == PointerEventData.InputButton.Right) ? 1 : draggedSlot.item.get_Item_Count();
-
-            // 1. 빈 슬롯에 드롭할 때
             if (this.item == null)
             {
-                if (moveCount == draggedSlot.item.get_Item_Count())
-                {
-                    this.Slot_Update(draggedSlot.item);
-                    draggedSlot.Clear_Slot();
-                }
-                else
-                {
-                    // ScriptableObject 복제 (Instance 생성)
-                    Item splitItem = Instantiate(draggedSlot.item);
-                    splitItem.set_Item_Count(moveCount);
-                    this.Slot_Update(splitItem);
-
-                    draggedSlot.item.add_Item_Count(-moveCount);
-                }
+                this.Slot_Update(currentlyHeldItem);
+                sourceSlot.Clear_Slot();
             }
-            // 2. 같은 아이템에 드롭할 때 (합치기)
-            else if (this.item != null && this.item.isSameItem(draggedSlot.item))
+            else if (this.item.isSameItem(currentlyHeldItem))
             {
-                this.item.add_Item_Count(moveCount);
+                this.item.add_Item_Count(currentlyHeldItem.get_Item_Count());
 
-                if (moveCount == draggedSlot.item.get_Item_Count())
+          
+                if (sourceSlot.item != this.item)
                 {
-                    Destroy(draggedSlot.item);
-                    draggedSlot.Clear_Slot();
+                    Destroy(sourceSlot.item);
                 }
-                else
-                {
-                    draggedSlot.item.add_Item_Count(-moveCount);
-                }
+                sourceSlot.Clear_Slot();
             }
-            // 3. 다른 아이템과 자리 바꾸기
             else
             {
-                if (draggedSlot.dragButton == PointerEventData.InputButton.Left)
-                {
-                    Item tempItem = this.item;
-                    this.Slot_Update(draggedSlot.item);
-                    draggedSlot.Slot_Update(tempItem);
-                }
+                Item tempItem = this.item;
+                this.Slot_Update(currentlyHeldItem);
+                sourceSlot.Slot_Update(tempItem);
+                SetColor(1f, sourceSlot.slot_Item_Image);
             }
 
             this.Update_Count_text();
-            draggedSlot.Update_Count_text();
+            if (sourceSlot != null)
+            {
+                sourceSlot.Update_Count_text();
+            }
+
+            ClearHeldItem();
         }
+    }
+
+    private void ClearHeldItem()
+    {
+        currentlyHeldItem = null;
+        sourceSlot = null;
     }
 
     public void SetSlotItem(Item setitem) { item = setitem; }

@@ -15,3 +15,6 @@ MonoBehaviour:
   ItemNumber: 4
   ItemName: can
   ItemSprite: {fileID: 0}
+  itemType: 1
+  cookedVersion: {fileID: 0}
+  prefab3D: {fileID: 0}
