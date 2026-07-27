@@ -11,6 +11,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private Button createRoomBtn;
     [SerializeField] private Button joinRoomBtn;
 
+    // 씬에서 태그로 찾은 스폰 지점들의 Transform을 저장할 리스트
+    private List<Transform> _spawnPoints = new List<Transform>();
+
     private NetworkRunner _runner;
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
@@ -48,13 +51,13 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        // Create a unique position for the player
-        Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 2f, 0);
         if (runner.IsServer)
         {
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-            // Keep track of the player avatars for easy access
-            _spawnedCharacters.Add(player, networkPlayerObject);
+            // 씬 로드가 이미 끝났고, 아직 스폰 안 된 플레이어라면 스폰
+            if (_spawnPoints.Count > 0 && !_spawnedCharacters.ContainsKey(player))
+            {
+                SpawnPlayer(runner, player);
+            }
         }
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -64,6 +67,64 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             runner.Despawn(networkObject);
             _spawnedCharacters.Remove(player);
         }
+    }
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+        // 1. 씬 로드가 끝난 시점에 SpawnPoint 태그 수집
+        FindSpawnPoints();
+
+        // 2. 스폰 처리는 Server/Host 권한만 수행
+        if (runner.IsServer)
+        {
+            // 현재 방에 접속해 있는 모든 플레이어 목록 순회
+            foreach (var player in runner.ActivePlayers)
+            {
+                // 아직 스폰되지 않은 플레이어라면 스폰 진행
+                if (!_spawnedCharacters.ContainsKey(player))
+                {
+                    SpawnPlayer(runner, player);
+                }
+            }
+        }
+    }
+
+    private void SpawnPlayer(NetworkRunner runner, PlayerRef player)
+    {
+        Transform spawnPoint = GetSpawnPoint(player);
+        Vector3 spawnPosition = spawnPoint != null ? spawnPoint.position : Vector3.zero;
+        Quaternion spawnRotation = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
+
+        NetworkObject playerObject = runner.Spawn(
+            _playerPrefab,
+            spawnPosition,
+            spawnRotation,
+            inputAuthority: player
+        );
+
+        _spawnedCharacters.Add(player, playerObject);
+    }
+
+    private void FindSpawnPoints()
+    {
+        _spawnPoints.Clear();
+        GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag("SpawnPoint");
+
+        foreach (GameObject obj in spawnPointObjects)
+        {
+            _spawnPoints.Add(obj.transform);
+        }
+
+        if (_spawnPoints.Count == 0)
+        {
+            Debug.LogWarning("[CharacterSpawner] 씬에서 'SpawnPoint' 태그를 찾지 못했습니다.");
+        }
+    }
+    private Transform GetSpawnPoint(PlayerRef player)
+    {
+        if (_spawnPoints == null || _spawnPoints.Count == 0) return null;
+
+        int index = player.PlayerId % _spawnPoints.Count;
+        return _spawnPoints[index];
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
@@ -77,7 +138,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

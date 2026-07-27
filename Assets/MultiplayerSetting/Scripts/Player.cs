@@ -1,6 +1,8 @@
-using System.Threading.Tasks; // 필수 추가
 using Fusion;
+using System.Threading.Tasks; // 필수 추가
 using UnityEngine;
+using UnityEngine.Windows;
+using static Fusion.NetworkBehaviour;
 
 public class Player : NetworkBehaviour
 {
@@ -16,6 +18,13 @@ public class Player : NetworkBehaviour
     private CustomNetworkCharacterController _cc;
     [SerializeField] private float _jumpForce = 5f; // 점프 힘
     [SerializeField] private float _snapTurnAngle = 45f; // 한 번에 회전할 각도
+
+    [Header("Walk Animaton")]
+    [SerializeField] private Animator animator;
+    [Networked] private NetworkBool IsWalking { get; set; }
+    // Fusion 2 최적화를 위한 ChangeDetector 및 Animator Hash
+    private ChangeDetector _changeDetector;
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
     private NetworkButtons _previousButtons;
 
@@ -75,6 +84,13 @@ public class Player : NetworkBehaviour
 
                 // 순수 조이스틱 X(좌우)와 Z(앞뒤)에 머리 방향을 입혀 최종 월드 이동 방향 완성!
                 moveDir = (forward * rawInput.z) + (right * rawInput.x);
+
+                // 입력이 들어왔으므로 Walking 상태 true
+                IsWalking = true;
+            }
+            else
+            {
+                IsWalking = false;
             }
 
             // 수정한 이동 방향을 NCC에 전달
@@ -87,6 +103,10 @@ public class Player : NetworkBehaviour
                 // NCC에게 점프 명령을 내립니다.
                 _cc.Jump(ignoreGrounded: false, overrideImpulse: _jumpForce);
             }
+        }
+        else
+        {
+            IsWalking = false;
         }
     }
 
@@ -134,6 +154,11 @@ public class Player : NetworkBehaviour
     public override void Render()
     {
         UpdateBodyRotation();
+
+        if (animator != null)
+        {
+            animator.SetBool(IsWalkingHash, IsWalking);
+        }
     }
 
     private void UpdateBodyRotation()

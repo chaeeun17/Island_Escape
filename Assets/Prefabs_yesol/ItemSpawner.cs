@@ -1,29 +1,33 @@
+using Fusion;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSpawner : MonoBehaviour
+public class ItemSpawner : NetworkBehaviour
 {
     [Header("Source")]
     public MeshFilter terrainMesh;
 
     [Header("Items")]
-    public GameObject item;
+    public NetworkObject branch;
+    public NetworkObject leaf;
+    public NetworkObject stone;
+    public NetworkObject clam;
+
+    public float branchDensity = 0.6f;
+    public float stoneDensity = 0.6f;
+    public float clamDensity = 0.5f;
 
     [Header("Density")]
     public int samplesPerTriangle = 10;
 
-    void Start()
+    public override void Spawned()
     {
-        StartCoroutine(SpawnItemWait());
+        // 호스트/서버만 스폰 수행
+        if (HasStateAuthority)
+        {
+            SpawnItems();
+        }
     }
-
-    IEnumerator SpawnItemWait()
-    {
-        yield return new WaitForEndOfFrame();
-        SpawnItems();
-    }
-
     void SpawnItems()
     {
         Mesh mesh = terrainMesh.sharedMesh;
@@ -74,14 +78,38 @@ public class ItemSpawner : MonoBehaviour
                 Vector3 worldPos =
                     tr.TransformPoint(pos);
 
-                float density = 0.6f;
-
-                if (Random.value > density)
-                    continue;
-
                 Quaternion rot = Quaternion.Euler(0, Random.Range(0, 360), 0);
 
-                Instantiate(item, worldPos, rot, transform);
+                // 1. 초록색 구역 (나무 스폰)
+                if (color.g > 0.7f && color.r < 0.3f && color.b < 0.3f && branch != null)
+                {
+                    if (Random.value > branchDensity)
+                        continue;
+
+                    // Instantiate(Random.value > 0.5f ? branch : leaf, worldPos, rot, transform);
+                    // Runner를 통해 네트워크 스폰
+                    Runner.Spawn(Random.value > 0.5f ? branch : leaf, worldPos,rot, inputAuthority: null);
+                }
+
+                // 2. 파란색 구역 (돌 스폰)
+                if (color.b > 0.7f && color.r < 0.3f && color.g < 0.3f && stone != null)
+                {
+                    if (Random.value > stoneDensity)
+                        continue;
+
+                    // Instantiate(stone, worldPos, rot, transform);
+                    Runner.Spawn(stone, worldPos, rot, inputAuthority: null);
+                }
+
+                // 3. 빨간색 구역 (조개 스폰)
+                if (color.r > 0.7f && color.g < 0.3f && color.b < 0.3f && clam != null)
+                {
+                    if (Random.value > clamDensity)
+                        continue;
+
+                    // Instantiate(clam, worldPos, rot, transform);
+                    Runner.Spawn(clam, worldPos, rot, inputAuthority: null);
+                }
             }
         }
     }

@@ -434,6 +434,7 @@ MonoBehaviour:
   _rotateSpeed: 8
   _jumpForce: 5
   _snapTurnAngle: 45
+  animator: {fileID: 186448883145184124}
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
@@ -476,7 +477,7 @@ MonoBehaviour:
   jumpImpulse: 8
   acceleration: 10
   braking: 10
-  maxSpeed: 2
+  maxSpeed: 6.5
   rotationSpeed: 15
 --- !u!1 &4664735668597634432
 GameObject:
@@ -800,10 +801,10 @@ Animator:
   m_GameObject: {fileID: 6862810995701486524}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2eddc34257224304cab534b68ab3680f, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 29033ed332dcd014c9b93cc94fc7a89c, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
