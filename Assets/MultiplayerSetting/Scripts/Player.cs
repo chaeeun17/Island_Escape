@@ -128,7 +128,7 @@ public class Player : NetworkBehaviour
                     // Debug.LogError("������ XR Origin�� ã�� �� �����ϴ�!");
                 }
 
-                InitPlayerStats();
+                //InitPlayerStats();
             }
         }
     }
