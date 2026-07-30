@@ -160,6 +160,7 @@ public class FishingCaster : NetworkBehaviour
         if (state == FloatState.Floating || state == FloatState.Flying)
         {
             state = FloatState.Reeling;
+            SEManager.Instance.PlayWaterSplash();
             if (currentFlyingFloat != null)
             {
                 currentFlyingFloat.floatRb.isKinematic = false;
@@ -197,6 +198,7 @@ public class FishingCaster : NetworkBehaviour
         if (state == FloatState.Reeling) return;
 
         state = FloatState.Floating;
+        SEManager.Instance.PlayWaterDrop();
 
         if (currentFlyingFloat != null)
         {
@@ -265,6 +267,7 @@ public class FishingCaster : NetworkBehaviour
                 string targetHand = interactorName.Contains("right") ? "RightHand" : "LeftHand";
 
                 Debug.Log("ÇÝÆ½ Áøµ¿!");
+                SEManager.Instance.PlayFish();
                 SendInputSystemHaptic(targetHand, intensity, duration);
             }
         }
