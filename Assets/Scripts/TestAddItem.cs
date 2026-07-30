@@ -1,13 +1,21 @@
 using UnityEngine;
 
-public class TestAddItem: MonoBehaviour
+public class TestAddItem : MonoBehaviour
 {
-    public Item itemToGive;
+
+    public Item[] itemsToGive;
+
     public void GiveItem()
     {
-        if (Inventory.Instance != null && itemToGive != null)
+        if (Inventory.Instance != null && itemsToGive != null)
         {
-            Inventory.Instance.AddItem(itemToGive);
+            foreach (Item item in itemsToGive)
+            {
+                if (item != null)
+                {
+                    Inventory.Instance.AddItem(item);
+                }
+            }
         }
     }
 }
