@@ -100,6 +100,15 @@ public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (this.item != null)
+        {
+            Inventory.Instance.ShowItemDetails(this.item);
+        }
+        else
+        {
+            Inventory.Instance.ShowItemDetails(null); // 빈 슬롯 클릭 시 패널을 끕니다.
+        }
+
         if (currentlyHeldItem == null)
         {
             if (this.item != null)
