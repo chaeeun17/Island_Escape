@@ -1,26 +1,21 @@
+using Fusion;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class HandController : MonoBehaviour
+public class HandController : NetworkBehaviour
 {
-    public InputActionReference gripInput;
-    public InputActionReference triggerInput;
-
     private Animator animator;
+
+    [Networked] public float Grip { get; set; }
+    [Networked] public float Trigger { get; set; }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    public override void FixedUpdateNetwork()
     {
-        if (!animator) return;
-
-        float trigger = triggerInput.action.ReadValue<float>();
-        float grip = gripInput.action.ReadValue<float>();
-
-        animator.SetFloat("Trigger", trigger);
-        animator.SetFloat("Grip", grip);
+        animator.SetFloat("Grip", Grip);
+        animator.SetFloat("Trigger", Trigger);
     }
 }

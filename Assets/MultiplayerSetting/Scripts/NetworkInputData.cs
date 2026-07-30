@@ -16,6 +16,12 @@ public struct NetworkInputData : INetworkInput
 
     public Vector3 rightHandPos;
     public Quaternion rightHandRot;
+
+    public float leftGrip;
+    public float leftTrigger;
+
+    public float rightGrip;
+    public float rightTrigger;
 }
 
 // 어떤 버튼인지 구분하기 위한 비트 플래그용 열거형

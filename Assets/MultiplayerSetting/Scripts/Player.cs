@@ -1,8 +1,6 @@
 using Fusion;
 using System.Threading.Tasks; // 필수 추가
 using UnityEngine;
-using UnityEngine.Windows;
-using static Fusion.NetworkBehaviour;
 
 public class Player : NetworkBehaviour
 {
@@ -11,6 +9,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netLeftHand;
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
+
+    [SerializeField] private HandController _leftHandController;
+    [SerializeField] private HandController _rightHandController;
 
     [SerializeField] private float _followAngle = 45f; // 몸통이 따라오기 시작하는 각도
     [SerializeField] private float _rotateSpeed = 8f; // 회전 속도
@@ -47,6 +48,12 @@ public class Player : NetworkBehaviour
 
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
+
+            _leftHandController.Grip = data.leftGrip;
+            _leftHandController.Trigger = data.leftTrigger;
+
+            _rightHandController.Grip = data.rightGrip;
+            _rightHandController.Trigger = data.rightTrigger;
 
             // 1. 입력 변화량(Pressed) 계산
             // 이전 틱의 입력을 가져와 이번 틱에 '새로 눌린' 버튼을 판별합니다.
