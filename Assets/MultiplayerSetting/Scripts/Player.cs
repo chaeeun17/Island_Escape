@@ -1,6 +1,8 @@
-using System.Threading.Tasks; // �ʼ� �߰�
 using Fusion;
+using System.Threading.Tasks; // �ʼ� �߰�
 using UnityEngine;
+using UnityEngine.Windows;
+using static Fusion.NetworkBehaviour;
 
 public class Player : NetworkBehaviour
 {
@@ -16,6 +18,13 @@ public class Player : NetworkBehaviour
     private CustomNetworkCharacterController _cc;
     [SerializeField] private float _jumpForce = 5f; // ���� ��
     [SerializeField] private float _snapTurnAngle = 45f; // �� ���� ȸ���� ����
+
+    [Header("Walk Animaton")]
+    [SerializeField] private Animator animator;
+    [Networked] private NetworkBool IsWalking { get; set; }
+    // Fusion 2 ����ȭ�� ���� ChangeDetector �� Animator Hash
+    private ChangeDetector _changeDetector;
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
     private NetworkButtons _previousButtons;
 
@@ -75,6 +84,13 @@ public class Player : NetworkBehaviour
 
                 // ���� ���̽�ƽ X(�¿�)�� Z(�յ�)�� �Ӹ� ������ ���� ���� ���� �̵� ���� �ϼ�!
                 moveDir = (forward * rawInput.z) + (right * rawInput.x);
+
+                // �Է��� �������Ƿ� Walking ���� true
+                IsWalking = true;
+            }
+            else
+            {
+                IsWalking = false;
             }
 
             // ������ �̵� ������ NCC�� ����
@@ -87,6 +103,10 @@ public class Player : NetworkBehaviour
                 // NCC���� ���� ������ �����ϴ�.
                 _cc.Jump(ignoreGrounded: false, overrideImpulse: _jumpForce);
             }
+        }
+        else
+        {
+            IsWalking = false;
         }
     }
 
@@ -150,6 +170,11 @@ public class Player : NetworkBehaviour
     public override void Render()
     {
         UpdateBodyRotation();
+
+        if (animator != null)
+        {
+            animator.SetBool(IsWalkingHash, IsWalking);
+        }
     }
 
     private void UpdateBodyRotation()
