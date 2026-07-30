@@ -1,8 +1,6 @@
 using Fusion;
 using System.Threading.Tasks; // �ʼ� �߰�
 using UnityEngine;
-using UnityEngine.Windows;
-using static Fusion.NetworkBehaviour;
 
 public class Player : NetworkBehaviour
 {
@@ -11,6 +9,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netLeftHand;
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
+
+    [SerializeField] private HandController _leftHandController;
+    [SerializeField] private HandController _rightHandController;
 
     [SerializeField] private float _followAngle = 45f; // ������ ������� �����ϴ� ����
     [SerializeField] private float _rotateSpeed = 8f; // ȸ�� �ӵ�
@@ -47,6 +48,12 @@ public class Player : NetworkBehaviour
 
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
+
+            _leftHandController.Grip = data.leftGrip;
+            _leftHandController.Trigger = data.leftTrigger;
+
+            _rightHandController.Grip = data.rightGrip;
+            _rightHandController.Trigger = data.rightTrigger;
 
             // 1. �Է� ��ȭ��(Pressed) ���
             // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
