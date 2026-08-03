@@ -15,6 +15,10 @@ public class Item : ScriptableObject
     [SerializeField] protected string ItemName;
     [SerializeField] protected Sprite ItemSprite;
 
+    [TextArea(3, 5)]
+    [SerializeField] protected string ItemDescription;
+
+
     [Header("아이템 세부 특성")]
     [SerializeField] protected ItemType itemType;      // 아이템 특성 (RawFood 등 선택)
     [SerializeField] protected Item cookedVersion;     // 요리 완료 시 변환될 결과물 (Item SO 연결)
@@ -25,6 +29,10 @@ public class Item : ScriptableObject
 
     public int getItemNumber() { return this.ItemNumber; }
     public string getItemName() { return this.ItemName; }
+
+
+    public string getItemDescription() { return this.ItemDescription; }
+
     public int get_Item_Count() { return this.get_Count; }
     public void set_Item_Count(int get_Count) { this.get_Count = get_Count; }
     public void add_Item_Count(int add_count) { this.get_Count += add_count; }
