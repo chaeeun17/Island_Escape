@@ -24,6 +24,16 @@ public class Item : ScriptableObject
     [SerializeField] protected Item cookedVersion;     // 요리 완료 시 변환될 결과물 (Item SO 연결)
     [SerializeField] protected GameObject prefab3D;    // 월드에 드롭/생성될 3D 모델 프리팹
 
+    [Header("음식 회복 스탯 설정")]
+    [SerializeField] protected int restoreHunger = 0;
+    [SerializeField] protected int restoreThirst = 0;
+    [SerializeField] protected int restoreStamina = 0;
+
+    public int GetRestoreHunger() { return this.restoreHunger; }
+    public int GetRestoreThirst() { return this.restoreThirst; }
+    public int GetRestoreStamina() { return this.restoreStamina; }
+
+
     [System.NonSerialized] protected int get_Count = 0;
     [System.NonSerialized] protected bool isget = false;
 

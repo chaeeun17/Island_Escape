@@ -183,6 +183,7 @@ public class Inventory: MonoBehaviour
         if (detailDescText != null) detailDescText.text = item.getItemDescription();
     }
 
+
 }
 
 
