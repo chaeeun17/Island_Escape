@@ -1,54 +1,83 @@
-using UnityEngine;
+using Fusion;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class FishingManager : MonoBehaviour
+public class FishingManager : NetworkBehaviour
 {
     /// 동시에 여러 명이 낚시 가능
-    /// 낚시꾼들을 Observer로 추가?
     /// 일정 틱 지난 이후에 낚시 성공 알림 보내고, 
     /// 랜덤한 종류 물고기 보내기
     [SerializeField] private float maxFishingTime = 20f;
     [SerializeField] private float minFishingTime = 5f;
-    [SerializeField] private float catchFishTime = 5f;
+    [SerializeField] private float catchFishWindow = 5f; // 입질 후 기회 시간
+    [SerializeField] private float hapticInterval = 0.15f; // 햅틱 진동 간격 (초)
+
     private List<FishingCaster> observer = new List<FishingCaster>();
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
-        foreach(FishingCaster caster in observer)
+        if (!HasStateAuthority) return;
+
+        for (int i = observer.Count - 1; i >= 0; i--)
         {
-            if (caster.waitingTime > Random.Range(minFishingTime, maxFishingTime))
+            FishingCaster caster = observer[i];
+
+            if (caster == null || caster.state != FloatState.Floating)
             {
-                if (caster.catchTime > catchFishTime)
-                {
-                    caster.isCatch = false;
-                    // 햅틱 종료
-                    caster.catchTime = 0;
-                }
-                else if (!caster.isCatch)
+                continue;
+            }
+
+            caster.waitingTime += Runner.DeltaTime;
+
+            if (caster.waitingTime >= caster.targetWaitTime)
+            {
+                // 1. 입질 시작
+                if (!caster.isCatch)
                 {
                     caster.isCatch = true;
-                    caster.waitingTime = 0;
-                    caster.fishType = (Fish)Random.Range(1f, (float)Fish.END);
-                    // 햅틱 피드백
-                    caster.TriggerHaptic();
+                    caster.catchTime = 0f;
+                    caster.hapticTimer = 0f; // 타이머 초기화
+
+                    caster.fishType = (Fish)UnityEngine.Random.Range(1, (int)Fish.END);
                 }
-                else
+
+                // 2. 입질 유지 중 (catchTime 동안 지속적 진동 연사)
+                caster.catchTime += Runner.DeltaTime;
+                caster.hapticTimer += Runner.DeltaTime;
+
+                // 재시뮬레이션(Resimulation) 틱이 아닐 때만 RPC 발사
+                if (Runner.IsForward && caster.hapticTimer >= hapticInterval)
                 {
-                    caster.catchTime += Time.deltaTime;
+                    caster.hapticTimer -= hapticInterval;
+
+                    // 해당 낚싯대의 주인(InputAuthority)에게 Unreliable RPC 전송
+                    caster.RPC_TriggerHaptic();
                 }
-            }
-            else
-            {
-                caster.waitingTime += Time.deltaTime;
+
+                // 3. 기회 시간 초과시 놓침
+                if (caster.catchTime > catchFishWindow)
+                {
+                    caster.isCatch = false;
+                    caster.waitingTime = 0f;
+                    caster.targetWaitTime = UnityEngine.Random.Range(minFishingTime, maxFishingTime);
+                }
             }
         }
     }
 
     public void ObserverRegister(FishingCaster caster)
     {
+        if (!HasStateAuthority) return;
+
         if (!observer.Contains(caster))
         {
             observer.Add(caster);
+            // 등록 시 최초 targetWaitTime 생성
+            caster.targetWaitTime = UnityEngine.Random.Range(minFishingTime, maxFishingTime);
+            caster.waitingTime = 0f;
+            caster.catchTime = 0f;
+            caster.hapticTimer = 0f;
+            caster.isCatch = false;
         }
     }
 

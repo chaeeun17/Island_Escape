@@ -72,6 +72,8 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    
+
     private void StartSurvivalTimer()
     {
         isSurvivalStarted = true;

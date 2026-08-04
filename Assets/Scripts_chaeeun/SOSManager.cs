@@ -115,6 +115,6 @@ public class SOSManager : MonoBehaviour
     private void TriggerSOSSuccess()
     {
         Debug.Log("SOS 신호 완성!");
-        TutorialManager.Instance.CompleteCurrentStep();
+        NetworkTutorialManager.Instance.CompleteCurrentStep();
     }
 }

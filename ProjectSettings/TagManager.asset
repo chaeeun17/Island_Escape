@@ -6,7 +6,12 @@ TagManager:
   tags:
   - Food
   - Stone
+  - Water
+  - Fishingrod
+  - Bow
   - XROrigin
+  - SpawnPoint
+  - PlayerRoot
   layers:
   - Default
   - TransparentFX
@@ -14,10 +19,10 @@ TagManager:
   - 
   - Water
   - UI
+  - 
+  - Item
   - Interactable
   - Player
-  - 
-  - 
   - 
   - 
   - 
@@ -43,6 +48,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UpperMain
+    uniqueID: 1752934789
     locked: 0
   m_RenderingLayers:
   - Default

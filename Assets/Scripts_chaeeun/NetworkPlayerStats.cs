@@ -64,12 +64,11 @@ public class NetworkPlayerStats : NetworkBehaviour
 
         Debug.Log("✅ [PlayerStats] Spawned 완료! 초기 스탯 100 설정됨.");
 
-/*
         // 튜토리얼 완료 이벤트 구독
-        if (TutorialManager.Instance != null)
+        if (NetworkTutorialManager.Instance != null)
         {
-            TutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
-        }*/
+            NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
+        }
     }
 
     public void StartSurvival()

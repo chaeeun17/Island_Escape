@@ -1338,6 +1338,17 @@
                 },
                 {
                     "name": "",
+                    "id": "082c5866-9592-4291-a2ec-8cd0c9916c8a",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interaction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "eb955f79-edbc-498c-a2fb-216df8bfeb7c",
                     "path": "<XRController>{LeftHand}/{SecondaryButton}",
                     "interactions": "",
