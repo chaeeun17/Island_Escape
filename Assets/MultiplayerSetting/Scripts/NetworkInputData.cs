@@ -23,5 +23,5 @@ public enum MyButtons
 {
     Jump = 0,
     TurnLeft = 1,
-    TurnRight = 2
+    TurnRight = 2,
 }

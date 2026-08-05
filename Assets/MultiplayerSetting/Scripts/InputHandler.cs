@@ -24,6 +24,7 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private InputActionReference _rightHandMoveAction;
     [SerializeField] private InputActionReference _jumpAction;
 
+
     // 매 프레임 수집된 로컬 입력 값을 임시로 보관할 변수
     private Vector2 _moveDirection;
     private Vector2 _turnDirection;

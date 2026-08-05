@@ -1,6 +1,7 @@
 using Fusion;
 using System.Threading.Tasks; // �ʼ� �߰�
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Windows;
 using static Fusion.NetworkBehaviour;
 
@@ -28,6 +29,13 @@ public class Player : NetworkBehaviour
 
     private NetworkButtons _previousButtons;
 
+    [SerializeField] private NetworkPlayerStats stats;
+
+    [Header("Revive Settings")]
+    [SerializeField] private float _reviveDistance = 1.5f; // 부활 가능 거리
+    [SerializeField] private float _reviveTimeSeconds = 3.0f; // 부활에 걸리는 시간 (초)
+    [SerializeField] private LayerMask _playerLayer;
+
     private void Awake()
     {
         _cc = GetComponent<CustomNetworkCharacterController>();
@@ -35,6 +43,15 @@ public class Player : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        // --------------------------------------------------------------------
+        // [NEW] 조작이 막힌 상태라면 입력 처리 및 이동 로직을 전체 스킵합니다.
+        // --------------------------------------------------------------------
+        if (stats.IsPlayerFainted())
+        {
+            IsWalking = false; // 걸음 애니메이션도 정지
+            return;
+        }
+
         // �� ƽ���� �Է��� �����ϴ��� Ȯ��
         if (GetInput(out NetworkInputData data))
         {
@@ -155,7 +172,7 @@ public class Player : NetworkBehaviour
 
     private void InitPlayerStats()
     {
-        NetworkPlayerStats stats = GetComponent<NetworkPlayerStats>();
+        // stats = GetComponent<NetworkPlayerStats>();
         if (stats != null)
         {
             // PlayerStats 스크립트에 만든 StartSurvival() 함수 호출!

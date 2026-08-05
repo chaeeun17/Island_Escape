@@ -1,5 +1,6 @@
-using UnityEngine;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -174,7 +175,6 @@ public class PlayerStats : MonoBehaviour
             staminaText.text = $"{currentStamina}";
             staminaText.color = (currentStamina <= warningThreshold) ? warningColor : normalColor;
         }
-            
     }
 
 

@@ -19,6 +19,13 @@ public class NetworkPlayerStats : NetworkBehaviour
 
     [Networked] private NetworkBool isFainted { get; set; }
     [Networked] private NetworkBool isSurvivalStarted { get; set; }
+    [Networked] private NetworkBool isRevived { get; set; }
+
+    [Header("Walk Animaton")]
+    [SerializeField] private Animator animator;
+
+    private static readonly int IsDeadHash = Animator.StringToHash("IsDead");
+    private static readonly int RevivedHash = Animator.StringToHash("Revived");
 
     [Header("Decrease Rates (몇 초당 1씩 줄어들 것인가)")]
     public float hungerDecreaseInterval = 2.0f;
@@ -39,6 +46,9 @@ public class NetworkPlayerStats : NetworkBehaviour
     private float hungerTimer;
     private float thirstTimer;
     private float staminaTimer;
+
+
+    private WarningVignetteController wvc;
 
     public override void Spawned()
     {
@@ -69,6 +79,8 @@ public class NetworkPlayerStats : NetworkBehaviour
         {
             NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
         }
+
+        wvc = GameObject.Find("Global Volume").GetComponent<WarningVignetteController>();
     }
 
     public void StartSurvival()
@@ -132,6 +144,24 @@ public class NetworkPlayerStats : NetworkBehaviour
         if (HasInputAuthority)
         {
             UpdateStatTexts();
+
+
+            if (CurrentHunger <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.HUNGER);
+            }
+            else if (CurrentThirst <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.THIRST);
+            }
+            else if (CurrentStamina <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.STAMINA);
+            }
+            else
+            {
+                WarningVignetteOff();
+            }
         }
     }
 
@@ -224,5 +254,60 @@ public class NetworkPlayerStats : NetworkBehaviour
     {
         if (isFainted || !HasStateAuthority) return;
         CurrentStamina = Mathf.Min(CurrentStamina + amount, maxStamina);
+    }
+
+    //====================================
+    // 추가 (Vignette)
+    //====================================
+    private void WarningVignetteOn(Stats stats)
+    {
+        wvc.EnableWarningVignette(stats);
+    }
+
+    private void WarningVignetteOff()
+    {
+        wvc.DisableWarningVignette();
+    }
+
+    //====================================
+    // 추가 (Revive)
+    //====================================
+    public void Revive()
+    {
+        if (!isFainted) return;
+
+        isFainted = false;
+        isRevived = true;
+        CurrentHunger = maxHunger / 2;
+        CurrentStamina = maxStamina / 2;
+        CurrentThirst = maxThirst / 2;
+
+        if(animator != null)
+        {
+            animator.SetTrigger(RevivedHash);
+        }
+    }
+
+    public bool IsPlayerFainted()
+    {
+        return isFainted;
+    }
+
+    //====================================
+    // 추가 (Animation)
+    //====================================
+    public override void Render()
+    {
+        if (animator != null)
+        {
+            if (isFainted)
+            {
+                animator.SetTrigger(IsDeadHash);
+            }
+            else if (isRevived)
+            {
+                animator.SetTrigger(RevivedHash);
+            }
+        }
     }
 }
