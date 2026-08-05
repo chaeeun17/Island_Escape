@@ -5,6 +5,7 @@ using TMPro;
 
 public class CraftingManager : MonoBehaviour
 {
+    /*
     [Header("등록된 조합법 목록")]
     public List<CraftingRecipe> availableRecipes;
 
@@ -152,5 +153,5 @@ public class CraftingManager : MonoBehaviour
 
         // 4. 재료가 소모되었으므로 현재 띄워진 UI 갱신
         UpdateDetailPanel();
-    }
+    }*/
 }

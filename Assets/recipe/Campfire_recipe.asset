@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9a096c415d8fa4b99e2ce600002f31, type: 3}
   m_Name: Campfire_recipe
   m_EditorClassIdentifier: Assembly-CSharp::CraftingRecipe
-  requiredIngredients:
-  - itemName: branchs
-    amount: 3
-  - itemName: rocks
-    amount: 2
-  resultPrefab: {fileID: 11400000, guid: 601434c8e7e3ad54ab4057fa145c60c8, type: 2}
+  resultItem: {fileID: 11400000, guid: 52f33747ea5470a4a8b3f81bcbb2ba01, type: 2}
   resultAmount: 1
+  requiredIngredients:
+  - item: {fileID: 0}
+    amount: 3
+  - item: {fileID: 0}
+    amount: 2
