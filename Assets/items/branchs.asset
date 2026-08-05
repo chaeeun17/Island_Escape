@@ -15,6 +15,7 @@ MonoBehaviour:
   ItemNumber: 3
   ItemName: branchs
   ItemSprite: {fileID: 0}
+  ItemDescription: 
   itemType: 1
   cookedVersion: {fileID: 0}
-  prefab3D: {fileID: 0}
+  prefab3D: {fileID: 6088903641478060533, guid: 36e22b93634682649980a9d9c109e7ba, type: 3}

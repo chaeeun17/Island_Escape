@@ -1,179 +1,212 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TMPro;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
-public class SLot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool isResultSlot = false;
-    public System.Action OnSlotChanged;
-
+    [Header("슬롯 데이터")]
     public Item item;
-    [SerializeField] private Image slot_Item_Image;
-    [SerializeField] private Image Event_Image;
-    [SerializeField] private TMP_Text slot_Item_Count_TXT;
-    private bool isIn = false;
-    public static Item currentlyHeldItem;
-    public static SLot sourceSlot;
 
-    void Awake()
+    [Header("UI 연결")]
+    [SerializeField] private Image iconImage;
+    [SerializeField] private TMP_Text slot_Item_Count_TXT;
+
+    // 🌟 인스펙터 할당 없이 코드로 찾아 저장할 참조 변수
+    private XRRayInteractor leftRayInteractor;
+    private XRRayInteractor rightRayInteractor;
+
+    private InputAction leftGripAction;
+    private InputAction rightGripAction;
+    private bool isHovered = false;
+
+    private NetworkInventory ownerInventory;
+
+    private void Awake()
     {
-        slot_Item_Count_TXT.text = "";
+        ownerInventory = GetComponentInParent<NetworkInventory>();
+
+        // VR 컨트롤러 그랩 입력 직접 바인딩
+        leftGripAction = new InputAction("LeftGripDirect", binding: "<XRController>{LeftHand}/grip");
+        rightGripAction = new InputAction("RightGripDirect", binding: "<XRController>{RightHand}/grip");
     }
 
-    public void SetSlot(Item setitem, bool is_New_Item)
+    private void Start()
     {
-        if (setitem != null)
+        // 🌟 코드로 XRRayInteractor 자동 탐색 및 연결
+        FindRayInteractors();
+    }
+
+    private void OnEnable()
+    {
+        leftGripAction?.Enable();
+        rightGripAction?.Enable();
+    }
+
+    private void OnDisable()
+    {
+        leftGripAction?.Disable();
+        rightGripAction?.Disable();
+    }
+
+    /// <summary>
+    /// 씬/캐릭터 내의 왼손/오른손 XRRayInteractor를 코드로 찾아서 연결합니다.
+    /// </summary>
+    private void FindRayInteractors()
+    {
+        XRRayInteractor[] interactors = Object.FindObjectsByType<XRRayInteractor>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+
+        foreach (var interactor in interactors)
         {
-            get_Item(setitem);
-            if (is_New_Item)
+            string objectName = interactor.gameObject.name.ToLower();
+
+            // 왼손/오른손 구분해서 자동 할당
+            if (objectName.Contains("left"))
             {
-                setitem.add_Item_Count(1);
+                leftRayInteractor = interactor;
             }
-            Slot_Update(setitem);
+            else if (objectName.Contains("right"))
+            {
+                rightRayInteractor = interactor;
+            }
         }
+    }
+
+    // VR 포인터가 슬롯 UI 영역 안으로 들어올 때
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHovered = true;
+    }
+
+    // VR 포인터가 슬롯 UI 영역 밖으로 나갈 때
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isHovered = false;
+    }
+
+    // 슬롯 클릭 시 디테일 패널 출력
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        NetworkInventory targetInventory = ownerInventory != null ? ownerInventory : NetworkInventory.Instance;
+
+        if (targetInventory == null) return;
+
+        if (isin() && item != null)
+        {
+            targetInventory.ShowItemDetails(item);
+        }
+        else
+        {
+            targetInventory.ShowItemDetails(null);
+        }
+    }
+
+    private void Update()
+    {
+        // 호버링 중이 아니거나 슬롯이 비어있으면 체크하지 않음
+        if (!isHovered || !isin() || item == null) return;
+
+        // 양손 Grip 버튼 입력 감지 (0.5f 이상 눌렀는지 확인)
+        bool leftGripPressed = leftGripAction != null && leftGripAction.ReadValue<float>() > 0.5f;
+        bool rightGripPressed = rightGripAction != null && rightGripAction.ReadValue<float>() > 0.5f;
+
+        if (leftGripPressed || rightGripPressed)
+        {
+            // 중복 스폰 방지
+            isHovered = false;
+
+            // 스폰할 3D 아이템 프리팹 확인
+            GameObject prefabToSpawn = item.GetPrefab3D();
+
+            if (prefabToSpawn == null)
+            {
+                Debug.LogWarning($"⚠️ [{item.getItemName()}] 스폰할 3D 아이템 프리팹이 없습니다!");
+                return;
+            }
+
+            // 눌린 손에 맞게 XRRayInteractor 지정 (null일 경우 백업 재탐색)
+            XRRayInteractor targetInteractor = leftGripPressed ? leftRayInteractor : rightRayInteractor;
+
+            if (targetInteractor == null)
+            {
+                FindRayInteractors();
+                targetInteractor = leftGripPressed ? leftRayInteractor : rightRayInteractor;
+            }
+
+            // 여전히 못 찾았거나 손에 이미 다른 물건을 쥐고 있다면 스킵
+            if (targetInteractor == null || targetInteractor.hasSelection) return;
+
+            // 3D 아이템 생성
+            Transform handTransform = targetInteractor.transform;
+            GameObject spawned = Instantiate(prefabToSpawn, handTransform.position, handTransform.rotation);
+
+            var grabInteractable = spawned.GetComponent<XRGrabInteractable>();
+
+            if (grabInteractable != null)
+            {
+                // XRInteractionManager를 불러 컨트롤러 손에 즉시 착 붙여주기
+                XRInteractionManager interactionManager = Object.FindFirstObjectByType<XRInteractionManager>();
+                if (interactionManager != null)
+                {
+                    interactionManager.SelectEnter((IXRSelectInteractor)targetInteractor, (IXRSelectInteractable)grabInteractable);
+                    Debug.Log($"★ [성공] {item.getItemName()}을(를) 꺼내 손에 쥐었습니다! ★");
+
+                    // 인벤토리 데이터에서 수량 1개 차감 및 UI 재정렬
+                    NetworkInventory targetInventory = ownerInventory != null ? ownerInventory : NetworkInventory.Instance;
+                    if (targetInventory != null)
+                    {
+                        targetInventory.ConsumeItem(item.getItemName(), 1);
+                    }
+                }
+            }
+        }
+    }
+
+    // 슬롯에 아이템 세팅
+    public void SetSlot(Item newItem, bool addCount = false)
+    {
+        this.item = newItem;
+
+        if (iconImage != null && item != null)
+        {
+            iconImage.sprite = item.get_Item_Sprite();
+            iconImage.gameObject.SetActive(true);
+        }
+
         Update_Count_text();
     }
 
-    private void get_Item(Item get_item)
-    {
-        get_item.set_isGet(true);
-    }
-
-    public void Slot_Update(Item get_item)
-    {
-        this.item = get_item;
-        this.slot_Item_Image.sprite = get_item.get_Item_Sprite();
-        SetColor(1f, this.slot_Item_Image);
-        this.isIn = true;
-        get_item.set_isGet(true);
-    }
-
+    // 슬롯 비우기
     public void Clear_Slot()
     {
-        SetColor(0f, slot_Item_Image);
         this.item = null;
-        this.slot_Item_Image.sprite = null;
-        this.isIn = false;
-        Update_Count_text();
+
+        if (iconImage != null) iconImage.gameObject.SetActive(false);
+        if (slot_Item_Count_TXT != null) slot_Item_Count_TXT.gameObject.SetActive(false);
+    }
+
+    public bool isin()
+    {
+        return item != null;
+    }
+
+    public Item getItem()
+    {
+        return item;
     }
 
     public void Update_Count_text()
     {
-        if (item != null && item.get_Item_Count() > 1)
+        if (slot_Item_Count_TXT != null && item != null)
         {
             slot_Item_Count_TXT.text = item.get_Item_Count().ToString();
-        }
-        else
-        {
-            slot_Item_Count_TXT.text = "";
+            slot_Item_Count_TXT.gameObject.SetActive(true);
         }
     }
-
-    public void addCount(int count)
-    {
-        if (item != null)
-        {
-            item.add_Item_Count(count);
-            Update_Count_text();
-        }
-    }
-
-    private void SetColor(float alpha, Image setImage)
-    {
-        if (setImage != null)
-        {
-            Color color = setImage.color;
-            color.a = alpha;
-            setImage.color = color;
-        }
-    }
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        SetColor(1f, Event_Image);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        SetColor(0f, Event_Image);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (this.item != null)
-        {
-            Inventory.Instance.ShowItemDetails(this.item);
-        }
-        else
-        {
-            Inventory.Instance.ShowItemDetails(null); // 빈 슬롯 클릭 시 패널을 끕니다.
-        }
-
-        if (currentlyHeldItem == null)
-        {
-            if (this.item != null)
-            {
-                currentlyHeldItem = this.item;
-                sourceSlot = this;
-
-                SetColor(0.5f, slot_Item_Image);
-            }
-        }
-        else
-        {
-            if (this == sourceSlot)
-            {
-                SetColor(1f, sourceSlot.slot_Item_Image); 
-                ClearHeldItem();
-                return;
-            }
-
-            if (isResultSlot) return;
-
-            if (this.item == null)
-            {
-                this.Slot_Update(currentlyHeldItem);
-                sourceSlot.Clear_Slot();
-            }
-            else if (this.item.isSameItem(currentlyHeldItem))
-            {
-                this.item.add_Item_Count(currentlyHeldItem.get_Item_Count());
-
-          
-                if (sourceSlot.item != this.item)
-                {
-                    Destroy(sourceSlot.item);
-                }
-                sourceSlot.Clear_Slot();
-            }
-            else
-            {
-                Item tempItem = this.item;
-                this.Slot_Update(currentlyHeldItem);
-                sourceSlot.Slot_Update(tempItem);
-                SetColor(1f, sourceSlot.slot_Item_Image);
-            }
-
-            this.Update_Count_text();
-            if (sourceSlot != null)
-            {
-                sourceSlot.Update_Count_text();
-            }
-
-            ClearHeldItem();
-        }
-    }
-
-    private void ClearHeldItem()
-    {
-        currentlyHeldItem = null;
-        sourceSlot = null;
-    }
-
-    public void SetSlotItem(Item setitem) { item = setitem; }
-    public void setSlotImage(Image SlotImage) { slot_Item_Image = SlotImage; }
-    public void Set__isIn(bool IsItem) { isIn = IsItem; }
-    public void set_Count_txt(int count) { slot_Item_Count_TXT.text = count.ToString(); }
-    public bool isin() { return isIn; }
-    public Item getItem() { return item; }
 }

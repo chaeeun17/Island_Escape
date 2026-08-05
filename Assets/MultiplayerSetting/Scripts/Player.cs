@@ -174,6 +174,7 @@ public class Player : NetworkBehaviour
         }
     }
 
+/*
     private void InitPlayerStats()
     {
         NetworkPlayerStats stats = GetComponent<NetworkPlayerStats>();
@@ -187,7 +188,8 @@ public class Player : NetworkBehaviour
         {
             Debug.LogWarning("⚠️ [Player] 이 프리팹에 PlayerStats 컴포넌트가 없습니다.");
         }
-    }
+    }*/ 
+    
     public override void Render()
     {
         UpdateBodyRotation();

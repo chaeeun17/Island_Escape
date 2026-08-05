@@ -11,15 +11,15 @@ public class Inventory: MonoBehaviour
     public static Inventory Instance;
 
     [Header("Filter Buttons UI")]
-    public Button[] filterButtons;     // ÀÎ½ºÆåÅÍ¿¡¼­ ÇÒ´çÇÒ ¹öÆ° ¹è¿­ (0:ÀüÃ¼, 1:Àç·á, 2:À½½Ä, 3:µµ±¸)
-    public Color selectedColor = Color.yellow;  // ¼±ÅÃµÇ¾úÀ» ¶§ÀÇ »ö»ó 
+    public Button[] filterButtons;     // ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½è¿­ (0:ï¿½ï¿½Ã¼, 1:ï¿½ï¿½ï¿½, 2:ï¿½ï¿½ï¿½ï¿½, 3:ï¿½ï¿½ï¿½ï¿½)
+    public Color selectedColor = Color.yellow;  // ï¿½ï¿½ï¿½ÃµÇ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     public Color defaultColor = new Color(1.0f, 0.8f, 0.3f, 1f);
 
     [Header("Item Detail Panel UI")]
-    public GameObject detailPanel;         // »ó¼¼ Á¤º¸ ÆÐ³Î ¹è°æ (ÀüÃ¼ ²ô°í ÄÑ±â ¿ëµµ)
-    public Image detailItemImage;          // ¶ç¿ï ¾ÆÀÌÅÛ ÀÌ¹ÌÁö
-    public TMP_Text detailNameText;        // ¾ÆÀÌÅÛ ÀÌ¸§ ÅØ½ºÆ®
-    public TMP_Text detailDescText;        // ¾ÆÀÌÅÛ ¼³¸í ÅØ½ºÆ®
+    public GameObject detailPanel;         // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½ ï¿½ëµµ)
+    public Image detailItemImage;          // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½
+    public TMP_Text detailNameText;        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Ø½ï¿½Æ®
+    public TMP_Text detailDescText;        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ®
 
     public void AddItem(Item item)
     { 
@@ -62,7 +62,7 @@ public class Inventory: MonoBehaviour
         Instance = this;
         if (detailPanel != null) detailPanel.SetActive(false);
     }
-    //  ÀÌ¸§À¸·Î ¾ÆÀÌÅÛ ÃÑ °³¼ö Ã£±â 
+    //  ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ 
     public int GetItemCount(string itemName)
     {
         int count = 0;
@@ -77,7 +77,7 @@ public class Inventory: MonoBehaviour
         return count;
     }
 
-    // ÀÌ¸§À¸·Î ¾ÆÀÌÅÛ ¼Ò¸ðÇÏ±â 
+    // ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ï¿½Ï±ï¿½ 
     public void ConsumeItem(string itemName, int amountToConsume)
     {
         if (itemSlots == null) return;
@@ -93,15 +93,15 @@ public class Inventory: MonoBehaviour
                 {
                     itemSlots[i].item.add_Item_Count(-remaining);
                     itemSlots[i].Update_Count_text();
-                    return; // ¼Ò¸ð ¿Ï·á
+                    return; // ï¿½Ò¸ï¿½ ï¿½Ï·ï¿½
                 }
                 else
                 {
                     remaining -= available;
-                    Destroy(itemSlots[i].item); // ¸Þ¸ð¸® ´©¼ö ¹æÁö
+                    Destroy(itemSlots[i].item); // ï¿½Þ¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                     itemSlots[i].Clear_Slot();
 
-                    if (remaining <= 0) return; // ¼Ò¸ð ¿Ï·á
+                    if (remaining <= 0) return; // ï¿½Ò¸ï¿½ ï¿½Ï·ï¿½
                 }
             }
         }
@@ -171,7 +171,7 @@ public class Inventory: MonoBehaviour
     {
         if (item == null)
         {
-            // ºó ½½·ÔÀ» Å¬¸¯ÇÏ¸é ÆÐ³Î ¼û±è
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (detailPanel != null) detailPanel.SetActive(false);
             return;
         }

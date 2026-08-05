@@ -31,7 +31,9 @@ public class NetworkMouthZone : MonoBehaviour
             PlayerStats.Instance.RestoreHunger(25);
         }*/
 
-        Debug.LogWarning($"🍎 [{foodName}]을(를) 맛있게 먹었습니다! 배고픔 +25 회복");
+        NetworkPlayerStats.LocalInstance.RestoreHunger(20);
+
+        Debug.LogWarning($"🍎 [{foodName}]을(를) 맛있게 먹었습니다! 배고픔 +20 회복");
 
         // Fusion의 Despawn을 호출해야 방에 있는 모든 플레이어 화면에서 음식이 깔끔하게 삭제
         if (foodNetworkObj.Runner != null && foodNetworkObj.Runner.IsRunning)
