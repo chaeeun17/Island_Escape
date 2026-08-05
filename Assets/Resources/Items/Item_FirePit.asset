@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d942ab5e849944996256aa981ea7c6, type: 3}
   m_Name: Item_FirePit
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  ItemNumber: 2
+  ItemNumber: 4
   ItemName: FirePit
   ItemSprite: {fileID: 21300000, guid: a8d2cc72f2bc4ce408bcd3ac78d0e25a, type: 3}
   ItemDescription: 

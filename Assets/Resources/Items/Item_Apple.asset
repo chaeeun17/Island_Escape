@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d942ab5e849944996256aa981ea7c6, type: 3}
   m_Name: Item_Apple
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  ItemNumber: 1
+  ItemNumber: 0
   ItemName: Apple
   ItemSprite: {fileID: 21300000, guid: c58bf75596586934b9654305b5b800fc, type: 3}
   ItemDescription: apple

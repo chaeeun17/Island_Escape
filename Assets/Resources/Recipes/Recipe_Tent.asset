@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9a096c415d8fa4b99e2ce600002f31, type: 3}
+  m_Name: Recipe_Tent
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingRecipe
+  resultItem: {fileID: 11400000, guid: 3e99705776135ff4a9ef36fe0b85b5d9, type: 2}
+  resultAmount: 1
+  requiredIngredients:
+  - item: {fileID: 11400000, guid: 2e6cd39aa3fb80f4296270dbcb6e02a6, type: 2}
+    amount: 4
+  - item: {fileID: 11400000, guid: 18281ee3d8a27194985a33b08b4ed501, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: fc42d82e4f68c894a9a26e5c3a230d3f, type: 2}
+    amount: 3

@@ -15,9 +15,7 @@ MonoBehaviour:
   resultItem: {fileID: 11400000, guid: b03a9e8c9a803224db4840c2f122cde9, type: 2}
   resultAmount: 1
   requiredIngredients:
-  - item: {fileID: 11400000, guid: 52f33747ea5470a4a8b3f81bcbb2ba01, type: 2}
-    amount: 1
-  - item: {fileID: 11400000, guid: 52f33747ea5470a4a8b3f81bcbb2ba01, type: 2}
+  - item: {fileID: 11400000, guid: 2e6cd39aa3fb80f4296270dbcb6e02a6, type: 2}
     amount: 3
-  - item: {fileID: 11400000, guid: 52f33747ea5470a4a8b3f81bcbb2ba01, type: 2}
-    amount: 1
+  - item: {fileID: 11400000, guid: 2d809b3ee81a1284db6a848657cc5788, type: 2}
+    amount: 4

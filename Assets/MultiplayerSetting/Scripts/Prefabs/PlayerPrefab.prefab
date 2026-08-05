@@ -1756,9 +1756,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkCraft
   availableRecipes:
-  - {fileID: 11400000, guid: 99f0f820012d3014295b015660ec0795, type: 2}
-  - {fileID: 11400000, guid: 7a23a948dabfb814b898b878a7995f80, type: 2}
   - {fileID: 11400000, guid: cb93c918e61dcc14194b96a0d85b0d5e, type: 2}
+  - {fileID: 11400000, guid: d0d0de9c7f1319a479ac382593f85ce1, type: 2}
+  - {fileID: 11400000, guid: fe6f20512e9759f498e32c3bab7a7b4d, type: 2}
+  - {fileID: 11400000, guid: fe9308ba9ca0b904ebfb59a338f2608b, type: 2}
+  - {fileID: 11400000, guid: b5281d9c3590ea1438a15e864e885e5b, type: 2}
+  - {fileID: 11400000, guid: 5fec3ed78da05644599b42766690dc49, type: 2}
   recipeListContent: {fileID: 1241365302550106677}
   recipeButtonPrefab: {fileID: 6267481653834449522, guid: ac9af44f2f17f7541a6a0561f30a6148, type: 3}
   detailPanel: {fileID: 10141312536395553}
