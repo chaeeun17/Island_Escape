@@ -16,6 +16,6 @@ MonoBehaviour:
   ItemName: Clam
   ItemSprite: {fileID: 21300000, guid: 917e2f4c7e8272045a42a2950cab68ce, type: 3}
   ItemDescription: 
-  itemType: 0
+  itemType: 3
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 4699171322173964463, guid: 1b7f6e56af73c394aaa218f9009278bf, type: 3}

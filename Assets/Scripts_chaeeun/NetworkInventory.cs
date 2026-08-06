@@ -159,8 +159,8 @@ public class NetworkInventory : NetworkBehaviour
                 case 0: // Material 탭
                     if (type == ItemType.Material) isMatch = true;
                     break;
-                case 1: // Tool 탭 (General)
-                    if (type == ItemType.General) isMatch = true;
+                case 1: // Tool 탭 
+                    if (type == ItemType.Tool) isMatch = true;
                     break;
                 case 2: // Food 탭
                     if (type == ItemType.CookedFood || type == ItemType.RawFood) isMatch = true;

@@ -16,6 +16,6 @@ MonoBehaviour:
   ItemName: Fish
   ItemSprite: {fileID: 21300000, guid: e5bf69be82577cd478663fb72fac2724, type: 3}
   ItemDescription: 
-  itemType: 0
+  itemType: 3
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 8155519088799159642, guid: 056c5e717343b8746bfe5318cc53a714, type: 3}

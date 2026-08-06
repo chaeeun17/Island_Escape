@@ -16,6 +16,6 @@ MonoBehaviour:
   ItemName: Purifier
   ItemSprite: {fileID: 21300000, guid: f5fdc8fef473c4a489e7f0033754f727, type: 3}
   ItemDescription: 
-  itemType: 0
+  itemType: 2
   cookedVersion: {fileID: 0}
-  prefab3D: {fileID: 3688515175735757111, guid: 7852ec9df4341f047bf04e8b78f060d4, type: 3}
+  prefab3D: {fileID: 4678586795225141814, guid: faf850e411c739a4db80913d84bb01e2, type: 3}

@@ -5,8 +5,11 @@ public enum ItemType
 {
     General, // 일반 아이템
     Material, //제작 아이템
+    Tool,
     RawFood, //날고기, 조리용 아이템
     CookedFood // 조리된 음식
+
+    
 }
 [CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item", order = 1)]
 public class Item : ScriptableObject

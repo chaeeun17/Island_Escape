@@ -4,64 +4,74 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using System.Collections;
 using System;
+using Fusion; // Fusion 네임스페이스
 
-public class SOSManager : MonoBehaviour
+public class SOSManager : NetworkBehaviour
 {
     public static SOSManager Instance { get; private set; }
 
     [Header("SOS를 구성하는 총 소켓 개수")]
     [SerializeField] private int totalRequiredSlots = 9;
-    private int currentFilledSlots = 0;
 
-    [Header("성공 UI")]
-    [SerializeField] private GameObject successCutsceneObject;
+    [Networked]
+    private int currentFilledSlots { get; set; }
 
-    void Awake()
+    [Header("UI 연결")]
+    [SerializeField] private GameObject tutorialNoticeUI;   // 🌟 시작 시 떠오를 튜토리얼 안내 UI
+    [SerializeField] private GameObject successCutsceneObject; // 성공 시 연출 UI
+
+    public event Action OnTutorialCompleted;
+
+    private void Awake()
     {
-        if (Instance == null) Instance = Instance = this;
+        if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    // 소켓에 돌이 들어왔을 때 호출될 함수
-    public void SlotFilled(XRSocketInteractor socket)
+    // 🌟 Fusion 네트워크 오브젝트가 씬에 스폰되었을 때 (게임 시작 시) 호출
+    public override void Spawned()
     {
-        if (socket == null) return;
-
-        currentFilledSlots++;
-        Debug.Log($"[SOS] 돌 배치됨! ({currentFilledSlots} / {totalRequiredSlots})");
-
-        socket.interactionLayers = 0;
-        socket.enabled = false;
-
-        var interactable = socket.hasSelection ? socket.interactablesSelected[0] : null;
-    
-        if (interactable != null)
+        // 내 화면(클라이언트)에 튜토리얼 UI 표시
+        if (tutorialNoticeUI != null)
         {
-            GameObject stoneObject = interactable.transform.gameObject;
+            tutorialNoticeUI.SetActive(true);
             
-            var grabComponent = stoneObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
-            if (grabComponent != null)
-            {
-                grabComponent.enabled = false; 
-            }
-
-            // (선택사항) 만약 물리 엔진(Rigidbody) 때문에 돌이 굴러떨어질까 봐 걱정된다면 
-            // 리짓바디를 완전히 정지(Kinematic) 시켜버리는 게 가장 안전합니다.
-            var rb = stoneObject.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = true; 
-                rb.linearVelocity = Vector3.zero; // 구버전 유니티면 velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
+            // (선택사항) 5초 뒤에 튜토리얼 안내창을 자동으로 끄고 싶다면 주석 해제
+            // StartCoroutine(HideTutorialAfterDelay(5f));
         }
 
-        if (currentFilledSlots >= totalRequiredSlots)
+        if (successCutsceneObject != null)
         {
-            TriggerSOSSuccess();
+            successCutsceneObject.SetActive(false);
         }
     }
 
+    // 튜토리얼 UI의 '확인' 버튼을 클릭할 때 연결해 줄 함수
+    public void OnClickCloseTutorial()
+    {
+        if (tutorialNoticeUI != null)
+        {
+            tutorialNoticeUI.SetActive(false);
+        }
+
+        if (successCutsceneObject != null)
+        {
+            successCutsceneObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator HideTutorialAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (tutorialNoticeUI != null)
+        {
+            tutorialNoticeUI.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 소켓에 돌이 들어왔을 때 호출
+    /// </summary>
     public void OnSocketSelected(SelectEnterEventArgs args)
     {
         if (args == null) return;
@@ -73,16 +83,16 @@ public class SOSManager : MonoBehaviour
 
         GameObject incomingObject = interactable.gameObject;
 
-        // 돌이 맞는지 확인
-        if (incomingObject.CompareTag("Stone"))
-        {
-            currentFilledSlots++;
-            Debug.Log($"[SOS] 돌 배치 성공! ({currentFilledSlots} / {totalRequiredSlots})");
+        string objName = incomingObject.name;
 
-            // 돌멩이 Grab 기능 끄기
+        if (objName.Equals("Item_Stone(Clone)") || objName.Contains("Item_Stone"))
+        {
+            RPC_AddSlotCount();
+
+            // 1. 돌 Grab 기능 끄기
             interactable.enabled = false; 
 
-            // 물리 엔진 고정
+            // 2. 물리 고정
             var rb = incomingObject.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -91,30 +101,39 @@ public class SOSManager : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
 
-            // 소켓 기능 자체를 끔
+            // 3. 소켓 기능 끄기
             interactor.enabled = false;
-
-            // 모든 슬롯이 다 잠겼다면 전체 미션 성공 처리
-            if (currentFilledSlots >= totalRequiredSlots)
-            {
-                TriggerSOSSuccess();
-            }
         }
         else
         {
-            interactor.interactionManager.SelectCancel((IXRSelectInteractor)interactor, (IXRSelectInteractable)interactable);
+            if (interactor.interactionManager != null)
+            {
+                interactor.interactionManager.SelectCancel((IXRSelectInteractor)interactor, (IXRSelectInteractable)interactable);
+            }
         }
     }
 
-    // 소켓에서 돌이 빠졌을 때 호출될 함수
-    public void SlotEmptied()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_AddSlotCount()
     {
-        currentFilledSlots = Mathf.Max(0, currentFilledSlots - 1);
+        currentFilledSlots++;
+        Debug.Log($"[SOS] 돌 배치 성공! ({currentFilledSlots} / {totalRequiredSlots})");
+
+        if (currentFilledSlots >= totalRequiredSlots)
+        {
+            RPC_TriggerSuccessAll();
+        }
     }
 
-    private void TriggerSOSSuccess()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_TriggerSuccessAll()
     {
-        Debug.Log("SOS 신호 완성!");
-        NetworkTutorialManager.Instance.CompleteCurrentStep();
+        Debug.Log("🎉 [SOS] 신호 완성! 모든 플레이어 성공!");          
+        
+        // 성공 시 혹시 떠있던 튜토리얼 UI도 끄고 성공 연출 켜기
+        if (tutorialNoticeUI != null) tutorialNoticeUI.SetActive(false);
+        if (successCutsceneObject != null) successCutsceneObject.SetActive(true);
+
+        OnTutorialCompleted?.Invoke();
     }
 }

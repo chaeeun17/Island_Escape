@@ -57,23 +57,23 @@ public class NetworkPlayerStats : NetworkBehaviour
         CurrentThirst = maxThirst;
         CurrentStamina = maxStamina;
         isFainted = false;
-        //isSurvivalStarted = true; // 시작하자마자 생존 시작 (필요시 튜토리얼 완료 이벤트와 연결)
-        isSurvivalStarted = false;
+        isSurvivalStarted = true; // 시작하자마자 생존 시작 (필요시 튜토리얼 완료 이벤트와 연결)
+        //isSurvivalStarted = false;
 
         Debug.Log("✅ [PlayerStats] 로컬 플레이어 스탯 시스템 준비 완료! (100/100/100)");
 
         // 튜토리얼 완료 이벤트 구독
-        if (NetworkTutorialManager.Instance != null)
+        if (SOSManager.Instance != null)
         {
-            NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
+            SOSManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
         }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        if (NetworkTutorialManager.Instance != null)
+        if (SOSManager.Instance != null)
         {
-            NetworkTutorialManager.Instance.OnTutorialCompleted -= StartSurvivalTimer;
+            SOSManager.Instance.OnTutorialCompleted -= StartSurvivalTimer;
         }
     }
 
