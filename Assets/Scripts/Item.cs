@@ -7,10 +7,10 @@ public enum ItemType
     Material, //제작 아이템
     Tool,
     RawFood, //날고기, 조리용 아이템
-    CookedFood // 조리된 음식
-
-    
+    CookedFood, // 조리된 음식
+    Water
 }
+
 [CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item", order = 1)]
 public class Item : ScriptableObject
 {

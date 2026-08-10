@@ -183,4 +183,31 @@ public class NetworkPlayerStats : NetworkBehaviour
         CurrentStamina = Mathf.Min(CurrentStamina + amount, maxStamina);
         UpdateStatTexts();
     }
+
+    // 감소
+    public void ReduceHunger(int amount)
+    {
+        if (isFainted) return;
+
+        CurrentHunger = Mathf.Max(CurrentHunger - amount, 0);
+        UpdateStatTexts();
+    }
+
+    // 🌟 3. 갈증 감소 (목마름)
+    public void ReduceThirst(int amount)
+    {
+        if (isFainted) return;
+
+        CurrentThirst = Mathf.Max(CurrentThirst - amount, 0);
+        UpdateStatTexts();
+    }
+
+    // 🌟 4. 스태미나 감소 (달리기/작업 등)
+    public void ReduceStamina(int amount)
+    {
+        if (isFainted) return;
+
+        CurrentStamina = Mathf.Max(CurrentStamina - amount, 0);
+        UpdateStatTexts();
+    }
 }

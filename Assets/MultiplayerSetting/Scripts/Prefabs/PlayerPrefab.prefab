@@ -824,6 +824,7 @@ GameObject:
   - component: {fileID: 7451684527670044244}
   - component: {fileID: 4582099451257597219}
   - component: {fileID: 3697573881986140967}
+  - component: {fileID: 6484348692411538944}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: PlayerRoot
@@ -873,6 +874,7 @@ MonoBehaviour:
   - {fileID: 7451684527670044244}
   - {fileID: 4582099451257597219}
   - {fileID: 3697573881986140967}
+  - {fileID: 6484348692411538944}
   - {fileID: 2728010740476956936}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
@@ -988,6 +990,20 @@ MonoBehaviour:
   craftMenuPanel: {fileID: 8541122246649605062}
   bButtonAction: {fileID: 530629899127318567, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   yButtonAction: {fileID: -7108236239894351648, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &6484348692411538944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4657577435369037573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e5aa1397cf976499246035e6a4e260, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkCountdown
+  countdownText: {fileID: 2260950223963328409}
+  realMinutesPerGameDay: 10
 --- !u!1 &4664735668597634432
 GameObject:
   m_ObjectHideFlags: 0
@@ -1869,25 +1885,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3861314829521278033}
     m_Modifications:
-    - target: {fileID: 3429106763424926326, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3429106763424926326, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3429106763424926326, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3429106763424926326, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3600955543432285113, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_LocalScale.x
-      value: -0.1
+    - target: {fileID: 1284553276094238226, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+      propertyPath: m_text
+      value: '3 days
+
+        13:00'
       objectReference: {fileID: 0}
     - target: {fileID: 3600955543432285113, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1929,39 +1931,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4562111590059833526, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4562111590059833526, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4562111590059833526, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4562111590059833526, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5664336443817474725, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_Name
       value: VRHandLeft
       objectReference: {fileID: 0}
-    - target: {fileID: 5983406593633841509, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+    - target: {fileID: 7515377807335447883, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5983406593633841509, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+    - target: {fileID: 7515377807335447883, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5983406593633841509, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+    - target: {fileID: 7515377807335447883, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5983406593633841509, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+    - target: {fileID: 7515377807335447883, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -1969,16 +1955,7 @@ PrefabInstance:
       propertyPath: SortKey
       value: 3525643314
       objectReference: {fileID: 0}
-    - target: {fileID: 7560997133003881264, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: NetworkedBehaviours.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7560997133003881264, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
-      propertyPath: 'NetworkedBehaviours.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6702280246099958981, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2008,6 +1985,17 @@ MonoBehaviour:
 --- !u!114 &1814322675690837691 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1702044573695006512, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+  m_PrefabInstance: {fileID: 1059230306303066507}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!114 &2260950223963328409 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1284553276094238226, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
   m_PrefabInstance: {fileID: 1059230306303066507}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

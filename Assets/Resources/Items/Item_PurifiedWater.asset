@@ -16,6 +16,6 @@ MonoBehaviour:
   ItemName: PurifiedWater
   ItemSprite: {fileID: 0}
   ItemDescription: 
-  itemType: 4
+  itemType: 5
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 44464080457299442, guid: aed834af25ff96643a253aba2183132a, type: 3}

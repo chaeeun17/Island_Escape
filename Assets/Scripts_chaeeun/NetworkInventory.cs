@@ -163,7 +163,7 @@ public class NetworkInventory : NetworkBehaviour
                     if (type == ItemType.Tool) isMatch = true;
                     break;
                 case 2: // Food 탭
-                    if (type == ItemType.CookedFood || type == ItemType.RawFood) isMatch = true;
+                    if (type == ItemType.CookedFood || type == ItemType.RawFood|| type == ItemType.Water) isMatch = true;
                     break;
             }
 
