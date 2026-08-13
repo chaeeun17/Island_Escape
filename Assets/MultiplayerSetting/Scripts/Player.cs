@@ -1,8 +1,6 @@
 using Fusion;
 using System.Threading.Tasks; // 필수 추가
 using UnityEngine;
-using UnityEngine.Windows;
-using static Fusion.NetworkBehaviour;
 
 public class Player : NetworkBehaviour
 {
@@ -12,8 +10,11 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
 
-    [SerializeField] private float _followAngle = 45f; // 몸통이 따라오기 시작하는 각도
-    [SerializeField] private float _rotateSpeed = 8f; // 회전 속도
+    [SerializeField] private Animator leftHandAnimator;
+    [SerializeField] private Animator rightHandAnimator;
+
+    [SerializeField] private float _followAngle = 45f; // ������ ������� �����ϴ� ����
+    [SerializeField] private float _rotateSpeed = 8f; // ȸ�� �ӵ�
 
     private CustomNetworkCharacterController _cc;
     [SerializeField] private float _jumpForce = 5f; // 점프 힘
@@ -22,7 +23,12 @@ public class Player : NetworkBehaviour
     [Header("Walk Animaton")]
     [SerializeField] private Animator animator;
     [Networked] private NetworkBool IsWalking { get; set; }
-    // Fusion 2 최적화를 위한 ChangeDetector 및 Animator Hash
+    [Networked] public float LeftGrab { get; set; }
+    [Networked] public float LeftTrigger { get; set; }
+    [Networked] public float RightGrab { get; set; }
+    [Networked] public float RightTrigger { get; set; }
+
+    // Fusion 2 ����ȭ�� ���� ChangeDetector �� Animator Hash
     private ChangeDetector _changeDetector;
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
@@ -48,8 +54,14 @@ public class Player : NetworkBehaviour
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
 
-            // 1. 입력 변화량(Pressed) 계산
-            // 이전 틱의 입력을 가져와 이번 틱에 '새로 눌린' 버튼을 판별합니다.
+            LeftGrab = data.leftGrab;
+            LeftTrigger = data.leftTrigger;
+
+            RightGrab = data.rightGrab;
+            RightTrigger = data.rightTrigger;
+
+            // 1. �Է� ��ȭ��(Pressed) ���
+            // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 
@@ -110,6 +122,15 @@ public class Player : NetworkBehaviour
         }
     }
 
+    private void Update()
+    {
+        leftHandAnimator.SetFloat("Grip", LeftGrab);
+        leftHandAnimator.SetFloat("Trigger", LeftTrigger);
+
+        rightHandAnimator.SetFloat("Grip", RightGrab);
+        rightHandAnimator.SetFloat("Trigger", RightTrigger);
+    }
+
     public override async void Spawned()
     {
         // 1. 아주 잠깐(예: 100ms = 0.1초) 대기하여 Fusion이 권한(Authority)을 완전히 세팅할 시간을 줍니다.
@@ -153,6 +174,7 @@ public class Player : NetworkBehaviour
         }
     }
 
+/*
     private void InitPlayerStats()
     {
         NetworkPlayerStats stats = GetComponent<NetworkPlayerStats>();
@@ -166,7 +188,8 @@ public class Player : NetworkBehaviour
         {
             Debug.LogWarning("⚠️ [Player] 이 프리팹에 PlayerStats 컴포넌트가 없습니다.");
         }
-    }
+    }*/ 
+    
     public override void Render()
     {
         UpdateBodyRotation();

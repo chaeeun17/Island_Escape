@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 
 public class VRItemPlacer: MonoBehaviour
-{
+{/*
     [Header("VR 설치 설정")]
     public Transform controllerTransform;
     public InputActionReference placeAction;
@@ -63,6 +63,6 @@ public class VRItemPlacer: MonoBehaviour
             }
             Debug.Log("설치 완료");
         }
-    }
+    }*/
 
 }
