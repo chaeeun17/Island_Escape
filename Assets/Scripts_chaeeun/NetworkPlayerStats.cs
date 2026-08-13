@@ -17,8 +17,18 @@ public class NetworkPlayerStats : NetworkBehaviour
     public int CurrentThirst { get; private set; }
     public int CurrentStamina { get; private set; }
 
-    private bool isFainted = false;
-    private bool isSurvivalStarted = false;
+    [Networked] private NetworkBool isFainted { get; set; }
+    [Networked] private NetworkBool isSurvivalStarted { get; set; }
+    [Networked] private NetworkBool isRevived { get; set; }
+
+    [Header("Walk Animaton")]
+    [SerializeField] private Animator animator;
+
+    private static readonly int IsDeadHash = Animator.StringToHash("IsDead");
+    private static readonly int RevivedHash = Animator.StringToHash("Revived");
+
+    // private bool isFainted = false;
+    // private bool isSurvivalStarted = false;
 
     [Header("Decrease Rates (몇 초당 1씩 줄어들 것인가)")]
     public float hungerDecreaseInterval = 2.0f;
@@ -39,6 +49,9 @@ public class NetworkPlayerStats : NetworkBehaviour
     private float thirstTimer;
     private float staminaTimer;
 
+
+    private WarningVignetteController wvc;
+
     public override void Spawned()
     {
         // 🌟 내 조종 권한(HasInputAuthority)이 있는 "나 자신"이 아니라면 이 스크립트의 작동을 끕니다.
@@ -50,6 +63,39 @@ public class NetworkPlayerStats : NetworkBehaviour
         }
 
         // 내 캐릭터일 경우에만 LocalInstance로 지정
+        if (HasInputAuthority)
+        {
+            LocalInstance = this;
+        }
+
+        isSurvivalStarted = true;
+        isFainted = false;
+
+        // 캐릭터가 소환될 때 소유권(StateAuthority)을 가진 클라이언트가 최초 스탯 초기화
+        if (HasStateAuthority)
+        {
+            CurrentHunger = maxHunger;
+            CurrentThirst = maxThirst;
+            CurrentStamina = maxStamina;
+            //isFainted = false;
+            //isSurvivalStarted = false;
+            
+        }
+
+        Debug.Log("✅ [PlayerStats] Spawned 완료! 초기 스탯 100 설정됨.");
+
+        // 튜토리얼 완료 이벤트 구독
+        if (NetworkTutorialManager.Instance != null)
+        {
+            NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
+        }
+
+        wvc = GameObject.Find("Global Volume").GetComponent<WarningVignetteController>();
+    }
+
+    public void StartSurvival()
+    {
+        // 내 캐릭터를 LocalInstance로 확실히 지정
         LocalInstance = this;
 
         // 초기 스탯 100 세팅
@@ -86,6 +132,30 @@ public class NetworkPlayerStats : NetworkBehaviour
     // 🌟 퓨전 네트워크 업데이트 대신 일반 유니티 Update 사용 (내 화면에서만 독립 실행)
     private void Update()
     {
+        // UI 반영은 내 화면(HasInputAuthority)일 때만 처리
+        if (HasInputAuthority)
+        {
+            UpdateStatTexts();
+
+
+            if (CurrentHunger <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.HUNGER);
+            }
+            else if (CurrentThirst <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.THIRST);
+            }
+            else if (CurrentStamina <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.STAMINA);
+            }
+            else
+            {
+                WarningVignetteOff();
+            }
+        }
+
         if (!isSurvivalStarted || isFainted) return;
 
         // 시간에 따른 스탯 감소
@@ -209,5 +279,60 @@ public class NetworkPlayerStats : NetworkBehaviour
 
         CurrentStamina = Mathf.Max(CurrentStamina - amount, 0);
         UpdateStatTexts();
+    }
+    
+    //====================================
+    // 추가 (Vignette)
+    //====================================
+    private void WarningVignetteOn(Stats stats)
+    {
+        wvc.EnableWarningVignette(stats);
+    }
+
+    private void WarningVignetteOff()
+    {
+        wvc.DisableWarningVignette();
+    }
+
+    //====================================
+    // 추가 (Revive)
+    //====================================
+    public void Revive()
+    {
+        if (!isFainted) return;
+
+        isFainted = false;
+        isRevived = true;
+        CurrentHunger = maxHunger / 2;
+        CurrentStamina = maxStamina / 2;
+        CurrentThirst = maxThirst / 2;
+
+        if(animator != null)
+        {
+            animator.SetTrigger(RevivedHash);
+        }
+    }
+
+    public bool IsPlayerFainted()
+    {
+        return isFainted;
+    }
+
+    //====================================
+    // 추가 (Animation)
+    //====================================
+    public override void Render()
+    {
+        if (animator != null)
+        {
+            if (isFainted)
+            {
+                animator.SetTrigger(IsDeadHash);
+            }
+            else if (isRevived)
+            {
+                animator.SetTrigger(RevivedHash);
+            }
+        }
     }
 }

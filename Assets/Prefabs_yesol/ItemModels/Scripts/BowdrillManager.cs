@@ -3,9 +3,8 @@ using UnityEngine;
 
 public class BowdrillManager : NetworkBehaviour
 {
-    // public ParticleSystem startFire;
-    // public ParticleSystem completeFire;
     [SerializeField] private HandlePart handlePart;
+    [SerializeField] private HandleEndPart handleEndPart;
 
     [Header("Settings")]
     [SerializeField] private int startBurn = 10;
@@ -74,7 +73,7 @@ public class BowdrillManager : NetworkBehaviour
         // 서버/호스트에서만 트리거 카운트를 올리도록 제어 (중복 카운트 방지)
         if (!HasStateAuthority) return;
 
-        if (!isCompleted && other.CompareTag("Bow"))
+        if (!isCompleted && handleEndPart.isOnPedestal && other.CompareTag("Bow"))
         {
             count++;
         }

@@ -12,6 +12,7 @@ TagManager:
   - XROrigin
   - SpawnPoint
   - PlayerRoot
+  - Pedestal
   layers:
   - Default
   - TransparentFX

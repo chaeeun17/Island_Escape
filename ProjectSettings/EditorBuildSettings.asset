@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainScene.unity
     guid: 2e1dbea94c2ed2241847d39c840ec846
   - enabled: 1
+    path: Assets/Scenes_Yesol/GameScene_New.unity
+    guid: fc37a3c934533ca40bee439194874dfb
+  - enabled: 1
     path: Assets/Scenes/GameScene_New.unity
     guid: 95b2828d7c462b0408c5f32ac46c5f4c
   - enabled: 1
