@@ -13,6 +13,14 @@ public class Campfire : MonoBehaviour
     [Header("요리 설정")]
     public float cookTime = 3f;
 
+    [Header("휴식 설정 (체력 회복)")]
+    public float restTickInterval = 2.0f; // 몇 초마다 체력을 회복할지
+    public int staminaRestoreAmount = 5;  // 한 번에 회복할 체력량
+
+    // 휴식 시스템 관리를 위한 변수
+    private bool isPlayerInZone = false;
+    private Coroutine restCoroutine;
+
     private void Start()
     {
         UpdateFireState();
@@ -22,6 +30,24 @@ public class Campfire : MonoBehaviour
     {
         isLit = true;
         UpdateFireState();
+
+        // 불을 켰을 때 플레이어가 이미 주변에 있다면 즉시 휴식 시작
+        if (isPlayerInZone && restCoroutine == null)
+        {
+            restCoroutine = StartCoroutine(RestRoutine());
+        }
+    }
+
+    public void Extinguish()
+    {
+        isLit = false;
+        UpdateFireState();
+
+        if (restCoroutine != null)
+        {
+            StopCoroutine(restCoroutine);
+            restCoroutine = null;
+        }
     }
 
     private void UpdateFireState()
@@ -36,29 +62,76 @@ public class Campfire : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // 1. 불 켜기 로직 (횃불 등은 여전히 태그나 특정 로직 유지)
+        // 1. 불 켜기 로직
         if (other.CompareTag("Torch") && !isLit)
         {
             Ignite();
             return;
         }
 
-        // 2. 요리 로직 (아이템 특성 기반)
+        // 2. 플레이어 접근 시 휴식 영역 진입
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInZone = true;
+            Debug.Log("🔥 플레이어가 모닥불 주변에 접근했습니다. (휴식 가능)");
+
+            // 불이 켜져 있다면 체력 회복 코루틴 시작
+            if (isLit && restCoroutine == null)
+            {
+                restCoroutine = StartCoroutine(RestRoutine());
+            }
+        }
+
+        // 3. 요리 로직 
         if (isLit)
         {
-            // 충돌한 3D 오브젝트에서 WorldItem 스크립트 추출
             WorldItem worldItem = other.GetComponent<WorldItem>();
 
             if (worldItem != null && worldItem.itemData != null)
             {
-                // 아이템 데이터의 특성이 'RawFood'인지 확인
                 if (worldItem.itemData.GetItemType() == ItemType.RawFood)
                 {
-                    // 요리 코루틴 실행 (물리적 오브젝트와 원본 데이터 모두 전달)
                     StartCoroutine(CookFood(other.gameObject, worldItem.itemData));
                 }
             }
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        // 4. 플레이어가 휴식 영역을 벗어났을 때
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInZone = false;
+            Debug.Log("💨 플레이어가 모닥불 주변을 벗어났습니다. (휴식 중단)");
+
+            // 진행 중인 회복 코루틴이 있다면 정지
+            if (restCoroutine != null)
+            {
+                StopCoroutine(restCoroutine);
+                restCoroutine = null;
+            }
+        }
+    }
+
+    // 휴식(체력 회복) 코루틴
+    private IEnumerator RestRoutine()
+    {
+        // 불이 켜져 있고 플레이어가 영역 안에 있는 동안 반복 실행
+        while (isLit && isPlayerInZone)
+        {
+            // 정해진 시간(restTickInterval)만큼 대기
+            yield return new WaitForSeconds(restTickInterval);
+
+            // PlayerStats 싱글톤을 통해 체력 회복
+            if (PlayerStats.Instance != null)
+            {
+                PlayerStats.Instance.RestoreStamina(staminaRestoreAmount);
+                // Debug.Log($"[휴식 중] 체력 {staminaRestoreAmount} 회복됨."); 
+            }
+        }
+
+        restCoroutine = null; // 루프가 끝나면 코루틴 초기화
     }
 
     private IEnumerator CookFood(GameObject rawFoodObject, Item rawFoodData)
@@ -67,17 +140,13 @@ public class Campfire : MonoBehaviour
 
         yield return new WaitForSeconds(cookTime);
 
-        // 요리가 완료되는 시점까지 물체가 파괴되지 않고 남아있다면
         if (rawFoodObject != null)
         {
             Vector3 spawnPos = rawFoodObject.transform.position;
-
-            // 데이터에 등록된 구워진 결과물 가져오기
             Item cookedItemData = rawFoodData.GetCookedVersion();
 
             if (cookedItemData != null && cookedItemData.GetPrefab3D() != null)
             {
-                // 구워진 3D 프리팹 생성
                 Instantiate(cookedItemData.GetPrefab3D(), spawnPos, Quaternion.identity);
                 Debug.Log("요리 완성!");
             }
@@ -86,7 +155,6 @@ public class Campfire : MonoBehaviour
                 Debug.LogWarning("결과물 데이터나 3D 프리팹이 등록되지 않았습니다.");
             }
 
-            // 기존 날고기 3D 오브젝트 파괴
             Destroy(rawFoodObject);
         }
     }
