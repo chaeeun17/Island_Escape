@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5468705300161354490}
   - component: {fileID: 8616140537360684260}
   - component: {fileID: 2811538656399406792}
+  - component: {fileID: 8130703104982332277}
   m_Layer: 0
   m_Name: Item_FirePit
   m_TagString: Untagged
@@ -64,7 +65,8 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 8130703104982332277}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &2811538656399406792
 MonoBehaviour:
@@ -112,6 +114,25 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8130703104982332277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776350657752945536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea119756ed87c1f4f84d5d4eed08a570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkCampfire
+  _isLit:
+    _value: 0
+  fireParticles: {fileID: 0}
+  fireLight: {fileID: 0}
+  cookTime: 3
+  restTickInterval: 2
+  staminaRestoreAmount: 5
 --- !u!1 &3502499044383756920
 GameObject:
   m_ObjectHideFlags: 0
