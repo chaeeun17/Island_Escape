@@ -10,8 +10,8 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
 
-    [SerializeField] private HandController _leftHandController;
-    [SerializeField] private HandController _rightHandController;
+    [SerializeField] private Animator leftHandAnimator;
+    [SerializeField] private Animator rightHandAnimator;
 
     [SerializeField] private Animator leftHandAnimator;
     [SerializeField] private Animator rightHandAnimator;
