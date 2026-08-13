@@ -20,6 +20,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _jumpForce = 5f; // ���� ��
     [SerializeField] private float _snapTurnAngle = 45f; // �� ���� ȸ���� ����
 
+    [Header("Helicopter Rider")]
+    [SerializeField] private PlayerHelicopterRider playerHelicopterRider;
+
     [Header("Walk Animaton")]
     [SerializeField] private Animator animator;
     [Networked] private NetworkBool IsWalking { get; set; }
@@ -28,6 +31,8 @@ public class Player : NetworkBehaviour
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
     private NetworkButtons _previousButtons;
+
+    [Networked] public NetworkBool IsEscaped { get; set; }
 
     private void Awake()
     {
@@ -39,7 +44,9 @@ public class Player : NetworkBehaviour
         // �� ƽ���� �Է��� �����ϴ��� Ȯ��
         if (GetInput(out NetworkInputData data))
         {
-            // 0. ���޹��� ���� Ʈ��ŷ ��ǥ�� ��Ʈ��ũ �ƹ�Ÿ �ڽĵ鿡�� �״�� �����մϴ�.
+            // ===================================================
+            // 1. VR 아바타 트래킹 동기화 (IsEscaped 상태여도 계속 실행)
+            // ===================================================
             _netHead.localPosition = data.headPos;
             _netHead.localRotation = data.headRot;
 
@@ -49,14 +56,20 @@ public class Player : NetworkBehaviour
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
 
-            _leftHandController.Grip = data.leftGrip;
-            _leftHandController.Trigger = data.leftTrigger;
+            // _leftHandController.Grip = data.leftGrip;
+            // _leftHandController.Trigger = data.leftTrigger;
 
-            _rightHandController.Grip = data.rightGrip;
-            _rightHandController.Trigger = data.rightTrigger;
+            // _rightHandController.Grip = data.rightGrip;
+            // _rightHandController.Trigger = data.rightTrigger;
 
-            // 1. �Է� ��ȭ��(Pressed) ���
-            // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
+            // ===================================================
+            // 2. 탈출 상태 체크 (이동 및 조작 차단)
+            // ===================================================
+            if (IsEscaped) return;
+
+            // ===================================================
+            // 3. 기존 이동 / 스냅턴 / 점프 로직 (정상 플레이 시에만 실행)
+            // ===================================================
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 
@@ -140,6 +153,7 @@ public class Player : NetworkBehaviour
                     xrOrigin.transform.localPosition = Vector3.zero;
                     xrOrigin.transform.localRotation = Quaternion.identity;
 
+                    InputHandler.Instance.cameraOffset = xrOrigin.transform.Find("Camera Offset");
                     InputHandler.Instance._localHead = xrOrigin.transform.Find("Camera Offset/Main Camera");
                     InputHandler.Instance._localLeftHand = xrOrigin.transform.Find("Camera Offset/Left Hand");
                     InputHandler.Instance._localRightHand = xrOrigin.transform.Find("Camera Offset/Right Hand");

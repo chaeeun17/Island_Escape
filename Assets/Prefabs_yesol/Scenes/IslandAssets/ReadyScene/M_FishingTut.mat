@@ -118,7 +118,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _WaveHeight: 0.05
+    - _WaveHeight: 0
     - _WaveSize: 10
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
@@ -128,12 +128,12 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 2, g: 2, b: 2, a: 1}
-    - _MainTexColor: {r: 0, g: 0.9056604, b: 0.82333654, a: 1}
+    - _MainTexColor: {r: 0, g: 0.89714384, b: 0.90588236, a: 1}
     - _MainTexSpeed: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _MainTexTiling: {r: 5, g: 5, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _WaterColor: {r: 0.32075468, g: 0.7382904, b: 1, a: 1}
-    - _WaveSpeed: {r: 0.1, g: 0, b: 0, a: 0}
+    - _WaterColor: {r: 0, g: 0.6127167, b: 1, a: 1}
+    - _WaveSpeed: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7302818610255866217

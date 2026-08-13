@@ -10,6 +10,7 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     public static InputHandler Instance;
 
     [Header("Local XR Origin Transforms")]
+    public Transform cameraOffset;
     public Transform _localHead;
     public Transform _localLeftHand;
     public Transform _localRightHand;
@@ -60,9 +61,14 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_localHead == null) return;
 
         // XR Origin 기준의 '상대적'인 로컬 좌표를 가져와야 합니다.
+        /*
         _hPos = _localHead.localPosition; _hRot = _localHead.localRotation;
         _lPos = _localLeftHand.localPosition; _lRot = _localLeftHand.localRotation;
         _rPos = _localRightHand.localPosition; _rRot = _localRightHand.localRotation;
+        */
+        _hPos = _localHead.localPosition + cameraOffset.localPosition; _hRot = _localHead.localRotation;
+        _lPos = _localLeftHand.localPosition + cameraOffset.localPosition; _lRot = _localLeftHand.localRotation;
+        _rPos = _localRightHand.localPosition + cameraOffset.localPosition; _rRot = _localRightHand.localRotation;
 
         // 1. 유니티 Update() 프레임마다 New Input System의 값을 읽어와 변수에 저장합니다.
         Vector2 move = new Vector2();

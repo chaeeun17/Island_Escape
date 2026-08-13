@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 7451684527670044244}
   - component: {fileID: 4582099451257597219}
   - component: {fileID: 3697573881986140967}
+  - component: {fileID: 7099703050513496140}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: PlayerRoot
@@ -416,6 +417,7 @@ MonoBehaviour:
   - {fileID: 7451684527670044244}
   - {fileID: 4582099451257597219}
   - {fileID: 3697573881986140967}
+  - {fileID: 7099703050513496140}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
   ForceRemoteRenderTimeframe: 0
@@ -435,11 +437,16 @@ MonoBehaviour:
   _netLeftHand: {fileID: 3861314829521278033}
   _netRightHand: {fileID: 2792663871626109130}
   _netBody: {fileID: 5317829829436036228}
+  _leftHandController: {fileID: 0}
+  _rightHandController: {fileID: 0}
   _followAngle: 45
   _rotateSpeed: 8
   _jumpForce: 5
   _snapTurnAngle: 45
+  playerHelicopterRider: {fileID: 0}
   animator: {fileID: 186448883145184124}
+  _IsEscaped:
+    _value: 0
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
@@ -502,6 +509,7 @@ MonoBehaviour:
   _CurrentHunger: 0
   _CurrentThirst: 0
   _CurrentStamina: 0
+  animator: {fileID: 0}
   hungerDecreaseInterval: 2
   thirstDecreaseInterval: 1.5
   staminaDecreaseInterval: 3
@@ -527,6 +535,20 @@ MonoBehaviour:
   craftMenuPanel: {fileID: 0}
   bButtonAction: {fileID: 530629899127318567, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   yButtonAction: {fileID: 0}
+--- !u!114 &7099703050513496140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4657577435369037573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f2a47bab1d96014f83df241084c0d97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHelicopterRider
+  characterController: {fileID: 5631152598068217068}
+  playerScript: {fileID: 5294166491441838424}
 --- !u!1 &4664735668597634432
 GameObject:
   m_ObjectHideFlags: 0
