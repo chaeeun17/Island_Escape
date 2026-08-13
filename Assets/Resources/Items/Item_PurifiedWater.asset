@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Item
   ItemNumber: 20
   ItemName: PurifiedWater
-  ItemSprite: {fileID: 0}
+  ItemSprite: {fileID: 21300000, guid: 7a8177beb29bd3f499f4f09fbdf34e6c, type: 3}
   ItemDescription: 
   itemType: 5
   cookedVersion: {fileID: 0}

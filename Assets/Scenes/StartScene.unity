@@ -201,6 +201,10 @@ MonoBehaviour:
   _leftHandTurnAction: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _rightHandMoveAction: {fileID: -8198699208435500284, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _jumpAction: {fileID: -3875704489234743591, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _leftTriggerAction: {fileID: 0}
+  _leftGrabAction: {fileID: 0}
+  _rightTriggerAction: {fileID: 0}
+  _rightGrabAction: {fileID: 0}
 --- !u!114 &371160870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +474,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
