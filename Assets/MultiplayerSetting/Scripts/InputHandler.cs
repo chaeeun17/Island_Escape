@@ -10,7 +10,6 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     public static InputHandler Instance;
 
     [Header("Local XR Origin Transforms")]
-    public Transform cameraOffset;
     public Transform _localHead;
     public Transform _localLeftHand;
     public Transform _localRightHand;
@@ -25,11 +24,17 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private InputActionReference _rightHandMoveAction;
     [SerializeField] private InputActionReference _jumpAction;
 
+    [SerializeField] private InputActionReference _leftTriggerAction;
+    [SerializeField] private InputActionReference _leftGrabAction;
+    [SerializeField] private InputActionReference _rightTriggerAction;
+    [SerializeField] private InputActionReference _rightGrabAction;
 
     // 매 프레임 수집된 로컬 입력 값을 임시로 보관할 변수
     private Vector2 _moveDirection;
     private Vector2 _turnDirection;
     private bool _jumpPressed;
+
+    private float _leftTrigger = 0, _leftGrab = 0, _rightTrigger = 0, _rightGrab = 0;
 
     // 중요: 사용하기 전에 Action을 반드시 활성화(Enable)해줘야 합니다.
     private void OnEnable()
@@ -37,6 +42,12 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_leftHandTurnAction != null) _leftHandTurnAction.action.Enable();
         if (_rightHandMoveAction != null) _rightHandMoveAction.action.Enable();
         if (_jumpAction != null) _jumpAction.action.Enable();
+
+        if (_leftTriggerAction != null) _leftTriggerAction.action.Enable();
+        if (_leftGrabAction != null) _leftGrabAction.action.Enable();
+
+        if (_rightTriggerAction != null) _rightTriggerAction.action.Enable();
+        if (_rightGrabAction != null) _rightGrabAction.action.Enable();
     }
 
     private void OnDisable()
@@ -44,6 +55,12 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_leftHandTurnAction != null) _leftHandTurnAction.action.Disable();
         if (_rightHandMoveAction != null) _rightHandMoveAction.action.Disable();
         if (_jumpAction != null) _jumpAction.action.Disable();
+
+        if (_leftTriggerAction != null) _leftTriggerAction.action.Disable();
+        if (_leftGrabAction != null) _leftGrabAction.action.Disable();
+
+        if (_rightTriggerAction != null) _rightTriggerAction.action.Disable();
+        if (_rightGrabAction != null) _rightGrabAction.action.Disable();
     }
 
     // 싱글톤
@@ -61,14 +78,9 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_localHead == null) return;
 
         // XR Origin 기준의 '상대적'인 로컬 좌표를 가져와야 합니다.
-        /*
         _hPos = _localHead.localPosition; _hRot = _localHead.localRotation;
         _lPos = _localLeftHand.localPosition; _lRot = _localLeftHand.localRotation;
         _rPos = _localRightHand.localPosition; _rRot = _localRightHand.localRotation;
-        */
-        _hPos = _localHead.localPosition + cameraOffset.localPosition; _hRot = _localHead.localRotation;
-        _lPos = _localLeftHand.localPosition + cameraOffset.localPosition; _lRot = _localLeftHand.localRotation;
-        _rPos = _localRightHand.localPosition + cameraOffset.localPosition; _rRot = _localRightHand.localRotation;
 
         // 1. 유니티 Update() 프레임마다 New Input System의 값을 읽어와 변수에 저장합니다.
         Vector2 move = new Vector2();
@@ -88,6 +100,18 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         {
             _jumpPressed = true;
         }
+
+
+
+        if (_leftTriggerAction != null)
+            _leftTrigger = _leftTriggerAction.action.ReadValue<float>();
+        if (_leftGrabAction != null)
+            _leftGrab = _leftGrabAction.action.ReadValue<float>();
+
+        if (_rightTriggerAction != null)
+            _rightTrigger = _rightTriggerAction.action.ReadValue<float>();
+        if (_rightGrabAction != null)
+            _rightGrab = _rightGrabAction.action.ReadValue<float>();
     }
 
     // 2. Fusion 엔진이 "네트워크로 보낼 입력 데이터 줘!" 하고 틱마다 호출하는 메서드
@@ -123,6 +147,9 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         data.headPos = _hPos; data.headRot = _hRot;
         data.leftHandPos = _lPos; data.leftHandRot = _lRot;
         data.rightHandPos = _rPos; data.rightHandRot = _rRot;
+
+        data.leftTrigger = _leftTrigger; data.leftGrab = _leftGrab;
+        data.rightTrigger = _rightTrigger; data.rightGrab = _rightGrab;
 
         // Fusion 엔진에 입력 데이터 전달
         input.Set(data);

@@ -13,6 +13,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private HandController _leftHandController;
     [SerializeField] private HandController _rightHandController;
 
+    [SerializeField] private Animator leftHandAnimator;
+    [SerializeField] private Animator rightHandAnimator;
+
     [SerializeField] private float _followAngle = 45f; // ������ ������� �����ϴ� ����
     [SerializeField] private float _rotateSpeed = 8f; // ȸ�� �ӵ�
 
@@ -20,19 +23,22 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _jumpForce = 5f; // ���� ��
     [SerializeField] private float _snapTurnAngle = 45f; // �� ���� ȸ���� ����
 
-    [Header("Helicopter Rider")]
-    [SerializeField] private PlayerHelicopterRider playerHelicopterRider;
-
     [Header("Walk Animaton")]
     [SerializeField] private Animator animator;
     [Networked] private NetworkBool IsWalking { get; set; }
+
+    /*
+    [Networked] public float LeftGrab { get; set; }
+    [Networked] public float LeftTrigger { get; set; }
+    [Networked] public float RightGrab { get; set; }
+    [Networked] public float RightTrigger { get; set; }
+    */
+
     // Fusion 2 ����ȭ�� ���� ChangeDetector �� Animator Hash
     private ChangeDetector _changeDetector;
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
     private NetworkButtons _previousButtons;
-
-    [Networked] public NetworkBool IsEscaped { get; set; }
 
     private void Awake()
     {
@@ -44,9 +50,7 @@ public class Player : NetworkBehaviour
         // �� ƽ���� �Է��� �����ϴ��� Ȯ��
         if (GetInput(out NetworkInputData data))
         {
-            // ===================================================
-            // 1. VR 아바타 트래킹 동기화 (IsEscaped 상태여도 계속 실행)
-            // ===================================================
+            // 0. ���޹��� ���� Ʈ��ŷ ��ǥ�� ��Ʈ��ũ �ƹ�Ÿ �ڽĵ鿡�� �״�� �����մϴ�.
             _netHead.localPosition = data.headPos;
             _netHead.localRotation = data.headRot;
 
@@ -56,20 +60,21 @@ public class Player : NetworkBehaviour
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
 
-            // _leftHandController.Grip = data.leftGrip;
-            // _leftHandController.Trigger = data.leftTrigger;
+            /*
+            LeftGrab = data.leftGrab;
+            LeftTrigger = data.leftTrigger;
 
-            // _rightHandController.Grip = data.rightGrip;
-            // _rightHandController.Trigger = data.rightTrigger;
+            RightGrab = data.rightGrab;
+            RightTrigger = data.rightTrigger;
+            */
+            _leftHandController.Grip = data.leftGrip;
+            _leftHandController.Trigger = data.leftTrigger;
 
-            // ===================================================
-            // 2. 탈출 상태 체크 (이동 및 조작 차단)
-            // ===================================================
-            if (IsEscaped) return;
+            _rightHandController.Grip = data.rightGrip;
+            _rightHandController.Trigger = data.rightTrigger;
 
-            // ===================================================
-            // 3. 기존 이동 / 스냅턴 / 점프 로직 (정상 플레이 시에만 실행)
-            // ===================================================
+            // 1. �Է� ��ȭ��(Pressed) ���
+            // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 
@@ -130,6 +135,15 @@ public class Player : NetworkBehaviour
         }
     }
 
+    private void Update()
+    {
+        leftHandAnimator.SetFloat("Grip", LeftGrab);
+        leftHandAnimator.SetFloat("Trigger", LeftTrigger);
+
+        rightHandAnimator.SetFloat("Grip", RightGrab);
+        rightHandAnimator.SetFloat("Trigger", RightTrigger);
+    }
+
     public override async void Spawned()
     {
         // 1. ���� ���(��: 100ms = 0.1��) ����Ͽ� Fusion�� ����(Authority)�� ������ ������ �ð��� �ݴϴ�.
@@ -153,7 +167,6 @@ public class Player : NetworkBehaviour
                     xrOrigin.transform.localPosition = Vector3.zero;
                     xrOrigin.transform.localRotation = Quaternion.identity;
 
-                    InputHandler.Instance.cameraOffset = xrOrigin.transform.Find("Camera Offset");
                     InputHandler.Instance._localHead = xrOrigin.transform.Find("Camera Offset/Main Camera");
                     InputHandler.Instance._localLeftHand = xrOrigin.transform.Find("Camera Offset/Left Hand");
                     InputHandler.Instance._localRightHand = xrOrigin.transform.Find("Camera Offset/Right Hand");
@@ -174,6 +187,7 @@ public class Player : NetworkBehaviour
         }
     }
 
+/*
     private void InitPlayerStats()
     {
         NetworkPlayerStats stats = GetComponent<NetworkPlayerStats>();
@@ -187,7 +201,8 @@ public class Player : NetworkBehaviour
         {
             Debug.LogWarning("⚠️ [Player] 이 프리팹에 PlayerStats 컴포넌트가 없습니다.");
         }
-    }
+    }*/ 
+    
     public override void Render()
     {
         UpdateBodyRotation();

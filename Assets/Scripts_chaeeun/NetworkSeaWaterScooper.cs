@@ -58,7 +58,7 @@ public class NetworkSeaWaterScooper : NetworkBehaviour
             if (spawnedBucketNetObj != null)
             {
                 GameObject spawnedBucket = spawnedBucketNetObj.gameObject;
-                spawnedBucket.name = "SeaWaterBucket";
+                //spawnedBucket.name = "SeaWaterBucket";
 
                 // 4. 생성된 네트워크 양동이를 내 손에 잡기 (Local)
                 var grabInteractable = spawnedBucket.GetComponent<XRGrabInteractable>();

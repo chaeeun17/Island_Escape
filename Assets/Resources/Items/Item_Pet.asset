@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d942ab5e849944996256aa981ea7c6, type: 3}
+  m_Name: Item_Pet
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  ItemNumber: 16
+  ItemName: Pet
+  ItemSprite: {fileID: 21300000, guid: 5d29e5008451660459221207983b0608, type: 3}
+  ItemDescription: 
+  itemType: 1
+  cookedVersion: {fileID: 0}
+  prefab3D: {fileID: 3008231697720813712, guid: 3a6c8faa364ea344d9f9ead711beb9e1, type: 3}
