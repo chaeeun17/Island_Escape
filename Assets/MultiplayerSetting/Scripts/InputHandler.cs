@@ -25,16 +25,16 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private InputActionReference _jumpAction;
 
     [SerializeField] private InputActionReference _leftTriggerAction;
-    [SerializeField] private InputActionReference _leftGrabAction;
+    [SerializeField] private InputActionReference _leftGripAction;
     [SerializeField] private InputActionReference _rightTriggerAction;
-    [SerializeField] private InputActionReference _rightGrabAction;
+    [SerializeField] private InputActionReference _rightGripAction;
 
     // 매 프레임 수집된 로컬 입력 값을 임시로 보관할 변수
     private Vector2 _moveDirection;
     private Vector2 _turnDirection;
     private bool _jumpPressed;
 
-    private float _leftTrigger = 0, _leftGrab = 0, _rightTrigger = 0, _rightGrab = 0;
+    private float _leftTrigger = 0, _leftGrip = 0, _rightTrigger = 0, _rightGrip = 0;
 
     // 중요: 사용하기 전에 Action을 반드시 활성화(Enable)해줘야 합니다.
     private void OnEnable()
@@ -44,10 +44,10 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_jumpAction != null) _jumpAction.action.Enable();
 
         if (_leftTriggerAction != null) _leftTriggerAction.action.Enable();
-        if (_leftGrabAction != null) _leftGrabAction.action.Enable();
+        if (_leftGripAction != null) _leftGripAction.action.Enable();
 
         if (_rightTriggerAction != null) _rightTriggerAction.action.Enable();
-        if (_rightGrabAction != null) _rightGrabAction.action.Enable();
+        if (_rightGripAction != null) _rightGripAction.action.Enable();
     }
 
     private void OnDisable()
@@ -57,10 +57,10 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_jumpAction != null) _jumpAction.action.Disable();
 
         if (_leftTriggerAction != null) _leftTriggerAction.action.Disable();
-        if (_leftGrabAction != null) _leftGrabAction.action.Disable();
+        if (_leftGripAction != null) _leftGripAction.action.Disable();
 
         if (_rightTriggerAction != null) _rightTriggerAction.action.Disable();
-        if (_rightGrabAction != null) _rightGrabAction.action.Disable();
+        if (_rightGripAction != null) _rightGripAction.action.Disable();
     }
 
     // 싱글톤
@@ -105,13 +105,13 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_leftTriggerAction != null)
             _leftTrigger = _leftTriggerAction.action.ReadValue<float>();
-        if (_leftGrabAction != null)
-            _leftGrab = _leftGrabAction.action.ReadValue<float>();
+        if (_leftGripAction != null)
+            _leftGrip = _leftGripAction.action.ReadValue<float>();
 
         if (_rightTriggerAction != null)
             _rightTrigger = _rightTriggerAction.action.ReadValue<float>();
-        if (_rightGrabAction != null)
-            _rightGrab = _rightGrabAction.action.ReadValue<float>();
+        if (_rightGripAction != null)
+            _rightGrip = _rightGripAction.action.ReadValue<float>();
     }
 
     // 2. Fusion 엔진이 "네트워크로 보낼 입력 데이터 줘!" 하고 틱마다 호출하는 메서드
@@ -148,8 +148,8 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         data.leftHandPos = _lPos; data.leftHandRot = _lRot;
         data.rightHandPos = _rPos; data.rightHandRot = _rRot;
 
-        data.leftTrigger = _leftTrigger; data.leftGrab = _leftGrab;
-        data.rightTrigger = _rightTrigger; data.rightGrab = _rightGrab;
+        data.leftTrigger = _leftTrigger; data.leftGrip = _leftGrip;
+        data.rightTrigger = _rightTrigger; data.rightGrip = _rightGrip;
 
         // Fusion 엔진에 입력 데이터 전달
         input.Set(data);

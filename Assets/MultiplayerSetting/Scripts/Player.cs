@@ -27,6 +27,8 @@ public class Player : NetworkBehaviour
     [SerializeField] private Animator animator;
     [Networked] private NetworkBool IsWalking { get; set; }
 
+    [Networked] public NetworkBool IsEscaped { get; set; }
+
     /*
     [Networked] public float LeftGrab { get; set; }
     [Networked] public float LeftTrigger { get; set; }
@@ -137,11 +139,11 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
-        leftHandAnimator.SetFloat("Grip", LeftGrab);
-        leftHandAnimator.SetFloat("Trigger", LeftTrigger);
+        leftHandAnimator.SetFloat("Grip", _leftHandController.Grip);
+        leftHandAnimator.SetFloat("Trigger", _leftHandController.Trigger);
 
-        rightHandAnimator.SetFloat("Grip", RightGrab);
-        rightHandAnimator.SetFloat("Trigger", RightTrigger);
+        rightHandAnimator.SetFloat("Grip", _rightHandController.Grip);
+        rightHandAnimator.SetFloat("Trigger", _rightHandController.Trigger);
     }
 
     public override async void Spawned()
