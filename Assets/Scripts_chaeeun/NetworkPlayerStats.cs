@@ -21,7 +21,7 @@ public class NetworkPlayerStats : NetworkBehaviour
     [Networked] private NetworkBool isSurvivalStarted { get; set; }
     [Networked] private NetworkBool isRevived { get; set; }
 
-    [Header("Walk Animaton")]
+    [Header("Faint/Revive Animaton")]
     [SerializeField] private Animator animator;
 
     private static readonly int IsDeadHash = Animator.StringToHash("IsDead");

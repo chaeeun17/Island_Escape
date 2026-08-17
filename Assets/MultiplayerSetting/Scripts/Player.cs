@@ -1,5 +1,6 @@
 using Fusion;
 using System.Threading.Tasks; // �ʼ� �߰�
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
@@ -164,7 +165,6 @@ public class Player : NetworkBehaviour
                     Debug.Log("Player : " + transform.position);
                     Debug.Log("XR Origin : " + xrOrigin.transform.position);
                     Debug.Log("Main Camera : " + InputHandler.Instance._localHead.position);
-
                     // Debug.Log("XR Origin�� ���������� Player Prefab ������ ���յǾ����ϴ�.");
                 }
                 else
