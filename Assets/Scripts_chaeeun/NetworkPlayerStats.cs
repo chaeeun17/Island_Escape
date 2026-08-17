@@ -49,6 +49,8 @@ public class NetworkPlayerStats : NetworkBehaviour
     private float thirstTimer;
     private float staminaTimer;
 
+    private bool isVignetteOn = false;
+
 
     private WarningVignetteController wvc;
 
@@ -132,31 +134,40 @@ public class NetworkPlayerStats : NetworkBehaviour
     // 🌟 퓨전 네트워크 업데이트 대신 일반 유니티 Update 사용 (내 화면에서만 독립 실행)
     private void Update()
     {
+        if (!isSurvivalStarted || isFainted) return;
+
         // UI 반영은 내 화면(HasInputAuthority)일 때만 처리
         if (HasInputAuthority)
         {
             UpdateStatTexts();
 
-
-            if (CurrentHunger <= warningThreshold)
+            if (!isVignetteOn)
             {
-                WarningVignetteOn(Stats.HUNGER);
-            }
-            else if (CurrentThirst <= warningThreshold)
-            {
-                WarningVignetteOn(Stats.THIRST);
-            }
-            else if (CurrentStamina <= warningThreshold)
-            {
-                WarningVignetteOn(Stats.STAMINA);
+                if (CurrentHunger <= warningThreshold)
+                {
+                    WarningVignetteOn(Stats.HUNGER);
+                    isVignetteOn = true;
+                }
+                else if (CurrentThirst <= warningThreshold)
+                {
+                    WarningVignetteOn(Stats.THIRST);
+                    isVignetteOn = true;
+                }
+                else if (CurrentStamina <= warningThreshold)
+                {
+                    WarningVignetteOn(Stats.STAMINA);
+                    isVignetteOn = true;
+                }
             }
             else
             {
-                WarningVignetteOff();
+                if (CurrentHunger > warningThreshold && CurrentThirst > warningThreshold && CurrentStamina > warningThreshold)
+                {
+                    WarningVignetteOff();
+                    isVignetteOn = false;
+                }
             }
         }
-
-        if (!isSurvivalStarted || isFainted) return;
 
         // 시간에 따른 스탯 감소
         HandleTimedDecrease();

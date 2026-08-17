@@ -13,9 +13,6 @@ public class Player : NetworkBehaviour
     [SerializeField] private Animator leftHandAnimator;
     [SerializeField] private Animator rightHandAnimator;
 
-    [SerializeField] private Animator leftHandAnimator;
-    [SerializeField] private Animator rightHandAnimator;
-
     [SerializeField] private float _followAngle = 45f; // ������ ������� �����ϴ� ����
     [SerializeField] private float _rotateSpeed = 8f; // ȸ�� �ӵ�
 
@@ -29,12 +26,10 @@ public class Player : NetworkBehaviour
 
     [Networked] public NetworkBool IsEscaped { get; set; }
 
-    /*
     [Networked] public float LeftGrab { get; set; }
     [Networked] public float LeftTrigger { get; set; }
     [Networked] public float RightGrab { get; set; }
     [Networked] public float RightTrigger { get; set; }
-    */
 
     // Fusion 2 ����ȭ�� ���� ChangeDetector �� Animator Hash
     private ChangeDetector _changeDetector;
@@ -62,19 +57,12 @@ public class Player : NetworkBehaviour
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
 
-            /*
-            LeftGrab = data.leftGrab;
+            LeftGrab = data.leftGrip;
             LeftTrigger = data.leftTrigger;
 
-            RightGrab = data.rightGrab;
+            RightGrab = data.rightGrip;
             RightTrigger = data.rightTrigger;
-            */
-            _leftHandController.Grip = data.leftGrip;
-            _leftHandController.Trigger = data.leftTrigger;
-
-            _rightHandController.Grip = data.rightGrip;
-            _rightHandController.Trigger = data.rightTrigger;
-
+            
             // 1. �Է� ��ȭ��(Pressed) ���
             // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
             var pressed = data.buttons.GetPressed(_previousButtons);
@@ -139,11 +127,11 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
-        leftHandAnimator.SetFloat("Grip", _leftHandController.Grip);
-        leftHandAnimator.SetFloat("Trigger", _leftHandController.Trigger);
+        leftHandAnimator.SetFloat("Grip", LeftGrab);
+        leftHandAnimator.SetFloat("Trigger", LeftTrigger);
 
-        rightHandAnimator.SetFloat("Grip", _rightHandController.Grip);
-        rightHandAnimator.SetFloat("Trigger", _rightHandController.Trigger);
+        rightHandAnimator.SetFloat("Grip", RightGrab);
+        rightHandAnimator.SetFloat("Trigger", RightTrigger);
     }
 
     public override async void Spawned()

@@ -825,6 +825,7 @@ GameObject:
   - component: {fileID: 4582099451257597219}
   - component: {fileID: 3697573881986140967}
   - component: {fileID: 6484348692411538944}
+  - component: {fileID: 1366045897206673347}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: PlayerRoot
@@ -875,6 +876,7 @@ MonoBehaviour:
   - {fileID: 4582099451257597219}
   - {fileID: 3697573881986140967}
   - {fileID: 6484348692411538944}
+  - {fileID: 1366045897206673347}
   - {fileID: 2728010740476956936}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
@@ -902,6 +904,8 @@ MonoBehaviour:
   _jumpForce: 5
   _snapTurnAngle: 45
   animator: {fileID: 186448883145184124}
+  _IsEscaped:
+    _value: 0
   _LeftGrab: 0
   _LeftTrigger: 0
   _RightGrab: 0
@@ -965,6 +969,7 @@ MonoBehaviour:
   maxHunger: 100
   maxThirst: 100
   maxStamina: 100
+  animator: {fileID: 0}
   hungerDecreaseInterval: 2
   thirstDecreaseInterval: 1.5
   staminaDecreaseInterval: 3
@@ -1004,6 +1009,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkCountdown
   countdownText: {fileID: 2260950223963328409}
   realMinutesPerGameDay: 10
+--- !u!114 &1366045897206673347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4657577435369037573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f2a47bab1d96014f83df241084c0d97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHelicopterRider
+  characterController: {fileID: 5631152598068217068}
+  playerScript: {fileID: 5294166491441838424}
+  climbSpeedMultiplier: 1
+  maxClimbY: 10
+  minClimbY: -2
 --- !u!1 &4664735668597634432
 GameObject:
   m_ObjectHideFlags: 0
