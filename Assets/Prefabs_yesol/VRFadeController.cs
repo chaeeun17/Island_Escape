@@ -1,46 +1,71 @@
 using System.Collections;
+using Fusion;
 using UnityEngine;
 
-public class VRFadeController : MonoBehaviour
+public class VRFadeController : NetworkBehaviour
 {
     [SerializeField] private Renderer fadeRenderer;
     [SerializeField] private float fadeDuration = 2f;
+    private static readonly int ColorProp = Shader.PropertyToID("_BaseColor");
 
-    private static readonly int ColorProp = Shader.PropertyToID("_Color");
+    private Material matInstance;
+    private Coroutine currentFade;
 
-    public IEnumerator FadeToTransparent()
+    public override void Spawned()
     {
-        Material mat = fadeRenderer.material;
-        Color c = mat.GetColor(ColorProp);
-        float t = 1f;
+        var rootNO = GetComponentInParent<NetworkObject>(true);
 
-        while (t < fadeDuration)
+        if (rootNO == null || !rootNO.HasInputAuthority)
         {
-            t -= Time.deltaTime;
-            c.a = Mathf.Clamp01(t / fadeDuration);
-            mat.SetColor(ColorProp, c);
-            yield return null;
+            fadeRenderer.enabled = false;
+            enabled = false;
+            return;
         }
 
-        c.a = 0f;
-        mat.SetColor(ColorProp, c);
+        matInstance = fadeRenderer.material;
     }
 
-    public IEnumerator FadeToWhite()
+    public void StartFadeToTransparent()
     {
-        Material mat = fadeRenderer.material;
-        Color c = mat.GetColor(ColorProp);
-        float t = 0f;
+        // if (!Object.HasInputAuthority) return; // 안전장치
+        if (currentFade != null) StopCoroutine(currentFade);
+        currentFade = StartCoroutine(FadeToTransparent());
+    }
 
+    public void StartFadeToWhite()
+    {
+        // if (!Object.HasInputAuthority) return;
+        if (currentFade != null) StopCoroutine(currentFade);
+        currentFade = StartCoroutine(FadeToWhite());
+    }
+
+    private IEnumerator FadeToTransparent()
+    {
+        Color c = matInstance.GetColor(ColorProp);
+        float t = 0f;
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            c.a = 1f - Mathf.Clamp01(t / fadeDuration);
+            matInstance.SetColor(ColorProp, c);
+            yield return null;
+        }
+        c.a = 0f;
+        matInstance.SetColor(ColorProp, c);
+    }
+
+    private IEnumerator FadeToWhite()
+    {
+        Color c = matInstance.GetColor(ColorProp);
+        float t = 0f;
         while (t < fadeDuration)
         {
             t += Time.deltaTime;
             c.a = Mathf.Clamp01(t / fadeDuration);
-            mat.SetColor(ColorProp, c);
+            matInstance.SetColor(ColorProp, c);
             yield return null;
         }
-
         c.a = 1f;
-        mat.SetColor(ColorProp, c);
+        matInstance.SetColor(ColorProp, c);
     }
 }

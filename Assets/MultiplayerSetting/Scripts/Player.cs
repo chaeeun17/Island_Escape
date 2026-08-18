@@ -64,8 +64,6 @@ public class Player : NetworkBehaviour
             RightGrab = data.rightGrip;
             RightTrigger = data.rightTrigger;
             
-            // 1. �Է� ��ȭ��(Pressed) ���
-            // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 

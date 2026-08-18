@@ -17,9 +17,12 @@ public class NetworkPlayerStats : NetworkBehaviour
     public int CurrentThirst { get; private set; }
     public int CurrentStamina { get; private set; }
 
-    [Networked] private NetworkBool isFainted { get; set; }
+    [Networked, OnChangedRender(nameof(OnFaintedChanged))]
+    private NetworkBool isFainted { get; set; }
+    [Networked, OnChangedRender(nameof(OnRevivedChanged))]
+    private NetworkBool isRevived { get; set; }
     [Networked] private NetworkBool isSurvivalStarted { get; set; }
-    [Networked] private NetworkBool isRevived { get; set; }
+
 
     [Header("Faint/Revive Animaton")]
     [SerializeField] private Animator animator;
@@ -28,6 +31,7 @@ public class NetworkPlayerStats : NetworkBehaviour
     public NetworkBool IsVisible { get; set; } = true;
     [SerializeField] private Renderer animatedHead;
     [SerializeField] private Renderer networkedHead;
+    [SerializeField] private VRFadeController vfc;
 
     private static readonly int IsDeadHash = Animator.StringToHash("IsDead");
     private static readonly int RevivedHash = Animator.StringToHash("Revived");
@@ -61,6 +65,7 @@ public class NetworkPlayerStats : NetworkBehaviour
 
     public override void Spawned()
     {
+        /*
         // 🌟 내 조종 권한(HasInputAuthority)이 있는 "나 자신"이 아니라면 이 스크립트의 작동을 끕니다.
         // (상대방 화면에서 내 스탯 타이머가 따로 도는 것을 방지)
         if (!HasInputAuthority)
@@ -86,12 +91,32 @@ public class NetworkPlayerStats : NetworkBehaviour
             CurrentStamina = maxStamina;
             //isFainted = false;
             //isSurvivalStarted = false;
-            
         }
 
         Debug.Log("✅ [PlayerStats] Spawned 완료! 초기 스탯 100 설정됨.");
 
         // 튜토리얼 완료 이벤트 구독
+        if (NetworkTutorialManager.Instance != null)
+        {
+            NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
+        }
+
+        wvc = GameObject.Find("Global Volume").GetComponent<WarningVignetteController>();
+        */
+        // 🌟 컴포넌트 전체를 끄지 않음 - Render()는 모두에게 돌아야 애니메이션 동기화됨
+        if (HasInputAuthority)
+        {
+            LocalInstance = this;
+            isSurvivalStarted = true;
+            isFainted = false;
+
+            CurrentHunger = maxHunger;
+            CurrentThirst = maxThirst;
+            CurrentStamina = maxStamina;
+        }
+
+        Debug.Log("✅ [PlayerStats] Spawned 완료!");
+
         if (NetworkTutorialManager.Instance != null)
         {
             NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
@@ -139,48 +164,41 @@ public class NetworkPlayerStats : NetworkBehaviour
     // 🌟 퓨전 네트워크 업데이트 대신 일반 유니티 Update 사용 (내 화면에서만 독립 실행)
     private void Update()
     {
+        if (!HasInputAuthority) return;
+
         if (!isSurvivalStarted || isFainted) return;
 
-        // UI 반영은 내 화면(HasInputAuthority)일 때만 처리
-        if (HasInputAuthority)
-        {
-            UpdateStatTexts();
+        UpdateStatTexts();
 
-            if (!isVignetteOn)
+        if (!isVignetteOn)
+        {
+            if (CurrentHunger <= warningThreshold)
             {
-                if (CurrentHunger <= warningThreshold)
-                {
-                    WarningVignetteOn(Stats.HUNGER);
-                    isVignetteOn = true;
-                }
-                else if (CurrentThirst <= warningThreshold)
-                {
-                    WarningVignetteOn(Stats.THIRST);
-                    isVignetteOn = true;
-                }
-                else if (CurrentStamina <= warningThreshold)
-                {
-                    WarningVignetteOn(Stats.STAMINA);
-                    isVignetteOn = true;
-                }
+                WarningVignetteOn(Stats.HUNGER);
+                isVignetteOn = true;
             }
-            else
+            else if (CurrentThirst <= warningThreshold)
             {
-                if (CurrentHunger > warningThreshold && CurrentThirst > warningThreshold && CurrentStamina > warningThreshold)
-                {
-                    WarningVignetteOff();
-                    isVignetteOn = false;
-                }
+                WarningVignetteOn(Stats.THIRST);
+                isVignetteOn = true;
+            }
+            else if (CurrentStamina <= warningThreshold)
+            {
+                WarningVignetteOn(Stats.STAMINA);
+                isVignetteOn = true;
+            }
+        }
+        else
+        {
+            if (CurrentHunger > warningThreshold && CurrentThirst > warningThreshold && CurrentStamina > warningThreshold)
+            {
+                WarningVignetteOff();
+                isVignetteOn = false;
             }
         }
 
-        // 시간에 따른 스탯 감소
         HandleTimedDecrease();
-
-        // 기절 조건 체크
         CheckFaintConditions();
-
-        // UI 텍스트 갱신
         UpdateStatTexts();
     }
 
@@ -225,6 +243,8 @@ public class NetworkPlayerStats : NetworkBehaviour
     {
         isFainted = true;
         Debug.LogError("🚨 [기절] 스탯 중 하나가 0이 되어 기절했습니다!");
+
+        vfc.StartFadeToWhite();
     }
 
     private void UpdateStatTexts()
@@ -313,6 +333,7 @@ public class NetworkPlayerStats : NetworkBehaviour
     //====================================
     // 추가 (Revive)
     //====================================
+    /*
     public void Revive()
     {
         if (!isFainted) return;
@@ -329,8 +350,46 @@ public class NetworkPlayerStats : NetworkBehaviour
             animator.SetTrigger(RevivedHash);
         }
         SetHeadVisible(true);
+
+        vfc.StartFadeToTransparent();
+    }
+    */
+    // NetworkPlayerStats.cs
+
+    public void Revive()
+    {
+        if (!isFainted) return;
+        if (isRevived) return;
+
+        if (Object.HasStateAuthority)
+        {
+            DoRevive();
+        }
+        else
+        {
+            RPC_RequestRevive();
+        }
     }
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestRevive()
+    {
+        if (!isFainted) return;
+        if (isRevived) return;
+        DoRevive();
+    }
+
+    private void DoRevive()
+    {
+        isFainted = false;
+        isRevived = true;
+        CurrentHunger = maxHunger / 2;
+        CurrentStamina = maxStamina / 2;
+        CurrentThirst = maxThirst / 2;
+
+        SetHeadVisible(true);
+        vfc.StartFadeToTransparent();
+    }
     public bool IsPlayerFainted()
     {
         return isFainted;
@@ -339,6 +398,7 @@ public class NetworkPlayerStats : NetworkBehaviour
     //====================================
     // 추가 (Animation)
     //====================================
+    /*
     public override void Render()
     {
         if (animator != null)
@@ -350,7 +410,7 @@ public class NetworkPlayerStats : NetworkBehaviour
             }
         }
     }
-
+    */
     // 로컬에서 호출하는 함수 (버튼, 트리거 등에서 사용)
     public void SetHeadVisible(bool visible)
     {
@@ -376,5 +436,34 @@ public class NetworkPlayerStats : NetworkBehaviour
     {
         networkedHead.enabled = visible;
         animatedHead.enabled = !visible;
+    }
+    private void OnFaintedChanged()
+    {
+        if (animator == null) return;
+
+        if (isFainted)
+        {
+            SetHeadVisible(false);
+            animator.SetTrigger(IsDeadHash);
+
+            // 🌟 fade는 본인 화면에서만 의미 있으므로 소유자만 실행
+            if (HasInputAuthority)
+            {
+                vfc.StartFadeToWhite();
+            }
+        }
+    }
+
+    private void OnRevivedChanged()
+    {
+        if (isRevived && animator != null)
+        {
+            animator.SetTrigger(RevivedHash);
+
+            if (HasInputAuthority)
+            {
+                vfc.StartFadeToTransparent();
+            }
+        }
     }
 }

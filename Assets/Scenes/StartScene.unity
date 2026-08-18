@@ -201,10 +201,10 @@ MonoBehaviour:
   _leftHandTurnAction: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _rightHandMoveAction: {fileID: -8198699208435500284, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _jumpAction: {fileID: -3875704489234743591, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  _leftTriggerAction: {fileID: 0}
-  _leftGripAction: {fileID: 0}
-  _rightTriggerAction: {fileID: 0}
-  _rightGripAction: {fileID: 0}
+  _leftTriggerAction: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _leftGripAction: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _rightTriggerAction: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _rightGripAction: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!114 &371160870
 MonoBehaviour:
   m_ObjectHideFlags: 0

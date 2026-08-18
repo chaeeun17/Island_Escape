@@ -4,8 +4,6 @@ using Fusion; // 🌟 Fusion 라이브러리 추가
 
 public class NetworkUIManager : NetworkBehaviour
 {
-    public static NetworkUIManager Instance { get; private set; }
-
     public Transform headTransform; // XR Origin의 Camera
 
     [Header("연결할 UI 패널 오브젝트")]
@@ -17,12 +15,6 @@ public class NetworkUIManager : NetworkBehaviour
     [SerializeField] private InputActionReference yButtonAction; // 왼손 (Y)
 
     private NetworkObject parentPlayerNetObj;
-
-    void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     // 🌟 Fusion NetworkObject 생성(Spawn) 시점에 입력 권한 체크
     public override void Spawned()
