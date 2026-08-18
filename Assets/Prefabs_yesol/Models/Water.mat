@@ -42,9 +42,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FadeDistance: 0.461
+    - _FadeDistance: 0.5
     - _FoamAmount: 1
-    - _FoamCutoff: 12
+    - _FoamCutoff: 50
     - _FoamScale: 300
     - _FoamSpeed: 0.007
     - _QueueControl: 0
@@ -53,6 +53,7 @@ Material:
     - _Speed: 0.01
     - _WaveHeight: 0.01
     - _WaveSize: 10
+    - _XRMotionVectorsPass: 1
     m_Colors:
     - _BaseColor: {r: 0.22467962, g: 0.87652767, b: 0.8820755, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}

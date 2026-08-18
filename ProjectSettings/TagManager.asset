@@ -12,6 +12,8 @@ TagManager:
   - XROrigin
   - SpawnPoint
   - PlayerRoot
+  - Pedestal
+  - ReviveRange
   layers:
   - Default
   - TransparentFX

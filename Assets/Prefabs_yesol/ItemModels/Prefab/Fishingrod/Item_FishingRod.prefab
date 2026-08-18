@@ -818,6 +818,7 @@ MonoBehaviour:
   _targetWaitTime: 0
   _isCatch: 0
   _fishType: 0
+  hapticTimer: 0
   dummyFloat: {fileID: 841509259363372430}
   floatPrefab: {fileID: 4713418083766020920, guid: 42c0d6a71f1327c4f82429014e5aa26c, type: 3}
   rodTip: {fileID: 4635283939554066626}
@@ -858,6 +859,7 @@ MonoBehaviour:
   - {fileID: 4621514415231975624}
   NetworkedBehaviours:
   - {fileID: 28882398602848383}
+  - {fileID: 6037144445964847580}
   - {fileID: -7087934003001875711}
   - {fileID: -6050648778204612198}
   - {fileID: 1731718290737838251}

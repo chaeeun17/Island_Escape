@@ -1,12 +1,13 @@
 using UnityEngine;
+using Fusion;
 
-public class ItemRemove : MonoBehaviour
-{ 
-    void Update()
+public class ItemRemove : NetworkBehaviour
+{
+    public override void FixedUpdateNetwork()
     {
-        if(transform.position.y < -10)
+        if(transform.position.y < -100)
         {
-            Destroy(gameObject);
+            Runner.Despawn(Object);
         }
     }
 }

@@ -3,7 +3,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem; // New Input System ³×ÀÓ½ºÆäÀÌ½º
+using UnityEngine.InputSystem; // New Input System ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½
 
 public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -14,7 +14,7 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     public Transform _localLeftHand;
     public Transform _localRightHand;
 
-    // ¸Å ÇÁ·¹ÀÓ Ä³½ÌÇÒ º¯¼öµé
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private Vector3 _hPos; private Quaternion _hRot;
     private Vector3 _lPos; private Quaternion _lRot;
     private Vector3 _rPos; private Quaternion _rRot;
@@ -25,18 +25,18 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private InputActionReference _jumpAction;
 
     [SerializeField] private InputActionReference _leftTriggerAction;
-    [SerializeField] private InputActionReference _leftGrabAction;
+    [SerializeField] private InputActionReference _leftGripAction;
     [SerializeField] private InputActionReference _rightTriggerAction;
-    [SerializeField] private InputActionReference _rightGrabAction;
+    [SerializeField] private InputActionReference _rightGripAction;
 
-    // ¸Å ÇÁ·¹ÀÓ ¼öÁýµÈ ·ÎÄÃ ÀÔ·Â °ªÀ» ÀÓ½Ã·Î º¸°üÇÒ º¯¼ö
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Vector2 _moveDirection;
     private Vector2 _turnDirection;
     private bool _jumpPressed;
 
-    private float _leftTrigger = 0, _leftGrab = 0, _rightTrigger = 0, _rightGrab = 0;
+    private float _leftTrigger = 0, _leftGrip = 0, _rightTrigger = 0, _rightGrip = 0;
 
-    // Áß¿ä: »ç¿ëÇÏ±â Àü¿¡ ActionÀ» ¹Ýµå½Ã È°¼ºÈ­(Enable)ÇØÁà¾ß ÇÕ´Ï´Ù.
+    // ï¿½ß¿ï¿½: ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ Actionï¿½ï¿½ ï¿½Ýµï¿½ï¿½ È°ï¿½ï¿½È­(Enable)ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Õ´Ï´ï¿½.
     private void OnEnable()
     {
         if (_leftHandTurnAction != null) _leftHandTurnAction.action.Enable();
@@ -44,10 +44,10 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_jumpAction != null) _jumpAction.action.Enable();
 
         if (_leftTriggerAction != null) _leftTriggerAction.action.Enable();
-        if (_leftGrabAction != null) _leftGrabAction.action.Enable();
+        if (_leftGripAction != null) _leftGripAction.action.Enable();
 
         if (_rightTriggerAction != null) _rightTriggerAction.action.Enable();
-        if (_rightGrabAction != null) _rightGrabAction.action.Enable();
+        if (_rightGripAction != null) _rightGripAction.action.Enable();
     }
 
     private void OnDisable()
@@ -57,13 +57,13 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_jumpAction != null) _jumpAction.action.Disable();
 
         if (_leftTriggerAction != null) _leftTriggerAction.action.Disable();
-        if (_leftGrabAction != null) _leftGrabAction.action.Disable();
+        if (_leftGripAction != null) _leftGripAction.action.Disable();
 
         if (_rightTriggerAction != null) _rightTriggerAction.action.Disable();
-        if (_rightGrabAction != null) _rightGrabAction.action.Disable();
+        if (_rightGripAction != null) _rightGripAction.action.Disable();
     }
 
-    // ½Ì±ÛÅæ
+    // ï¿½Ì±ï¿½ï¿½ï¿½
     private void Awake()
     {
         if (Instance == null)
@@ -77,12 +77,12 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (_localHead == null) return;
 
-        // XR Origin ±âÁØÀÇ '»ó´ëÀû'ÀÎ ·ÎÄÃ ÁÂÇ¥¸¦ °¡Á®¿Í¾ß ÇÕ´Ï´Ù.
+        // XR Origin ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 'ï¿½ï¿½ï¿½ï¿½ï¿½'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ ï¿½Õ´Ï´ï¿½.
         _hPos = _localHead.localPosition; _hRot = _localHead.localRotation;
         _lPos = _localLeftHand.localPosition; _lRot = _localLeftHand.localRotation;
         _rPos = _localRightHand.localPosition; _rRot = _localRightHand.localRotation;
 
-        // 1. À¯´ÏÆ¼ Update() ÇÁ·¹ÀÓ¸¶´Ù New Input SystemÀÇ °ªÀ» ÀÐ¾î¿Í º¯¼ö¿¡ ÀúÀåÇÕ´Ï´Ù.
+        // 1. ï¿½ï¿½ï¿½ï¿½Æ¼ Update() ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ New Input Systemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         Vector2 move = new Vector2();
         if (_rightHandMoveAction != null)
             move = _rightHandMoveAction.action.ReadValue<Vector2>();
@@ -91,11 +91,11 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_leftHandTurnAction != null)
             turn = _leftHandTurnAction.action.ReadValue<Vector2>();
 
-        // ÃÖÁ¾ ¿ùµå ±âÁØ ÀÌµ¿ ¹æÇâ º¤ÅÍ ¿Ï¼º
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¼ï¿½
         _moveDirection = move;
         _turnDirection = turn;
 
-        // ÀÌ¹ø ÇÁ·¹ÀÓ¿¡ Á¡ÇÁ ¹öÆ°ÀÌ ´­·È´Ù¸é true À¯Áö
+        // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½È´Ù¸ï¿½ true ï¿½ï¿½ï¿½ï¿½
         if (_jumpAction.action.WasPressedThisFrame())
         {
             _jumpPressed = true;
@@ -105,53 +105,53 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_leftTriggerAction != null)
             _leftTrigger = _leftTriggerAction.action.ReadValue<float>();
-        if (_leftGrabAction != null)
-            _leftGrab = _leftGrabAction.action.ReadValue<float>();
+        if (_leftGripAction != null)
+            _leftGrip = _leftGripAction.action.ReadValue<float>();
 
         if (_rightTriggerAction != null)
             _rightTrigger = _rightTriggerAction.action.ReadValue<float>();
-        if (_rightGrabAction != null)
-            _rightGrab = _rightGrabAction.action.ReadValue<float>();
+        if (_rightGripAction != null)
+            _rightGrip = _rightGripAction.action.ReadValue<float>();
     }
 
-    // 2. Fusion ¿£ÁøÀÌ "³×Æ®¿öÅ©·Î º¸³¾ ÀÔ·Â µ¥ÀÌÅÍ Áà!" ÇÏ°í Æ½¸¶´Ù È£ÃâÇÏ´Â ¸Þ¼­µå
+    // 2. Fusion ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "ï¿½ï¿½Æ®ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½!" ï¿½Ï°ï¿½ Æ½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
 
-        // ¼öÁýÇØµÐ New Input SystemÀÇ µ¥ÀÌÅÍ¸¦ Fusion ±¸Á¶Ã¼¿¡ ´ã±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ New Input Systemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Fusion ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½
         data.direction = _moveDirection;
 
-        // Snap Turn Àü¿ë : µ¥µåÁ¸(Deadzone) ÀÓ°è°ª ¼³Á¤ (Á¶ÀÌ½ºÆ½À» È®½ÇÈ÷ ¹Ð¾úÀ» ¶§¸¸ ÀÎ½Ä)
+        // Snap Turn ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Deadzone) ï¿½Ó°è°ª ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Ì½ï¿½Æ½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½)
         float threshold = 0.7f;
 
-        // 3. Vector2 °ªÀ» MyButtons ºñÆ® ÇÃ·¡±×·Î ¸ÅÇÎ
+        // 3. Vector2 ï¿½ï¿½ï¿½ï¿½ MyButtons ï¿½ï¿½Æ® ï¿½Ã·ï¿½ï¿½×·ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (_turnDirection.x < -threshold)
         {
-            // Á¶ÀÌ½ºÆ½À» ¿ÞÂÊÀ¸·Î ¹Ð¾úÀ¸¸é TurnLeft ºñÆ®¸¦ ÄÔ
+            // ï¿½ï¿½ï¿½Ì½ï¿½Æ½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½ TurnLeft ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½
             data.buttons.Set(MyButtons.TurnLeft, true);
         }
         else if (_turnDirection.x > threshold)
         {
-            // Á¶ÀÌ½ºÆ½À» ¿À¸¥ÂÊÀ¸·Î ¹Ð¾úÀ¸¸é TurnRight ºñÆ®¸¦ ÄÔ
+            // ï¿½ï¿½ï¿½Ì½ï¿½Æ½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½ TurnRight ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½
             data.buttons.Set(MyButtons.TurnRight, true);
         }
 
         if (_jumpPressed)
         {
             data.buttons.Set(MyButtons.Jump, true);
-            _jumpPressed = false; // ¼öÁý ¿Ï·á ÈÄ ÃÊ±âÈ­
+            _jumpPressed = false; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½È­
         }
 
-        // Æ®·¡Å· µ¥ÀÌÅÍ¸¦ Input ±¸Á¶Ã¼¿¡ ¼¼ÆÃ
+        // Æ®ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Input ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         data.headPos = _hPos; data.headRot = _hRot;
         data.leftHandPos = _lPos; data.leftHandRot = _lRot;
         data.rightHandPos = _rPos; data.rightHandRot = _rRot;
 
-        data.leftTrigger = _leftTrigger; data.leftGrab = _leftGrab;
-        data.rightTrigger = _rightTrigger; data.rightGrab = _rightGrab;
+        data.leftTrigger = _leftTrigger; data.leftGrip = _leftGrip;
+        data.rightTrigger = _rightTrigger; data.rightGrip = _rightGrip;
 
-        // Fusion ¿£Áø¿¡ ÀÔ·Â µ¥ÀÌÅÍ Àü´Þ
+        // Fusion ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         input.Set(data);
     }
 
