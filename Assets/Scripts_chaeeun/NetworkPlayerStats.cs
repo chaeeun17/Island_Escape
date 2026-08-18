@@ -24,6 +24,11 @@ public class NetworkPlayerStats : NetworkBehaviour
     [Header("Faint/Revive Animaton")]
     [SerializeField] private Animator animator;
 
+    [Networked, OnChangedRender(nameof(OnVisibilityChanged))]
+    public NetworkBool IsVisible { get; set; } = true;
+    [SerializeField] private Renderer animatedHead;
+    [SerializeField] private Renderer networkedHead;
+
     private static readonly int IsDeadHash = Animator.StringToHash("IsDead");
     private static readonly int RevivedHash = Animator.StringToHash("Revived");
 
@@ -311,6 +316,7 @@ public class NetworkPlayerStats : NetworkBehaviour
     public void Revive()
     {
         if (!isFainted) return;
+        if (isRevived) return;
 
         isFainted = false;
         isRevived = true;
@@ -322,6 +328,7 @@ public class NetworkPlayerStats : NetworkBehaviour
         {
             animator.SetTrigger(RevivedHash);
         }
+        SetHeadVisible(true);
     }
 
     public bool IsPlayerFainted()
@@ -338,12 +345,36 @@ public class NetworkPlayerStats : NetworkBehaviour
         {
             if (isFainted)
             {
+                SetHeadVisible(false);
                 animator.SetTrigger(IsDeadHash);
             }
-            else if (isRevived)
-            {
-                animator.SetTrigger(RevivedHash);
-            }
         }
+    }
+
+    // 로컬에서 호출하는 함수 (버튼, 트리거 등에서 사용)
+    public void SetHeadVisible(bool visible)
+    {
+        if (Object.HasStateAuthority)
+        {
+            IsVisible = visible; // Shared 모드면 바로 대입 가능
+        }
+        else
+        {
+            RPC_RequestSetVisible(visible); // Host 모드면 요청
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestSetVisible(bool visible)
+    {
+        IsVisible = visible;
+    }
+
+    private void OnVisibilityChanged() => ApplyVisibility(IsVisible);
+
+    private void ApplyVisibility(bool visible)
+    {
+        networkedHead.enabled = visible;
+        animatedHead.enabled = !visible;
     }
 }
