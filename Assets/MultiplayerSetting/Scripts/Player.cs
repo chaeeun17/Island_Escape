@@ -1,5 +1,6 @@
 using Fusion;
 using System.Threading.Tasks; // �ʼ� �߰�
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
@@ -23,6 +24,9 @@ public class Player : NetworkBehaviour
     [Header("Walk Animaton")]
     [SerializeField] private Animator animator;
     [Networked] private NetworkBool IsWalking { get; set; }
+
+    [Networked] public NetworkBool IsEscaped { get; set; }
+
     [Networked] public float LeftGrab { get; set; }
     [Networked] public float LeftTrigger { get; set; }
     [Networked] public float RightGrab { get; set; }
@@ -54,14 +58,12 @@ public class Player : NetworkBehaviour
             _netRightHand.localPosition = data.rightHandPos;
             _netRightHand.localRotation = data.rightHandRot;
 
-            LeftGrab = data.leftGrab;
+            LeftGrab = data.leftGrip;
             LeftTrigger = data.leftTrigger;
 
-            RightGrab = data.rightGrab;
+            RightGrab = data.rightGrip;
             RightTrigger = data.rightTrigger;
-
-            // 1. �Է� ��ȭ��(Pressed) ���
-            // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
+            
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 
@@ -161,7 +163,6 @@ public class Player : NetworkBehaviour
                     Debug.Log("Player : " + transform.position);
                     Debug.Log("XR Origin : " + xrOrigin.transform.position);
                     Debug.Log("Main Camera : " + InputHandler.Instance._localHead.position);
-
                     // Debug.Log("XR Origin�� ���������� Player Prefab ������ ���յǾ����ϴ�.");
                 }
                 else

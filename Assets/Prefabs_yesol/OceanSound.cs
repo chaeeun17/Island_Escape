@@ -39,7 +39,7 @@ public class OceanSound : MonoBehaviour
 
     float GetMinDistance()
     {
-        Collider colA = player.GetComponent<Collider>();
+        Collider colA = player.GetComponent<CharacterController>();
         BoxCollider[] collidersB = oceanSound.GetComponentsInChildren<BoxCollider>();
 
         float minDistance = float.MaxValue;
