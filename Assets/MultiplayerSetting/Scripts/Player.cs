@@ -1,6 +1,8 @@
 using Fusion;
 using System.Threading.Tasks; // �ʼ� �߰�
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class Player : NetworkBehaviour
 {
@@ -28,6 +30,15 @@ public class Player : NetworkBehaviour
     [Networked] public float RightGrab { get; set; }
     [Networked] public float RightTrigger { get; set; }
 
+    // 수면 또는 컷신 중 플레이어 조작 차단 플래그
+    private bool _isInputBlocked = false;
+
+    // 🌟 XR 컨트롤러 및 인터랙터 전체 캐싱
+    private ActionBasedController[] _localControllers;
+    private XRBaseInteractor[] _localInteractors;
+    private UnityEngine.XR.Interaction.Toolkit.Interactors.Visuals.XRInteractorLineVisual[] _localLineVisuals;
+
+
     // Fusion 2 ����ȭ�� ���� ChangeDetector �� Animator Hash
     private ChangeDetector _changeDetector;
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
@@ -37,6 +48,36 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         _cc = GetComponent<CustomNetworkCharacterController>();
+    }
+
+    public void SetInputEnabled(bool isEnabled)
+    {
+        _isInputBlocked = !isEnabled;
+
+        if (_isInputBlocked)
+        {
+            IsWalking = false;
+        }
+
+        // 1. 레이저 및 잡기 인터랙터 켜기/끄기
+        if (_localInteractors != null)
+        {
+            foreach (var interactor in _localInteractors)
+            {
+                if (interactor != null) interactor.enabled = isEnabled;
+            }
+        }
+
+        // 2. 레이저 시각선(Line Visual) 켜기/끄기
+        if (_localLineVisuals != null)
+        {
+            foreach (var line in _localLineVisuals)
+            {
+                if (line != null) line.enabled = isEnabled;
+            }
+        }
+
+        Debug.Log($"🎮 [Player] 입력 활성화 상태 변경: {isEnabled}");
     }
 
     public override void FixedUpdateNetwork()
@@ -59,6 +100,13 @@ public class Player : NetworkBehaviour
 
             RightGrab = data.rightGrab;
             RightTrigger = data.rightTrigger;
+
+            if (_isInputBlocked)
+            {
+                IsWalking = false;
+                _previousButtons = data.buttons;
+                return;
+            }
 
             // 1. �Է� ��ȭ��(Pressed) ���
             // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
@@ -163,6 +211,10 @@ public class Player : NetworkBehaviour
                     Debug.Log("Main Camera : " + InputHandler.Instance._localHead.position);
 
                     // Debug.Log("XR Origin�� ���������� Player Prefab ������ ���յǾ����ϴ�.");
+
+                    _localControllers = xrOrigin.GetComponentsInChildren<ActionBasedController>(true);
+                    _localInteractors = xrOrigin.GetComponentsInChildren<XRBaseInteractor>(true);
+                    _localLineVisuals = xrOrigin.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Interactors.Visuals.XRInteractorLineVisual>(true);
                 }
                 else
                 {
