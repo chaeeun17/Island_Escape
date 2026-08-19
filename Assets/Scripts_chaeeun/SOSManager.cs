@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using System.Collections;
 using System;
 using Fusion; // Fusion 네임스페이스
+using System.Collections.Generic;
 
 public class SOSManager : NetworkBehaviour
 {
@@ -21,6 +22,9 @@ public class SOSManager : NetworkBehaviour
     [SerializeField] private GameObject successCutsceneObject; // 성공 시 연출 UI
 
     public event Action OnTutorialCompleted;
+
+    [Header("관리할 소켓 목록 (Inspector에서 드래그 연결)")]
+    [SerializeField] private List<XRSocketInteractor> socketInteractors = new List<XRSocketInteractor>();
 
     private void Awake()
     {
@@ -87,22 +91,15 @@ public class SOSManager : NetworkBehaviour
 
         if (objName.Equals("Item_Stone(Clone)") || objName.Contains("Item_Stone"))
         {
+            int socketIndex = socketInteractors.IndexOf(interactor);
+
+            NetworkObject stoneNetworkObj = incomingObject.GetComponentInParent<NetworkObject>();
+            NetworkId stoneId = stoneNetworkObj != null ? stoneNetworkObj.Id : default;
+
             RPC_AddSlotCount();
 
-            // 1. 돌 Grab 기능 끄기
-            interactable.enabled = false; 
+            RPC_SyncDisableSocket(socketIndex, stoneId);
 
-            // 2. 물리 고정
-            var rb = incomingObject.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = true;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-
-            // 3. 소켓 기능 끄기
-            interactor.enabled = false;
         }
         else
         {
@@ -112,6 +109,45 @@ public class SOSManager : NetworkBehaviour
             }
         }
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_SyncDisableSocket(int socketIndex, NetworkId stoneId)
+    {
+        StartCoroutine(DisableSocketAndFixStoneRoutine(socketIndex, stoneId));
+    }
+
+    private IEnumerator DisableSocketAndFixStoneRoutine(int socketIndex, NetworkId stoneId)
+    {
+        // 위치 스냅 동기화가 끝날 때까지 1프레임 대기
+        yield return null;
+
+        // 1. 돌 오브젝트 물리 고정 및 상호작용 끄기
+        if (stoneId != default && Runner.TryFindObject(stoneId, out NetworkObject stoneObj))
+        {
+            var grab = stoneObj.GetComponentInChildren<XRGrabInteractable>();
+            if (grab != null) grab.enabled = false;
+
+            var rb = stoneObj.GetComponentInChildren<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+        }
+
+        // 2. 해당 소켓 게임오브젝트 끄기
+        if (socketIndex >= 0 && socketIndex < socketInteractors.Count)
+        {
+            var targetSocket = socketInteractors[socketIndex];
+            if (targetSocket != null)
+            {
+                targetSocket.enabled = false;
+                targetSocket.gameObject.SetActive(false);
+            }
+        }
+    }
+
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_AddSlotCount()

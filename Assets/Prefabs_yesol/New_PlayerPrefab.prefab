@@ -166,6 +166,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4663748811772514610}
+  - {fileID: 2431240234865759927}
   - {fileID: 8653612929909724655}
   - {fileID: 3712192601682582649}
   m_Father: {fileID: 38952214719630331}
@@ -658,7 +660,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1029,8 +1031,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4663748811772514610}
-  - {fileID: 2431240234865759927}
   - {fileID: 4431677544889963613}
   - {fileID: 3861314829521278033}
   - {fileID: 2792663871626109130}
@@ -2087,13 +2087,13 @@ Transform:
   m_GameObject: {fileID: 8541122246649605062}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06271, y: 0, z: 3.59493}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2190789214888018736}
   - {fileID: 7737238295416155186}
-  m_Father: {fileID: 38952214719630331}
+  m_Father: {fileID: 4431677544889963613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6176413390862266854
 MonoBehaviour:
@@ -3380,7 +3380,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 38952214719630331}
+    m_TransformParent: {fileID: 4431677544889963613}
     m_Modifications:
     - target: {fileID: 150919095288218670, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: iconImage
@@ -3448,7 +3448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 880590488763655592, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.13
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 880590488763655592, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3573,6 +3573,10 @@ PrefabInstance:
     - target: {fileID: 4145338414253585319, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4314196632093740300, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4956275082762422473, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: iconImage

@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class PedestalPart : NetworkBehaviour
 {
-    // Inspector Ã¢¿¡¼­ ÇÏÀ§¿¡ ÀÖ´Â Æ¯Á¤ ParticleSystemÀ» Á÷Á¢ µå·¡±×ÇØ¼­ ³Ö¾îÁÝ´Ï´Ù.
+    // Inspector Ã¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Æ¯ï¿½ï¿½ ParticleSystemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½å·¡ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ö¾ï¿½ï¿½Ý´Ï´ï¿½.
     [Header("Child References")]
     [SerializeField] private ParticleSystem startParticleSystem;
     [SerializeField] private ParticleSystem completeParticleSystem;
 
-    // ¿ÜºÎ(¼ÕÀâÀÌ µî)¿¡¼­ Á¢±ÙÇÒ ¼ö ÀÖ´Â Á¦¾î ¸Þ¼­µå
+    // ï¿½Üºï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void PlayStartParticle()
     {
         if (startParticleSystem != null)
@@ -22,6 +22,8 @@ public class PedestalPart : NetworkBehaviour
         {
             completeParticleSystem.Play();
         }
+
+        gameObject.tag = "Torch";
     }
 
     public void StopStartParticle()

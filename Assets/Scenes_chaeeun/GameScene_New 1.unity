@@ -1176,6 +1176,7 @@ MonoBehaviour:
   totalRequiredSlots: 1
   tutorialNoticeUI: {fileID: 1636210220}
   successCutsceneObject: {fileID: 1310286274}
+  socketInteractors: []
 --- !u!4 &178525449
 Transform:
   m_ObjectHideFlags: 0
@@ -1454,35 +1455,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &286015435 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3928485144730400599, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-  m_PrefabInstance: {fileID: 6351564541594538765}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &286015436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 286015435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b24b294693c14644cbec681762e85dd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerStats
-  maxHunger: 100
-  maxThirst: 100
-  maxStamina: 100
-  hungerDecreaseInterval: 2
-  thirstDecreaseInterval: 1.5
-  staminaDecreaseInterval: 3
-  hungerText: {fileID: 0}
-  thirstText: {fileID: 0}
-  staminaText: {fileID: 0}
-  warningThreshold: 20
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  warningColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &331815841
 GameObject:
   m_ObjectHideFlags: 0
@@ -4693,10 +4665,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2776350657752945536, guid: dfc261d20b461e844add277f5c16e102, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1874241354}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfc261d20b461e844add277f5c16e102, type: 3}
 --- !u!1001 &1292949450
 PrefabInstance:
@@ -6340,32 +6309,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7852ec9df4341f047bf04e8b78f060d4, type: 3}
---- !u!1 &1874241348 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2776350657752945536, guid: dfc261d20b461e844add277f5c16e102, type: 3}
-  m_PrefabInstance: {fileID: 1236988365}
-  m_PrefabAsset: {fileID: 0}
---- !u!135 &1874241354
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1874241348}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1.22
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1981325468
 GameObject:
   m_ObjectHideFlags: 0
@@ -7077,7 +7020,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6966613190866260072, guid: 49ea26bf520e76443a2fc6c4a9fdc6f2, type: 3}
       propertyPath: NetworkedBehaviours.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8360448134229742951, guid: 49ea26bf520e76443a2fc6c4a9fdc6f2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7215,9 +7158,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 137529880}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3928485144730400599, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 286015436}
     - targetCorrespondingSourceObject: {fileID: 3807662835016236483, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6351564541594538770}
@@ -7255,6 +7195,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: cdc5f2d8a8e2c6840908374ae45cdb31, type: 2}
   guideUI: {fileID: 391047232}
   xButtonActionReference: {fileID: -2441894373077348105, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  ignoreTag: Water
 --- !u!114 &6351564541594538770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7270,6 +7211,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: cdc5f2d8a8e2c6840908374ae45cdb31, type: 2}
   guideUI: {fileID: 391047232}
   xButtonActionReference: {fileID: -2441894373077348105, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  ignoreTag: Water
 --- !u!1001 &8820252565677749487
 PrefabInstance:
   m_ObjectHideFlags: 0

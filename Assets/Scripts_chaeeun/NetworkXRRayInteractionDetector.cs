@@ -3,7 +3,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.InputSystem;
-using Fusion; // 🌟 Fusion 라이브러리
+using Fusion;
 
 public class NetworkXRRayInteractionDetector : MonoBehaviour
 {
@@ -16,7 +16,9 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
     [Header("X 버튼 입력 매핑 (인풋 액션)")]
     [SerializeField] private InputActionReference xButtonActionReference;
 
-    // 🌟 XRRayInteractor 컴포넌트
+    [Header("하이라이트 제외할 태그 (선택 사항)")]
+    [SerializeField] private string ignoreTag = "Water";
+
     private XRRayInteractor rayInteractor;
     private MeshRenderer previousRenderer;
     private Material previousOriginalMaterial;
@@ -32,7 +34,6 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
 
     void OnEnable()
     {
-        // 내 네트워크 캐릭터(HasInputAuthority)가 아닐 때는 이 감지 스크립트를 끕니다.
         if (localNetworkObject != null && !localNetworkObject.HasInputAuthority)
         {
             enabled = false;
@@ -73,10 +74,10 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
 
     private void OnHoverEntered(HoverEnterEventArgs args)
     {
-        // 🌟 1. 내 손(Interactor)이 이미 무언가를 잡고 있는 중이라면 하이라이트 스킵
+        // 1. 내 손에 이미 잡고 있는 물건이 있다면 패스
         if (rayInteractor != null && rayInteractor.hasSelection) return;
 
-        // 🌟 2. 레이저에 닿은 대상이 이미 잡혀있는(isSelected) 상태라면 하이라이트 스킵
+        // 2. 다른 사람이나 내 다른 손에 이미 잡혀 있는 물건이라면 패스
         if (args.interactableObject is IXRSelectInteractable selectInteractable && selectInteractable.isSelected)
         {
             return;
@@ -85,30 +86,40 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
         var grabObject = args.interactableObject.transform.gameObject;
         if (grabObject == null) return;
 
-        MeshRenderer targetRenderer = grabObject.GetComponentInChildren<MeshRenderer>();
-        
-        // IInteractable 인터페이스를 부모나 자식 오브젝트에서 탐색
+        // 3. IInteractable 컴포넌트 탐색
         IInteractable targetInteractable = grabObject.GetComponentInParent<IInteractable>();
         if (targetInteractable == null)
         {
             targetInteractable = grabObject.GetComponentInChildren<IInteractable>();
         }
 
-        ResetDetectorState(); 
+        ResetDetectorState();
 
-        // 하이라이트 머티리얼 교체
-        if (targetRenderer != null && highlightMaterial != null)
+        // 🌟 4. [바다 제외 로직]
+        // - 태그가 ignoreTag("Sea")이거나
+        // - 이름에 "Sea" 또는 "Ocean" 또는 "Water"가 포함되어 있거나
+        // - NetworkSeaWaterScooper 컴포넌트가 붙어있는 경우 하이라이트 적용 제외
+        bool isSeaObject = grabObject.CompareTag(ignoreTag) ||
+                           grabObject.name.ToLower().Contains("sea") ||
+                           grabObject.name.ToLower().Contains("ocean") ||
+                           grabObject.GetComponentInParent<NetworkSeaWaterScooper>() != null;
+
+        // 바다가 아닐 때만 하이라이트 머티리얼 교체
+        if (!isSeaObject)
         {
-            if (targetRenderer.sharedMaterial != highlightMaterial)
+            MeshRenderer targetRenderer = grabObject.GetComponentInChildren<MeshRenderer>();
+            if (targetRenderer != null && highlightMaterial != null)
             {
-                previousRenderer = targetRenderer;
-                previousOriginalMaterial = targetRenderer.material; // 원본 저장
+                if (targetRenderer.sharedMaterial != highlightMaterial)
+                {
+                    previousRenderer = targetRenderer;
+                    previousOriginalMaterial = targetRenderer.material;
+                }
+                targetRenderer.material = highlightMaterial;
             }
-            
-            targetRenderer.material = highlightMaterial; // 하이라이트 적용
         }
 
-        // 상호작용 UI 가이드 출력
+        // 5. 상호작용 UI 가이드 출력 (IInteractable이 있다면 바다라도 텍스트 가이드는 출력됨)
         currentTargetInteractable = targetInteractable;
         if (currentTargetInteractable != null && guideUI != null)
         {
@@ -123,7 +134,6 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
 
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
-        // 🌟 3. 물건을 잡는 순간 하이라이트 및 상호작용 UI 가이드 즉시 해제
         ResetDetectorState();
     }
 
@@ -146,7 +156,6 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
 
     private void OnXButtonPressed(InputAction.CallbackContext context)
     {
-        // 손에 물건을 쥐고 있지 않을 때만 X 버튼 상호작용 수행
         if (rayInteractor != null && rayInteractor.hasSelection) return;
 
         if (currentTargetInteractable != null) 

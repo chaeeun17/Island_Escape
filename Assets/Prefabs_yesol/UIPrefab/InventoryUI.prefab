@@ -272,10 +272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 4017656923935384428}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 8981004371560786711}
 --- !u!1 &875870582256131160
 GameObject:
@@ -1884,10 +1882,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 5025204921873691924}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 7633994736907030283}
 --- !u!1 &2549410662337319398
 GameObject:
@@ -2254,7 +2250,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1983886149946661281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2936,10 +2932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 3526617336275051438}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 4718247805172412474}
 --- !u!1 &4030195093493617193
 GameObject:
@@ -3154,10 +3148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 7454698935946208426}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 2880716912894440560}
 --- !u!1 &4191472389864710360
 GameObject:
@@ -4107,10 +4099,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 6467652448244841430}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 855627368335246755}
 --- !u!1 &7474031852313689229
 GameObject:
@@ -4397,10 +4387,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 495641057555214848}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 1671703166251808114}
 --- !u!1 &7869639326254384623
 GameObject:
@@ -4687,10 +4675,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 4842101800865387756}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 7391849113039516118}
 --- !u!1 &8096586541690610582
 GameObject:
@@ -4902,10 +4888,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce3a0afbb90ead428e83ac17827f1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SLot
-  isResultSlot: 0
   item: {fileID: 0}
-  slot_Item_Image: {fileID: 7814713461470441775}
-  Event_Image: {fileID: 0}
+  iconImage: {fileID: 0}
   slot_Item_Count_TXT: {fileID: 5461010790087079397}
 --- !u!1 &8746152639603175801
 GameObject:
