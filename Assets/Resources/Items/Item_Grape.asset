@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 13
   ItemName: Grape
   ItemSprite: {fileID: 21300000, guid: b05bc2510e0402f448c4dfb32b957bbe, type: 3}
-  ItemDescription: 
+  ItemDescription: A juicy, fragrant fruit. It can be eaten raw. Nice nutritional
+    supplement.
   itemType: 4
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 150590163866104073, guid: 641c3c2ec5963014e8f93cf144a7716f, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

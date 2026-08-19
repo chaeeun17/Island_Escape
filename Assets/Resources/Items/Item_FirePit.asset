@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 4
   ItemName: FirePit
   ItemSprite: {fileID: 21300000, guid: a8d2cc72f2bc4ce408bcd3ac78d0e25a, type: 3}
-  ItemDescription: 
+  ItemDescription: Essential for maintaining body temperature. A refuge for all of
+    us. You can roast and eat food.
   itemType: 2
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 2776350657752945536, guid: dfc261d20b461e844add277f5c16e102, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 14
   ItemName: Can
   ItemSprite: {fileID: 21300000, guid: 9f35e9c5bd872574b8a6e2979a79b4c1, type: 3}
-  ItemDescription: 
+  ItemDescription: A dented can washed ashore from the sea. It might be useful, at
+    best, for making tools.
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 5836771563233976136, guid: 8e59c2ed1a7754e46b282c0c79b5c4ce, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

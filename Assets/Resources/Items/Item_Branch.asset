@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 1
   ItemName: Branch
   ItemSprite: {fileID: 21300000, guid: 541aa9a8bc1e1334184f24df64cf32f0, type: 3}
-  ItemDescription: 
+  ItemDescription: Solid wood that has fallen from a tree. Useful for making various
+    tools.
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 6088903641478060533, guid: 36e22b93634682649980a9d9c109e7ba, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

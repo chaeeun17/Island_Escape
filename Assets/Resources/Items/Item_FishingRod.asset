@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 8
   ItemName: Fishingrod
   ItemSprite: {fileID: 21300000, guid: a8f5da0be39383e48aeae95d44b9e718, type: 3}
-  ItemDescription: 
+  ItemDescription: "An essential tool for solving food problems on the island. Let\u2019s
+    catch a ton of fish with this."
   itemType: 2
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 5339471088910090483, guid: 47a1f0d8d2e70ba459a622fb6ce001c5, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 3
   ItemName: Stone
   ItemSprite: {fileID: 21300000, guid: b74d0634cd9654143a8826fc4c3656fc, type: 3}
-  ItemDescription: 
+  ItemDescription: A hard stone picked up from the ground. It looks useful when creating
+    various tools.
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 70524935569243635, guid: a9e990b5d1914504eb393ab0e3448a42, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

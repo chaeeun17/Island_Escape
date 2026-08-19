@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using Fusion;
 
 public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -18,7 +19,12 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text slot_Item_Count_TXT;
 
-    // 🌟 인스펙터 할당 없이 코드로 찾아 저장할 참조 변수
+    [Header("바닥 설치형 아이템 설정")]
+    [Tooltip("손에 쥐지 않고 바닥에 바로 스폰할 아이템/프리팹 이름 키워드")]
+    private List<string> groundSpawnItemNames = new List<string> { "Purifier", "Tent", "BowDrill", "FirePit" };
+    private float spawnForwardDistance = 1.2f;       // 일반 설치물 플레이어 앞거리
+    private float tentSpawnForwardDistance = 3.0f;  // 텐트 전용 앞거리
+
     private XRRayInteractor leftRayInteractor;
     private XRRayInteractor rightRayInteractor;
 
@@ -32,14 +38,13 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         ownerInventory = GetComponentInParent<NetworkInventory>();
 
-        // VR 컨트롤러 그랩 입력 직접 바인딩
+        // VR 컨트롤러 그랩 입력 바인딩
         leftGripAction = new InputAction("LeftGripDirect", binding: "<XRController>{LeftHand}/grip");
         rightGripAction = new InputAction("RightGripDirect", binding: "<XRController>{RightHand}/grip");
     }
 
     private void Start()
     {
-        // 🌟 코드로 XRRayInteractor 자동 탐색 및 연결
         FindRayInteractors();
     }
 
@@ -55,9 +60,6 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         rightGripAction?.Disable();
     }
 
-    /// <summary>
-    /// 씬/캐릭터 내의 왼손/오른손 XRRayInteractor를 코드로 찾아서 연결합니다.
-    /// </summary>
     private void FindRayInteractors()
     {
         XRRayInteractor[] interactors = Object.FindObjectsByType<XRRayInteractor>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -66,7 +68,6 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             string objectName = interactor.gameObject.name.ToLower();
 
-            // 왼손/오른손 구분해서 자동 할당
             if (objectName.Contains("left"))
             {
                 leftRayInteractor = interactor;
@@ -78,19 +79,16 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
     }
 
-    // VR 포인터가 슬롯 UI 영역 안으로 들어올 때
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovered = true;
     }
 
-    // VR 포인터가 슬롯 UI 영역 밖으로 나갈 때
     public void OnPointerExit(PointerEventData eventData)
     {
         isHovered = false;
     }
 
-    // 슬롯 클릭 시 디테일 패널 출력
     public void OnPointerClick(PointerEventData eventData)
     {
         NetworkInventory targetInventory = ownerInventory != null ? ownerInventory : NetworkInventory.Instance;
@@ -109,66 +107,160 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     private void Update()
     {
-        // 호버링 중이 아니거나 슬롯이 비어있으면 체크하지 않음
         if (!isHovered || !isin() || item == null) return;
 
-        // 양손 Grip 버튼 입력 감지 (0.5f 이상 눌렀는지 확인)
         bool leftGripPressed = leftGripAction != null && leftGripAction.ReadValue<float>() > 0.5f;
         bool rightGripPressed = rightGripAction != null && rightGripAction.ReadValue<float>() > 0.5f;
 
         if (leftGripPressed || rightGripPressed)
         {
-            // 중복 스폰 방지
             isHovered = false;
 
-            // 스폰할 3D 아이템 프리팹 확인
             GameObject prefabToSpawn = item.GetPrefab3D();
-
             if (prefabToSpawn == null)
             {
                 Debug.LogWarning($"⚠️ [{item.getItemName()}] 스폰할 3D 아이템 프리팹이 없습니다!");
                 return;
             }
 
-            // 눌린 손에 맞게 XRRayInteractor 지정 (null일 경우 백업 재탐색)
             XRRayInteractor targetInteractor = leftGripPressed ? leftRayInteractor : rightRayInteractor;
-
             if (targetInteractor == null)
             {
                 FindRayInteractors();
                 targetInteractor = leftGripPressed ? leftRayInteractor : rightRayInteractor;
             }
 
-            // 여전히 못 찾았거나 손에 이미 다른 물건을 쥐고 있다면 스킵
-            if (targetInteractor == null || targetInteractor.hasSelection) return;
+            // 바닥 설치형 아이템 여부 확인
+            bool isGroundItem = IsGroundSpawnItem(item);
 
-            // 3D 아이템 생성
-            Transform handTransform = targetInteractor.transform;
-            GameObject spawned = Instantiate(prefabToSpawn, handTransform.position, handTransform.rotation);
-
-            var grabInteractable = spawned.GetComponent<XRGrabInteractable>();
-
-            if (grabInteractable != null)
+            // 손에 쥐는 아이템인데 이미 다른 물건을 들고 있다면 패스
+            if (!isGroundItem && (targetInteractor == null || targetInteractor.hasSelection))
             {
-                // XRInteractionManager를 불러 컨트롤러 손에 즉시 착 붙여주기
-                XRInteractionManager interactionManager = Object.FindFirstObjectByType<XRInteractionManager>();
-                if (interactionManager != null)
-                {
-                    interactionManager.SelectEnter((IXRSelectInteractor)targetInteractor, (IXRSelectInteractable)grabInteractable);
-                    Debug.Log($"★ [성공] {item.getItemName()}을(를) 꺼내 손에 쥐었습니다! ★");
+                return;
+            }
 
-                    // 인벤토리 데이터에서 수량 1개 차감 및 UI 재정렬
-                    NetworkInventory targetInventory = ownerInventory != null ? ownerInventory : NetworkInventory.Instance;
-                    if (targetInventory != null)
+            // 스폰 위치 및 회전 계산
+            Vector3 spawnPos;
+            Quaternion spawnRot;
+
+            if (isGroundItem)
+            {
+                GetGroundSpawnPose(out spawnPos, out spawnRot);
+            }
+            else
+            {
+                Transform handTransform = targetInteractor != null ? targetInteractor.transform : transform;
+                spawnPos = handTransform.position;
+                spawnRot = handTransform.rotation;
+            }
+
+            // NetworkRunner를 통한 네트워크 스폰
+            NetworkInventory targetInventory = ownerInventory != null ? ownerInventory : NetworkInventory.Instance;
+            GameObject spawned = null;
+
+            if (targetInventory != null && targetInventory.Runner != null && targetInventory.Runner.IsRunning)
+            {
+                NetworkObject spawnedNetObj = targetInventory.Runner.Spawn(prefabToSpawn, spawnPos, spawnRot);
+                if (spawnedNetObj != null)
+                {
+                    spawned = spawnedNetObj.gameObject;
+                }
+            }
+            else
+            {
+                spawned = Instantiate(prefabToSpawn, spawnPos, spawnRot);
+            }
+
+            if (spawned == null) return;
+
+            // 설치형 아이템 vs 손 쥐기 아이템 분기 처리
+            if (isGroundItem)
+            {
+                Debug.Log($"⛺ [설치형 아이템] {item.getItemName()}을(를) 바닥에 네트워크 스폰했습니다.");
+            }
+            else
+            {
+                var grabInteractable = spawned.GetComponent<XRGrabInteractable>();
+                if (grabInteractable != null && targetInteractor != null)
+                {
+                    XRInteractionManager interactionManager = Object.FindFirstObjectByType<XRInteractionManager>();
+                    if (interactionManager != null)
                     {
-                        targetInventory.ConsumeItem(item.getItemName(), 1);
+                        interactionManager.SelectEnter((IXRSelectInteractor)targetInteractor, (IXRSelectInteractable)grabInteractable);
+                        Debug.Log($"★ [성공] {item.getItemName()}을(를) 꺼내 손에 쥐었습니다! ★");
                     }
                 }
+            }
+
+            // 인벤토리 수량 1개 차감
+            if (targetInventory != null)
+            {
+                targetInventory.ConsumeItem(item.getItemName(), 1);
             }
         }
     }
 
-    // 슬롯에 아이템 세팅
+    private bool IsGroundSpawnItem(Item targetItem)
+    {
+        if (targetItem == null) return false;
+
+        string itemName = targetItem.getItemName();
+        string prefabName = targetItem.GetPrefab3D() != null ? targetItem.GetPrefab3D().name : "";
+
+        string cleanItemName = itemName.Replace(" ", "").Replace("_", "").ToLower();
+        string cleanPrefabName = prefabName.Replace(" ", "").Replace("_", "").ToLower();
+
+        foreach (var keyword in groundSpawnItemNames)
+        {
+            string cleanKeyword = keyword.Replace(" ", "").Replace("_", "").ToLower();
+            
+            if (cleanItemName.Contains(cleanKeyword) || cleanPrefabName.Contains(cleanKeyword))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void GetGroundSpawnPose(out Vector3 position, out Quaternion rotation)
+    {
+        Transform camTransform = Camera.main != null ? Camera.main.transform : transform;
+
+        Vector3 forward = camTransform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        float targetDistance = spawnForwardDistance;
+        if (item != null)
+        {
+            string itemName = item.getItemName().ToLower();
+            string prefabName = item.GetPrefab3D() != null ? item.GetPrefab3D().name.ToLower() : "";
+
+            if (itemName.Contains("tent") || prefabName.Contains("tent"))
+            {
+                targetDistance = tentSpawnForwardDistance;
+            }
+        }
+
+        Vector3 targetXZ = camTransform.position + (forward * targetDistance);
+        
+        // 레이 시작점을 머리 위 0.5m 지점으로 잡고 아래로 20m 넉넉하게 투사 (트리거 콜라이더 무시)
+        Vector3 rayStart = new Vector3(targetXZ.x, camTransform.position.y + 0.5f, targetXZ.z);
+
+        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, 20f, ~0, QueryTriggerInteraction.Ignore))
+        {
+            position = hit.point + (Vector3.up * 0.05f);
+        }
+        else
+        {
+            // 바닥을 찾지 못했을 경우 눈높이가 아닌 지면 추정치(눈높이 아래 1.4m)로 배치
+            position = new Vector3(targetXZ.x, camTransform.position.y - 1.4f, targetXZ.z);
+        }
+
+        rotation = Quaternion.LookRotation(forward, Vector3.up);
+    }
+
     public void SetSlot(Item newItem, bool addCount = false)
     {
         this.item = newItem;
@@ -182,7 +274,6 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         Update_Count_text();
     }
 
-    // 슬롯 비우기
     public void Clear_Slot()
     {
         this.item = null;

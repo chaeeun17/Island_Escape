@@ -2,41 +2,45 @@ using UnityEngine;
 using System.Collections;
 using Fusion;
 
-public class NetworkTent : NetworkBehaviour, IInteractable
+public class NetworkTent : NetworkBehaviour
 {
-    // 현재 텐트가 사용 중인지 네트워크 상에 동기화
     [Networked] private NetworkBool isPlayerSleeping { get; set; }
 
     [Header("페이드 연출 시간 설정")]
-    [SerializeField] private float fadeDuration = 1.0f; // 화면이 닫히고 열리는 시간(초)
-    [SerializeField] private float sleepDelay = 5.0f;    // 암전된 상태로 유지될 시간(자는 시간)
+    [SerializeField] private float fadeDuration = 1.0f;
+    [SerializeField] private float sleepDelay = 5.0f;
 
     [Header("퇴장 위치")]
-    [SerializeField] private Transform exitPoint; // 잠에서 깨어난 후 플레이어가 서 있을 위치
+    [SerializeField] private Transform exitPoint;
 
-    public string GetInteractText()
+    private void OnTriggerEnter(Collider other)
     {
-        if (isPlayerSleeping)
+        // 1. ReviveRange 무시
+        if (other.gameObject.name.Contains("ReviveRange") || 
+             other.gameObject.name.Contains("Sphere")||
+            (other.transform.parent != null && other.transform.parent.name.Contains("ReviveRange")))
         {
-            return "누군가 사용하는 중...";
+            return;
         }
-        else
-        {
-            return "잠자기";
-        }
-    }
 
-    public void Interact()
-    {
-        if (isPlayerSleeping) return;
+        // 2. 네트워크 유효성 검사
+        if (Object == null || !Object.IsValid || Runner == null || !Runner.IsRunning) return;
 
-        if (NetworkPlayerStats.LocalInstance != null)
+        // 3. 이미 자는 중인지 확인
+        bool sleepingState = false;
+        try { sleepingState = isPlayerSleeping; }
+        catch (System.InvalidOperationException) { return; }
+
+        if (sleepingState) return;
+
+        // 4. 플레이어 컴포넌트 검사
+        Player enteringPlayer = other.GetComponentInParent<Player>();
+        if (enteringPlayer == null || enteringPlayer.Object == null || !enteringPlayer.Object.IsValid) return;
+
+        // 5. 내 로컬 플레이어일 때만 수면 요청
+        if (enteringPlayer.HasInputAuthority)
         {
-            Player localPlayer = NetworkPlayerStats.LocalInstance.GetComponent<Player>();
-            if (localPlayer != null)
-            {
-                RPC_RequestSleep(localPlayer.Object.InputAuthority);
-            }
+            RPC_RequestSleep(enteringPlayer.Object.InputAuthority);
         }
     }
 
@@ -54,7 +58,7 @@ public class NetworkTent : NetworkBehaviour, IInteractable
     {
         foreach (var player in FindObjectsOfType<Player>())
         {
-            if (player.Object.InputAuthority == sleepingPlayerRef)
+            if (player.Object != null && player.Object.InputAuthority == sleepingPlayerRef)
             {
                 StartCoroutine(SleepRoutine(player));
                 break;
@@ -64,34 +68,29 @@ public class NetworkTent : NetworkBehaviour, IInteractable
 
     private IEnumerator SleepRoutine(Player sleepingPlayer)
     {
-        bool isMyPlayer = sleepingPlayer.HasInputAuthority; // "나 자신"인가?
+        bool isMyPlayer = sleepingPlayer.HasInputAuthority;
 
         if (isMyPlayer)
         {
-            // ==========================================
-            // 👁️ [내 시점] 나에게는 내 캐릭터를 끌 필요가 전혀 없음!
-            // ==========================================
             Debug.Log("[텐트] 수면 시퀀스 시작...");
-
-            // 🛑 [입력 차단] 페이드 아웃 시작 직전 이동 및 잡기 정지
             sleepingPlayer.SetInputEnabled(false);
 
-            // 1. 화면 암전 (Fade Out)
+            // 1. 암전
             if (FadeManager.Instance != null)
             {
                 yield return FadeManager.Instance.FadeOut(fadeDuration);
             }
 
-            // 2. 스탯 정산
+            // 2. 스탯 회복
             if (NetworkPlayerStats.LocalInstance != null)
             {
                 NetworkPlayerStats.LocalInstance.RestoreStamina(10);
             }
 
-            // 3. 수면 시간 대기 (어두운 화면 유지)
+            // 3. 자는 시간 대기
             yield return new WaitForSeconds(sleepDelay);
 
-            // 4. 깨어날 위치로 내 위치 이동
+            // 4. 깨어날 위치로 플레이어 이동
             if (exitPoint != null)
             {
                 sleepingPlayer.transform.position = exitPoint.position;
@@ -99,51 +98,37 @@ public class NetworkTent : NetworkBehaviour, IInteractable
             }
 
             sleepingPlayer.SetInputEnabled(true);
-        
+
+            // 🌟 1회용이므로 텐트 네트워크 디스폰 요청
             RPC_RequestDespawn();
 
-            // 5. 화면 다시 밝아지기 (Fade In)
+            // 5. 화면 밝아짐
             if (FadeManager.Instance != null)
             {
                 yield return FadeManager.Instance.FadeIn(fadeDuration);
             }
-
-            
         }
         else
         {
-            // ==========================================
-            // 👥 [상대방 시점] 상대방 화면에서만 내 아바타 숨기기!
-            // ==========================================
-            Debug.Log($"[텐트] {sleepingPlayer.name} 님이 텐트 속으로 들어갔습니다.");
-
-            // 1. 상대방 화면에서만 잠자는 플레이어 아바타(메쉬) 숨김
             SetPlayerVisibility(sleepingPlayer, false);
 
-            // 2. 수면 + 페이드 시간 동안 대기
             yield return new WaitForSeconds(fadeDuration + sleepDelay);
 
-            // 3. 퇴장 위치로 플레이어 모델링 이동
             if (exitPoint != null)
             {
                 sleepingPlayer.transform.position = exitPoint.position;
                 sleepingPlayer.transform.rotation = exitPoint.rotation;
             }
 
-            // 4. 상대방 화면에 내 아바타 다시 뿅! 등장
             SetPlayerVisibility(sleepingPlayer, true);
-            Debug.Log($"[텐트] {sleepingPlayer.name} 님이 텐트에서 나왔습니다.");
         }
     }
 
-    // 🌟 [핵심 지원 함수] GameObject는 둔 채, 메쉬(Renderer)만 켜고 끄는 함수
     private void SetPlayerVisibility(Player player, bool isVisible)
     {
-        // 플레이어 캐릭터 자식들에 붙은 모든 MeshRenderer(몸통, 손, 얼굴 등)를 켜거나 끕니다.
         Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
         foreach (Renderer rend in renderers)
         {
-            // VR 카메라는 끄면 안 되므로, 혹시 카메라나 UI 가이드가 포함되어 있지 않은 렌더러만 토글합니다.
             rend.enabled = isVisible;
         }
     }
@@ -151,7 +136,7 @@ public class NetworkTent : NetworkBehaviour, IInteractable
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_RequestDespawn()
     {
-        if (Runner != null && Runner.IsRunning)
+        if (Runner != null && Runner.IsRunning && Object != null && Object.IsValid)
         {
             Runner.Despawn(Object);
         }

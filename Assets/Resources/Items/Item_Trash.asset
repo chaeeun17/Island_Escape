@@ -15,7 +15,11 @@ MonoBehaviour:
   ItemNumber: 2
   ItemName: Trash
   ItemSprite: {fileID: 21300000, guid: 6619173a109d1a044acd16e09a964017, type: 3}
-  ItemDescription: Trash
+  ItemDescription: Vinyl waste washed ashore from the sea. It seems useful when creating
+    some tools.
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 7723232089280703118, guid: c4bdf884016ac1940aaafc08f30fe987, type: 3}
+  restoreHunger: 0
+  restoreThirst: 0
+  restoreStamina: 0

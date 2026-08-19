@@ -972,7 +972,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -3686,58 +3686,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: testStartItems.Array.size
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 993b9c7801eeedc42b60aab67d4ee97e, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 52f33747ea5470a4a8b3f81bcbb2ba01, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[3]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 2e6cd39aa3fb80f4296270dbcb6e02a6, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[4]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 5170f69ec14a8664b95c8939c895365a, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[5]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 0dafa9dc02baf974e906ebb05d4b247b, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[6]'
-      value: 
-      objectReference: {fileID: 11400000, guid: b03a9e8c9a803224db4840c2f122cde9, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[7]'
-      value: 
-      objectReference: {fileID: 11400000, guid: be07eb5cdedb8f94ba8f32fb4ee8ea4c, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[8]'
-      value: 
-      objectReference: {fileID: 11400000, guid: c1b4776eac2f14644b69c9a26ae16ced, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[9]'
-      value: 
-      objectReference: {fileID: 11400000, guid: fc42d82e4f68c894a9a26e5c3a230d3f, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[10]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 3e99705776135ff4a9ef36fe0b85b5d9, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[11]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 18281ee3d8a27194985a33b08b4ed501, type: 2}
-    - target: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
-      propertyPath: 'testStartItems.Array.data[12]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 6772d93bc6364c84e81628d89906937e, type: 2}
     - target: {fileID: 7808138428837355802, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: iconImage
       value: 
