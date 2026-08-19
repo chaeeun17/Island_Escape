@@ -1,3 +1,4 @@
+ï»¿using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -10,19 +11,36 @@ public class PlayerHelicopterRider : NetworkBehaviour
     [SerializeField] private Player playerScript;
 
     [Header("Climb Settings")]
-    [SerializeField] private float climbSpeedMultiplier = 1.0f; // Å¬¶óÀÌ¹Ö °¨µµ
-    [SerializeField] private float maxClimbY = 10.0f;           // »ç´Ù¸® ÃÖ»ó´Ü Á¦ÇÑ
-    [SerializeField] private float minClimbY = -2.0f;           // »ç´Ù¸® ÃÖÇÏ´Ü Á¦ÇÑ
+    [SerializeField] private float climbSpeedMultiplier = 1.0f;
+    [SerializeField] private float maxClimbY = 2.0f;
+    [SerializeField] private float minClimbY = -2.0f;
 
     private Rigidbody _rigidbody;
-    private Transform _targetRung;
-    private Vector3 _offsetPosition;
-    private Quaternion _offsetRotation;
-    private bool _isAttached = false;
 
-    // Å¬¶óÀÌ¹Ö °è»ê¿ë º¯¼ö
-    private Transform _grabbingHand;      // Àâ°í ÀÖ´Â ¼Õ Transform
-    private Vector3 _lastHandLocalPos;    // ÀÌÀü ÇÁ·¹ÀÓÀÇ ¼Õ À§Ä¡
+    // ğŸŒŸ ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ë³´ì—¬ì£¼ê¸° ìœ„í•œ ë³µì œ ì „ìš© (ë³¸ì¸ ë Œë”ë§ì—ëŠ” ì‚¬ìš© ì•ˆ í•¨)
+    [Networked] private NetworkBool IsAttached { get; set; }
+    [Networked] private Vector3 OffsetPosition { get; set; }
+    [Networked] private Quaternion OffsetRotation { get; set; }
+    [Networked] private NetworkId HelicopterId { get; set; }
+    [Networked] private int RungIndex { get; set; } = -1;
+
+    // ğŸŒŸ ë³¸ì¸(ì†Œìœ ì) ì „ìš© ë¡œì»¬ ìƒíƒœ - RPC ì™•ë³µ ì—†ì´ ì¦‰ì‹œ ë°˜ì˜ë¨
+    private bool _localIsAttached = false;
+    private Transform _localTargetRung;
+    private Vector3 _localOffsetPosition;
+    private Quaternion _localOffsetRotation;
+    private HelicopterController _cachedHelicopterLocal;
+
+    // ì† -> ì¡ê³  ìˆëŠ” ë°œíŒ ë§¤í•‘ (ì–‘ì† í´ë¼ì´ë° ì¶”ì ìš©)
+    private readonly Dictionary<Transform, Transform> _grabbingHandsToRung = new Dictionary<Transform, Transform>();
+
+    private Transform _grabbingHand;      // í´ë¼ì´ë° ê³„ì‚°ì— ì“°ì´ëŠ” "ì£¼" ì†
+    private Vector3 _lastHandLocalPos;
+
+    // ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ì—ê²Œë„ ë…¸ì¶œ: ì§€ê¸ˆ ì‚¬ë‹¤ë¦¬ì— ë¶™ì–´ìˆëŠ” ìƒíƒœì¸ì§€
+    public bool IsCurrentlyAttached => HasInputAuthority ? _localIsAttached : IsAttached;
+
+    [SerializeField] private bool preventReleaseWhileClimbing = false;
 
     private void Awake()
     {
@@ -31,89 +49,196 @@ public class PlayerHelicopterRider : NetworkBehaviour
         if (playerScript == null) playerScript = GetComponent<Player>();
     }
 
-    // »ç´Ù¸®¸¦ Àâ¾ÒÀ» ¶§ È£Ãâ (RopeRung¿¡¼­ handTransformÀ» Àü´Ş¹ŞÀ½)
-    public void AttachToLadder(Transform rungTransform, Transform handTransform)
+    // ì† í•˜ë‚˜ê°€ ë°œíŒì„ ì¡ì•˜ì„ ë•Œ í˜¸ì¶œ
+    public void AttachToLadder(Transform rungTransform, Transform handTransform, HelicopterController helicopter)
     {
-        _targetRung = rungTransform;
+        if (!HasInputAuthority) return;
+
+        int index = helicopter.GetRungIndex(rungTransform);
+        if (index < 0)
+        {
+            Debug.LogWarning("[PlayerHelicopterRider] ë“±ë¡ë˜ì§€ ì•Šì€ Rungì…ë‹ˆë‹¤.");
+            return;
+        }
+
+        bool wasAttached = _localIsAttached;
+
+        _grabbingHandsToRung[handTransform] = rungTransform;
+        _cachedHelicopterLocal = helicopter;
+
+        // ğŸŒŸ rungTransformì´ ì•„ë‹ˆë¼ helicopter.transform ê¸°ì¤€ìœ¼ë¡œ ì˜¤í”„ì…‹ ê³„ì‚°
+        Transform heliRoot = helicopter.transform;
+        Vector3 initialOffsetPos = heliRoot.InverseTransformPoint(transform.position);
+        Quaternion initialOffsetRot = Quaternion.Inverse(heliRoot.rotation) * transform.rotation;
+
+        _localTargetRung = rungTransform;       // í´ë¼ì´ë° ì¶• ê³„ì‚°ì—ëŠ” ì—¬ì „íˆ ì‚¬ìš©
+        _localOffsetPosition = initialOffsetPos; // ğŸŒŸ í—¬ê¸° ê¸°ì¤€
+        _localOffsetRotation = initialOffsetRot;
+        _localIsAttached = true;
+
         _grabbingHand = handTransform;
+        _lastHandLocalPos = heliRoot.InverseTransformPoint(handTransform.position); // ğŸŒŸ í—¬ê¸° ê¸°ì¤€ìœ¼ë¡œ í†µì¼
 
-        if (_grabbingHand != null)
+        if (!wasAttached)
         {
-            // ÀâÀº ¼ÕÀÇ »ç´Ù¸® ±âÁØ »ó´ë À§Ä¡ ±â·Ï
-            _lastHandLocalPos = _targetRung.InverseTransformPoint(_grabbingHand.position);
+            if (playerScript != null) playerScript.IsEscaped = true;
+            SetLocomotionEnabled(false);
         }
 
-        if (playerScript != null)
+        var heliNetObj = helicopter.Object;
+        NetworkId heliId = heliNetObj != null ? heliNetObj.Id : default;
+        SetAttachState(true, initialOffsetPos, initialOffsetRot, heliId, index);
+    }
+
+    // ì† í•˜ë‚˜ê°€ ë°œíŒì„ ë†“ì•˜ì„ ë•Œ í˜¸ì¶œ (ì™„ì „ íƒˆì°©ì€ ì—¬ê¸°ì„œ ë‚´ë¶€ì ìœ¼ë¡œ íŒë‹¨)
+    public void DetachHand(Transform handTransform)
+    {
+        if (!HasInputAuthority) return;
+        if (preventReleaseWhileClimbing) return; // ğŸŒŸ ì•„ì˜ˆ íƒˆì°© ë¡œì§ì„ ë§‰ìŒ
+
+        _grabbingHandsToRung.Remove(handTransform);
+
+        if (_grabbingHandsToRung.Count == 0)
         {
-            playerScript.IsEscaped = true;
+            if (playerScript != null) playerScript.IsEscaped = false;
+
+            _localIsAttached = false;
+            _localTargetRung = null;
+            _grabbingHand = null;
+
+            SetAttachState(false, Vector3.zero, Quaternion.identity, default, -1);
+
+            // ğŸŒŸ ë¡œì½”ëª¨ì…˜ì„ ì¼œê¸° ì „ì—, CCì˜ ë‚´ë¶€ ìœ„ì¹˜ë¥¼ í˜„ì¬ ìœ„ì¹˜ë¡œ ë¨¼ì € ë™ê¸°í™”
+            if (playerScript != null)
+            {
+                playerScript.SyncControllerPositionToTransform();
+            }
+
+            SetLocomotionEnabled(true);
         }
-
-        AttachToLadderInternal();
-    }
-
-    public void DetachFromLadder()
-    {
-        if (playerScript != null)
+        else
         {
-            playerScript.IsEscaped = false;
+            Transform remainingHand = null;
+            Transform remainingRung = null;
+            foreach (var kv in _grabbingHandsToRung)
+            {
+                remainingHand = kv.Key;
+                remainingRung = kv.Value;
+            }
+
+            // ğŸŒŸ remainingRungì´ ì•„ë‹ˆë¼ í—¬ê¸° ë£¨íŠ¸ ê¸°ì¤€ìœ¼ë¡œ í†µì¼
+            Transform heliRoot = _cachedHelicopterLocal != null ? _cachedHelicopterLocal.transform : null;
+            if (heliRoot == null) return;
+
+            Vector3 newOffsetPos = heliRoot.InverseTransformPoint(transform.position);
+            Quaternion newOffsetRot = Quaternion.Inverse(heliRoot.rotation) * transform.rotation;
+
+            _localTargetRung = remainingRung;
+            _localOffsetPosition = newOffsetPos;
+            _localOffsetRotation = newOffsetRot;
+            _grabbingHand = remainingHand;
+            _lastHandLocalPos = heliRoot.InverseTransformPoint(remainingHand.position); // ğŸŒŸ ì—¬ê¸°ë„ heliRoot ê¸°ì¤€
+
+            int index = _cachedHelicopterLocal.GetRungIndex(remainingRung);
+            NetworkId heliId = _cachedHelicopterLocal.Object != null ? _cachedHelicopterLocal.Object.Id : default;
+
+            SetAttachState(true, newOffsetPos, newOffsetRot, heliId, index);
         }
-
-        _grabbingHand = null;
-        DetachFromLadderInternal();
     }
 
-    private void AttachToLadderInternal()
+    // ==========================================
+    // [Networked] ìƒíƒœ ì“°ê¸° í—¬í¼ (ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ ë³µì œ ì „ìš©)
+    // ==========================================
+    private void SetAttachState(bool attached, Vector3 offsetPos, Quaternion offsetRot, NetworkId heliId, int rungIndex)
     {
-        if (_isAttached || _targetRung == null) return;
-
-        _isAttached = true;
-        SetLocomotionEnabled(false);
-
-        // Ã¹ ºÎÂø ½Ã ¿ÀÇÁ¼Â °è»ê
-        _offsetPosition = _targetRung.InverseTransformPoint(transform.position);
-        _offsetRotation = Quaternion.Inverse(_targetRung.rotation) * transform.rotation;
-
-        transform.SetParent(_targetRung);
+        if (Object.HasStateAuthority)
+        {
+            ApplyAttachState(attached, offsetPos, offsetRot, heliId, rungIndex);
+        }
+        else
+        {
+            RPC_RequestSetAttachState(attached, offsetPos, offsetRot, heliId, rungIndex);
+        }
     }
 
-    private void DetachFromLadderInternal()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestSetAttachState(bool attached, Vector3 offsetPos, Quaternion offsetRot, NetworkId heliId, int rungIndex)
     {
-        if (!_isAttached) return;
+        ApplyAttachState(attached, offsetPos, offsetRot, heliId, rungIndex);
+    }
 
-        _isAttached = false;
-        _targetRung = null;
-
-        transform.SetParent(null);
-        SetLocomotionEnabled(true);
+    private void ApplyAttachState(bool attached, Vector3 offsetPos, Quaternion offsetRot, NetworkId heliId, int rungIndex)
+    {
+        IsAttached = attached;
+        OffsetPosition = offsetPos;
+        OffsetRotation = offsetRot;
+        HelicopterId = heliId;
+        RungIndex = rungIndex;
     }
 
     private void LateUpdate()
     {
-        if (!_isAttached || _targetRung == null) return;
-
-        // 1. ¼Õ ÀÌµ¿¿¡ µû¸¥ Y ¿ÀÇÁ¼Â °è»êÀ» LateUpdate ³»¿¡¼­ Á÷Á¢ ¼öÇà
-        if (_grabbingHand != null)
+        if (HasInputAuthority)
         {
-            Vector3 currentHandLocalPos = _targetRung.InverseTransformPoint(_grabbingHand.position);
+            if (!_localIsAttached || _cachedHelicopterLocal == null) return;
 
-            // ÇÁ·¹ÀÓ °£ ¼Õ ÀÌµ¿·® °è»ê
-            float deltaY = currentHandLocalPos.y - _lastHandLocalPos.y;
+            Transform heliRoot = _cachedHelicopterLocal.transform;
 
-            // ¶³¸² ¹æÁö: ¹Ì¼¼ÇÑ ³ëÀÌÁî(0.1mm ÀÌÇÏ º¯È­) ¹«½Ã
-            if (Mathf.Abs(deltaY) > 0.0001f)
+            if (_grabbingHand != null)
             {
-                _offsetPosition.y -= deltaY * climbSpeedMultiplier;
-                _offsetPosition.y = Mathf.Clamp(_offsetPosition.y, minClimbY, maxClimbY);
+                // ğŸŒŸ í´ë¼ì´ë°(ì† ì´ë™)ë„ í—¬ê¸° ê¸°ì¤€ ì¢Œí‘œê³„ë¡œ ê³„ì‚°
+                Vector3 currentHandLocalPos = heliRoot.InverseTransformPoint(_grabbingHand.position);
+                float deltaY = currentHandLocalPos.y - _lastHandLocalPos.y;
+
+                if (Mathf.Abs(deltaY) > 0.0001f)
+                {
+                    _localOffsetPosition.y -= deltaY * climbSpeedMultiplier;
+                    _localOffsetPosition.y = Mathf.Clamp(_localOffsetPosition.y, minClimbY, maxClimbY);
+
+                    SetAttachState(true, _localOffsetPosition, _localOffsetRotation, HelicopterId, RungIndex);
+                }
+
+                _lastHandLocalPos = currentHandLocalPos;
             }
 
-            // ÀÌ¹ø ÇÁ·¹ÀÓ ±âÁØ À§Ä¡·Î °»½Å
-            _lastHandLocalPos = currentHandLocalPos;
+            // ğŸŒŸ í—¬ê¸° ê¸°ì¤€ìœ¼ë¡œ ì›”ë“œ ìœ„ì¹˜ ê³„ì‚° â†’ í—¬ê¸°ì™€ì˜ ê±°ë¦¬ê°€ í•­ìƒ ê³ ì • ìœ ì§€
+            transform.position = heliRoot.TransformPoint(_localOffsetPosition);
+            transform.rotation = heliRoot.rotation * _localOffsetRotation;
         }
+        else
+        {
+            if (!IsAttached) return;
 
-        // 2. ÃÖÁ¾ ¿ùµå Transform Àû¿ë
-        transform.position = _targetRung.TransformPoint(_offsetPosition);
-        transform.rotation = _targetRung.rotation * _offsetRotation;
+            Transform heliTransform = ResolveHelicopterTransform();
+            if (heliTransform == null) return;
+
+            transform.position = heliTransform.TransformPoint(OffsetPosition);
+            transform.rotation = heliTransform.rotation * OffsetRotation;
+        }
     }
+
+    private Transform ResolveHelicopterTransform()
+    {
+        if (!HelicopterId.IsValid || Runner == null) return null;
+
+        var heliObj = Runner.FindObject(HelicopterId);
+        return heliObj != null ? heliObj.transform : null;
+    }
+
+    /*
+    private Transform ResolveRungTransform()
+    {
+        if (RungIndex < 0 || !HelicopterId.IsValid || Runner == null) return null;
+
+        var heliObj = Runner.FindObject(HelicopterId);
+        if (heliObj == null) return null;
+
+        var helicopter = heliObj.GetComponent<HelicopterController>();
+        if (helicopter == null) return null;
+
+        return helicopter.GetRungByIndex(RungIndex);
+    }
+    */
 
     private void SetLocomotionEnabled(bool isEnabled)
     {

@@ -9,6 +9,9 @@ public class NetworkInventoryZone : MonoBehaviour
     {
         // 들어온 오브젝트가 XRGrabInteractable을 가지고 있는지 확인
         XRGrabInteractable grabInteractable = other.GetComponentInParent<XRGrabInteractable>();
+        ItemRemove item = other.GetComponentInParent<ItemRemove>();
+
+        if (item == null) return;
 
         if (grabInteractable != null)
         {

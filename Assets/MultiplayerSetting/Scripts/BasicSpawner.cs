@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
@@ -11,7 +11,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private Button createRoomBtn;
     [SerializeField] private Button joinRoomBtn;
 
-    // ¾À¿¡¼­ ÅÂ±×·Î Ã£Àº ½ºÆù ÁöÁ¡µéÀÇ TransformÀ» ÀúÀåÇÒ ¸®½ºÆ®
+    // ì”¬ì—ì„œ íƒœê·¸ë¡œ ì°¾ì€ ìŠ¤í° ì§€ì ë“¤ì˜ Transformì„ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸
     private List<Transform> _spawnPoints = new List<Transform>();
 
     private NetworkRunner _runner;
@@ -53,7 +53,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
-            // ¾À ·Îµå°¡ ÀÌ¹Ì ³¡³µ°í, ¾ÆÁ÷ ½ºÆù ¾È µÈ ÇÃ·¹ÀÌ¾î¶ó¸é ½ºÆù
+            // ì”¬ ë¡œë“œê°€ ì´ë¯¸ ëë‚¬ê³ , ì•„ì§ ìŠ¤í° ì•ˆ ëœ í”Œë ˆì´ì–´ë¼ë©´ ìŠ¤í°
             if (_spawnPoints.Count > 0 && !_spawnedCharacters.ContainsKey(player))
             {
                 SpawnPlayer(runner, player);
@@ -70,16 +70,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        // 1. ¾À ·Îµå°¡ ³¡³­ ½ÃÁ¡¿¡ SpawnPoint ÅÂ±× ¼öÁı
+        // 1. ì”¬ ë¡œë“œê°€ ëë‚œ ì‹œì ì— SpawnPoint íƒœê·¸ ìˆ˜ì§‘
         FindSpawnPoints();
 
-        // 2. ½ºÆù Ã³¸®´Â Server/Host ±ÇÇÑ¸¸ ¼öÇà
+        // 2. ìŠ¤í° ì²˜ë¦¬ëŠ” Server/Host ê¶Œí•œë§Œ ìˆ˜í–‰
         if (runner.IsServer)
         {
-            // ÇöÀç ¹æ¿¡ Á¢¼ÓÇØ ÀÖ´Â ¸ğµç ÇÃ·¹ÀÌ¾î ¸ñ·Ï ¼øÈ¸
+            // í˜„ì¬ ë°©ì— ì ‘ì†í•´ ìˆëŠ” ëª¨ë“  í”Œë ˆì´ì–´ ëª©ë¡ ìˆœíšŒ
             foreach (var player in runner.ActivePlayers)
             {
-                // ¾ÆÁ÷ ½ºÆùµÇÁö ¾ÊÀº ÇÃ·¹ÀÌ¾î¶ó¸é ½ºÆù ÁøÇà
+                // ì•„ì§ ìŠ¤í°ë˜ì§€ ì•Šì€ í”Œë ˆì´ì–´ë¼ë©´ ìŠ¤í° ì§„í–‰
                 if (!_spawnedCharacters.ContainsKey(player))
                 {
                     SpawnPlayer(runner, player);
@@ -101,16 +101,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             inputAuthority: player
         );
 
-        Debug.Log($"[Spawn °á°ú] player={player.PlayerId}, playerObject == null ? {playerObject == null}, pos={spawnPosition}");
+        Debug.Log($"[Spawn ê²°ê³¼] player={player.PlayerId}, playerObject == null ? {playerObject == null}, pos={spawnPosition}");
 
         _spawnedCharacters.Add(player, playerObject);
+        runner.SetPlayerObject(player, playerObject); // ì¶”ê°€
 
         StartCoroutine(CheckAlive(playerObject, player));
     }
     private System.Collections.IEnumerator CheckAlive(NetworkObject obj, PlayerRef player)
     {
         yield return new WaitForSeconds(1f);
-        Debug.Log($"[1ÃÊ ÈÄ »ıÁ¸ È®ÀÎ] player={player.PlayerId}, obj == null ? {obj == null}");
+        Debug.Log($"[1ì´ˆ í›„ ìƒì¡´ í™•ì¸] player={player.PlayerId}, obj == null ? {obj == null}");
     }
 
     private void FindSpawnPoints()
@@ -125,7 +126,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_spawnPoints.Count == 0)
         {
-            Debug.LogWarning("[CharacterSpawner] ¾À¿¡¼­ 'SpawnPoint' ÅÂ±×¸¦ Ã£Áö ¸øÇß½À´Ï´Ù.");
+            Debug.LogWarning("[CharacterSpawner] ì”¬ì—ì„œ 'SpawnPoint' íƒœê·¸ë¥¼ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
         }
     }
     private Transform GetSpawnPoint(PlayerRef player)

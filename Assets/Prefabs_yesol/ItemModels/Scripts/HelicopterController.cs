@@ -1,17 +1,17 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
 public class HelicopterController : NetworkBehaviour
 {
-    // Çï±â »óÅÂ Á¤ÀÇ
+    // í—¬ê¸° ìƒíƒœ ì •ì˜
     public enum EHelicopterState
     {
-        Inactive,      // ½ºÆù Àü / ´ë±â
-        Approaching,   // ¸ñÇ¥ ÁöÁ¡À¸·Î ºñÇà Áß
-        Hovering,      // Á¤Áö »óÅÂ (»ç´Ù¸® ³»·Á¿È, ÇÃ·¹ÀÌ¾î Å¾½Â ½Ã°£)
-        Departing      // Å»Ãâ »ó½Â ÀÌÅ»
+        Inactive,      // ìŠ¤í° ì „ / ëŒ€ê¸°
+        Approaching,   // ëª©í‘œ ì§€ì ìœ¼ë¡œ ë¹„í–‰ ì¤‘
+        Hovering,      // ì •ì§€ ìƒíƒœ (ì‚¬ë‹¤ë¦¬ ë‚´ë ¤ì˜´, í”Œë ˆì´ì–´ íƒ‘ìŠ¹ ì‹œê°„)
+        Departing      // íƒˆì¶œ ìƒìŠ¹ ì´íƒˆ
     }
 
     [Header("Networked States")]
@@ -29,25 +29,44 @@ public class HelicopterController : NetworkBehaviour
     [SerializeField] private float rotationSpeed = 3f;
 
     [Header("Ladder & Escape Settings")]
-    [SerializeField] private GameObject ropeLadderObject; // »ç´Ù¸® ÇÁ¸®ÆÕ/¿ÀºêÁ§Æ®
-    [SerializeField] private float hoverDuration = 45f;    // Å¾½Â ´ë±â ½Ã°£ (ÃÊ)
+    [SerializeField] private GameObject ropeLadderObject; // ì‚¬ë‹¤ë¦¬ í”„ë¦¬íŒ¹/ì˜¤ë¸Œì íŠ¸
+    [SerializeField] private float hoverDuration = 45f;    // íƒ‘ìŠ¹ ëŒ€ê¸° ì‹œê°„ (ì´ˆ)
 
     [Header("Components")]
     [SerializeField] private AudioSource engineAudioSource;
 
-    // Å»Ãâ ¼º°øÇÑ ÇÃ·¹ÀÌ¾î ¸ñ·Ï (State Authority¿¡¼­ °ü¸®)
+    // íƒˆì¶œ ì„±ê³µí•œ í”Œë ˆì´ì–´ ëª©ë¡ (State Authorityì—ì„œ ê´€ë¦¬)
     private readonly HashSet<PlayerRef> _escapedPlayers = new HashSet<PlayerRef>();
+
+    [Header("Ladder Rungs")]
+    [SerializeField] private Transform[] ladderRungs; // ì‚¬ë‹¤ë¦¬ ë°œíŒë“¤, ì¸ìŠ¤í™í„°ì—ì„œ ìˆœì„œëŒ€ë¡œ ë“±ë¡
+
+    public Transform GetRungByIndex(int index)
+    {
+        if (ladderRungs == null || index < 0 || index >= ladderRungs.Length) return null;
+        return ladderRungs[index];
+    }
+
+    public int GetRungIndex(Transform rung)
+    {
+        if (ladderRungs == null) return -1;
+        for (int i = 0; i < ladderRungs.Length; i++)
+        {
+            if (ladderRungs[i] == rung) return i;
+        }
+        return -1;
+    }
 
     public override void Spawned()
     {
-        // »ç´Ù¸®´Â ÃÊ±â »óÅÂ¿¡¼­ ºñÈ°¼ºÈ­
+        // ì‚¬ë‹¤ë¦¬ëŠ” ì´ˆê¸° ìƒíƒœì—ì„œ ë¹„í™œì„±í™”
         if (ropeLadderObject != null)
         {
             ropeLadderObject.SetActive(false);
         }
     }
 
-    // Çï±â È£Ãâ (¼­¹ö/Host ±ÇÇÑÀ¸·Î ½ÇÇà)
+    // í—¬ê¸° í˜¸ì¶œ (ì„œë²„/Host ê¶Œí•œìœ¼ë¡œ ì‹¤í–‰)
     public void CallHelicopter()
     {
         if (!Object.HasStateAuthority) return;
@@ -60,7 +79,7 @@ public class HelicopterController : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        // »óÅÂ ¾÷µ¥ÀÌÆ® ·ÎÁ÷Àº State Authority(Host)¿¡¼­¸¸ ¼öÇà
+        // ìƒíƒœ ì—…ë°ì´íŠ¸ ë¡œì§ì€ State Authority(Host)ì—ì„œë§Œ ìˆ˜í–‰
         if (!Object.HasStateAuthority) return;
 
         switch (CurrentState)
@@ -68,14 +87,14 @@ public class HelicopterController : NetworkBehaviour
             case EHelicopterState.Approaching:
                 MoveTowardsWaypoint(hoverWaypoint.position, () =>
                 {
-                    // ¸ñÇ¥ ÁöÁ¡ µµÂø ½Ã È£¹ö¸µ »óÅÂ·Î ÀüÈ¯ ¹× Å¸ÀÌ¸Ó ½ÃÀÛ
+                    // ëª©í‘œ ì§€ì  ë„ì°© ì‹œ í˜¸ë²„ë§ ìƒíƒœë¡œ ì „í™˜ ë° íƒ€ì´ë¨¸ ì‹œì‘
                     CurrentState = EHelicopterState.Hovering;
                     EscapeTimer = TickTimer.CreateFromSeconds(Runner, hoverDuration);
                 });
                 break;
 
             case EHelicopterState.Hovering:
-                // ³²Àº ½Ã°£ÀÌ ³¡³ª¸é ÀÌÅ» »óÅÂ·Î ÀüÈ¯
+                // ë‚¨ì€ ì‹œê°„ì´ ëë‚˜ë©´ ì´íƒˆ ìƒíƒœë¡œ ì „í™˜
                 if (EscapeTimer.Expired(Runner))
                 {
                     CurrentState = EHelicopterState.Departing;
@@ -85,7 +104,7 @@ public class HelicopterController : NetworkBehaviour
             case EHelicopterState.Departing:
                 MoveTowardsWaypoint(escapeWaypoint.position, () =>
                 {
-                    // Å»Ãâ ¿Ï·á ÈÄ ¼¼¼Ç ¸¶¹«¸® Ã³¸®
+                    // íƒˆì¶œ ì™„ë£Œ í›„ ì„¸ì…˜ ë§ˆë¬´ë¦¬ ì²˜ë¦¬
                     OnHelicopterEscaped();
                     CurrentState = EHelicopterState.Inactive;
                 });
@@ -93,10 +112,10 @@ public class HelicopterController : NetworkBehaviour
         }
     }
 
-    // ºñÇà ÀÌµ¿ Ã³¸® ¸Ş¼­µå (È¸Àü ¾øÀÌ Á÷¼± ÀÌµ¿¸¸ ¼öÇà)
+    // ë¹„í–‰ ì´ë™ ì²˜ë¦¬ ë©”ì„œë“œ (íšŒì „ ì—†ì´ ì§ì„  ì´ë™ë§Œ ìˆ˜í–‰)
     private void MoveTowardsWaypoint(Vector3 targetPosition, System.Action onArrived)
     {
-        // È¸Àü °è»ê(Quaternion.LookRotation ¹× Slerp)À» ¸ğµÎ Á¦°ÅÇÏ°í Position¸¸ ÀÌµ¿
+        // íšŒì „ ê³„ì‚°(Quaternion.LookRotation ë° Slerp)ì„ ëª¨ë‘ ì œê±°í•˜ê³  Positionë§Œ ì´ë™
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, flySpeed * Runner.DeltaTime);
 
         if (Vector3.Distance(transform.position, targetPosition) < 0.5f)
@@ -105,7 +124,7 @@ public class HelicopterController : NetworkBehaviour
         }
     }
 
-    // ÇÃ·¹ÀÌ¾î°¡ »ç´Ù¸®¸¦ Àâ¾ÒÀ» ¶§ È£ÃâÇÏ´Â RPC
+    // í”Œë ˆì´ì–´ê°€ ì‚¬ë‹¤ë¦¬ë¥¼ ì¡ì•˜ì„ ë•Œ í˜¸ì¶œí•˜ëŠ” RPC
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_RegisterEscapedPlayer(PlayerRef player, bool isBoarded)
     {
@@ -120,7 +139,7 @@ public class HelicopterController : NetworkBehaviour
         }
     }
 
-    // »óÅÂ º¯°æ ½Ã ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡¼­ ½ÇÇà (Fusion 2 OnChangedRender)
+    // ìƒíƒœ ë³€ê²½ ì‹œ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì‹¤í–‰ (Fusion 2 OnChangedRender)
     private void OnStateChanged()
     {
         switch (CurrentState)
@@ -128,22 +147,58 @@ public class HelicopterController : NetworkBehaviour
             case EHelicopterState.Approaching:
                 if (engineAudioSource != null && !engineAudioSource.isPlaying)
                     engineAudioSource.Play();
+
+                // ğŸŒŸ ëª¨ë“  í”Œë ˆì´ì–´ í”„ë¦¬íŒ¹ì˜ ì•Œë¦¼ í•¨ìˆ˜ í˜¸ì¶œì€ StateAuthorityì—ì„œë§Œ
+                if (Object.HasStateAuthority)
+                {
+                    NotifyAllPlayersApproaching();
+                }
                 break;
 
             case EHelicopterState.Hovering:
                 if (ropeLadderObject != null)
-                    ropeLadderObject.SetActive(true); // »ç´Ù¸® ÅõÇÏ ¿¬Ãâ/È°¼ºÈ­
+                    ropeLadderObject.SetActive(true); // ì‚¬ë‹¤ë¦¬ íˆ¬í•˜ ì—°ì¶œ/í™œì„±í™”
                 break;
 
             case EHelicopterState.Departing:
-                // Å»Ãâ ¿¬Ãâ ½ÃÀÛ (¿¹: VR Ä«¸Ş¶ó Fade Out ÁØºñ)
+                // íƒˆì¶œ ì—°ì¶œ ì‹œì‘ (ì˜ˆ: VR ì¹´ë©”ë¼ Fade Out ì¤€ë¹„)
                 break;
+        }
+    }
+
+    private void NotifyAllPlayersApproaching()
+    {
+        foreach (var playerRef in Runner.ActivePlayers)
+        {
+            var playerObject = Runner.GetPlayerObject(playerRef);
+            if (playerObject != null)
+            {
+                var player = playerObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.NotifyHelicopterApproaching();
+                }
+            }
         }
     }
 
     private void OnHelicopterEscaped()
     {
         Debug.Log($"Helicopter escaped with {_escapedPlayers.Count} players!");
-        // TODO: UI Fade Out Ã³¸® ¹× ½Â¸® °á°úÃ¢ Ãâ·Â ÈÄ ¼¼¼Ç Á¾·á ·ÎÁ÷ ±¸Çö
+
+        foreach (var playerRef in _escapedPlayers)
+        {
+            var playerObject = Runner.GetPlayerObject(playerRef); // í‘œì¤€ Player ì˜¤ë¸Œì íŠ¸ ì¡°íšŒ
+            if (playerObject != null)
+            {
+                var player = playerObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.IsRescued = true; // StateAuthorityì´ë¯€ë¡œ ì§ì ‘ ëŒ€ì… ê°€ëŠ¥
+                }
+            }
+        }
+
+        // TODO: UI Fade Out ì²˜ë¦¬ ë° ìŠ¹ë¦¬ ê²°ê³¼ì°½ ì¶œë ¥ í›„ ì„¸ì…˜ ì¢…ë£Œ ë¡œì§ êµ¬í˜„
     }
 }

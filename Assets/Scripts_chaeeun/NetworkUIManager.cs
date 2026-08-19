@@ -1,14 +1,16 @@
+using Fusion; // 🌟 Fusion 라이브러리 추가
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Fusion; // 🌟 Fusion 라이브러리 추가
+using UnityEngine.SceneManagement;
 
 public class NetworkUIManager : NetworkBehaviour
 {
     public Transform headTransform; // XR Origin의 Camera
 
     [Header("연결할 UI 패널 오브젝트")]
-    [SerializeField] private GameObject itemInventoryPanel; // 아이템 창 (B 버튼)
+    [SerializeField] private Canvas itemInventoryPanel; // 아이템 창 (B 버튼)
     [SerializeField] private GameObject craftMenuPanel;     // 크래프트 창 (Y 버튼)
+    [SerializeField] private Canvas notifyPanel;
 
     [Header("컨트롤러 입력 매핑 (Input Actions)")]
     [SerializeField] private InputActionReference bButtonAction; // 오른손 (B)
@@ -30,7 +32,7 @@ public class NetworkUIManager : NetworkBehaviour
         }
 
         // 초기 시작 시 UI 창 끄기
-        if (itemInventoryPanel != null) itemInventoryPanel.SetActive(false);
+        if (itemInventoryPanel != null) itemInventoryPanel.enabled = false;//itemInventoryPanel.SetActive(false);
         if (craftMenuPanel != null) craftMenuPanel.SetActive(false);
     }
 
@@ -71,7 +73,7 @@ public class NetworkUIManager : NetworkBehaviour
     // 🎒 B 버튼 눌렸을 때: 아이템 창 토글
     private void OnBButtonPressed(InputAction.CallbackContext context)
     {
-        if (!itemInventoryPanel.activeSelf)
+        if (!itemInventoryPanel.enabled)
         {
             Vector3 forward = headTransform.forward;
             forward.y = 0; // 위아래 기울임 무시 (수평 배치)
@@ -85,7 +87,8 @@ public class NetworkUIManager : NetworkBehaviour
                 itemInventoryPanel.transform.position - headTransform.position);
         }
 
-        itemInventoryPanel.SetActive(!itemInventoryPanel.activeSelf);
+        //itemInventoryPanel.SetActive(!itemInventoryPanel.activeSelf);
+        itemInventoryPanel.enabled = !itemInventoryPanel.enabled;
         /*
         if (itemInventoryPanel == null) return;
 
@@ -133,8 +136,30 @@ public class NetworkUIManager : NetworkBehaviour
     // 외부 스크립트에서 인벤토리/크래프트 UI가 열려있는지 확인할 수 있는 함수
     public bool IsAnyUIOpen()
     {
-        bool isInvOpen = itemInventoryPanel != null && itemInventoryPanel.activeSelf;
+        bool isInvOpen = itemInventoryPanel != null && itemInventoryPanel.enabled;// itemInventoryPanel.activeSelf;
         bool isCraftOpen = craftMenuPanel != null && craftMenuPanel.activeSelf;
         return isInvOpen || isCraftOpen;
+    }
+
+
+    // =======================================
+    public async void EndSessionAndReturnToLobby()
+    {
+        if (Runner != null)
+        {
+            await Runner.Shutdown();
+        }
+
+        // 세션 종료 후 각자 로컬에서 로비 씬으로 이동 (네트워크와 무관하게 개별 실행)
+        SceneManager.LoadScene("StartScene");
+    }
+
+    public void ShowApproachNotice()
+    {
+        notifyPanel.enabled = true;
+    }
+    public void CloseApproachNotice()
+    {
+        notifyPanel.enabled = false;
     }
 }

@@ -66,6 +66,7 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: 5468705300161354490}
   - {fileID: 8130703104982332277}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &2811538656399406792
@@ -130,6 +131,7 @@ MonoBehaviour:
     _value: 0
   fireParticles: {fileID: 0}
   fireLight: {fileID: 0}
+  soFolderPath: Items/
   cookTime: 3
   restTickInterval: 2
   staminaRestoreAmount: 5
