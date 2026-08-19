@@ -101,7 +101,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             inputAuthority: player
         );
 
+        Debug.Log($"[Spawn 결과] player={player.PlayerId}, playerObject == null ? {playerObject == null}, pos={spawnPosition}");
+
         _spawnedCharacters.Add(player, playerObject);
+
+        StartCoroutine(CheckAlive(playerObject, player));
+    }
+    private System.Collections.IEnumerator CheckAlive(NetworkObject obj, PlayerRef player)
+    {
+        yield return new WaitForSeconds(1f);
+        Debug.Log($"[1초 후 생존 확인] player={player.PlayerId}, obj == null ? {obj == null}");
     }
 
     private void FindSpawnPoints()

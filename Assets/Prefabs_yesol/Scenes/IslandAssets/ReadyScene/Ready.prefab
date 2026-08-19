@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 2407405552
+  SortKey: 2691394982
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -992,7 +992,7 @@ GameObject:
   - component: {fileID: 7241603834985068280}
   m_Layer: 0
   m_Name: SpawnSpot_00
-  m_TagString: SpawnPoint
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4566,7 +4566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7992587096563541508, guid: 7063b3530f6cb8e4990789917c1be3bc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.8
+      value: 0.557
       objectReference: {fileID: 0}
     - target: {fileID: 7992587096563541508, guid: 7063b3530f6cb8e4990789917c1be3bc, type: 3}
       propertyPath: m_LocalPosition.z

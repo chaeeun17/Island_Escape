@@ -17,10 +17,10 @@ public struct NetworkInputData : INetworkInput
     public Vector3 rightHandPos;
     public Quaternion rightHandRot;
 
-    public float leftGrab;
+    public float leftGrip;
     public float leftTrigger;
 
-    public float rightGrab;
+    public float rightGrip;
     public float rightTrigger;
 }
 
