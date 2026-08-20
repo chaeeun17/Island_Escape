@@ -11,6 +11,8 @@ public class NetworkUIManager : NetworkBehaviour
     [SerializeField] private Canvas itemInventoryPanel; // 아이템 창 (B 버튼)
     [SerializeField] private GameObject craftMenuPanel;     // 크래프트 창 (Y 버튼)
     [SerializeField] private Canvas notifyPanel;
+    [SerializeField] private Canvas failPanel;
+    [SerializeField] private Canvas successPanel;
 
     [Header("컨트롤러 입력 매핑 (Input Actions)")]
     [SerializeField] private InputActionReference bButtonAction; // 오른손 (B)
@@ -161,5 +163,14 @@ public class NetworkUIManager : NetworkBehaviour
     public void CloseApproachNotice()
     {
         notifyPanel.enabled = false;
+    }
+    public void ShowFailUI()
+    {
+        failPanel.enabled = true;
+    }
+
+    public void ShowSuccessUI()
+    {
+        successPanel.enabled = true;
     }
 }

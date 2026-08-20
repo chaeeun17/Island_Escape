@@ -11,6 +11,10 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
 
+    // 추가: 외부에서 손 Transform을 조회할 수 있는 프로퍼티
+    public Transform NetLeftHand => _netLeftHand;
+    public Transform NetRightHand => _netRightHand;
+
     [SerializeField] private Animator leftHandAnimator;
     [SerializeField] private Animator rightHandAnimator;
 
@@ -48,6 +52,38 @@ public class Player : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnApproachNotifiedChanged))]
     private int ApproachNotifyToken { get; set; } // 값 변화 자체가 트리거 (bool 토글보다 중복 알림에 안전)
     [SerializeField] private NetworkUIManager uiManager; // 실제 UI 컴포넌트로 교체
+
+    [Networked, OnChangedRender(nameof(OnEscapeFailedChanged))]
+    public NetworkBool IsEscapeFailed { get; set; }
+
+    private void OnRescuedChanged()
+    {
+        if (IsRescued && HasInputAuthority)
+        {
+            vfc.StartFadeToWhite();
+
+            var uiManager = GetComponent<NetworkUIManager>(); // 실제 클래스명으로 교체 필요
+            if (uiManager != null)
+            {
+                uiManager.ShowSuccessUI(); // 실제 함수명으로 교체 필요
+            }
+        }
+    }
+
+    private void OnEscapeFailedChanged()
+    {
+        if (IsEscapeFailed && HasInputAuthority)
+        {
+            vfc.StartFadeToWhite();
+
+            var uiManager = GetComponent<NetworkUIManager>();
+            if (uiManager != null)
+            {
+                uiManager.ShowFailUI(); // 실제 함수명으로 교체 필요
+            }
+        }
+    }
+
     private void OnApproachNotifiedChanged()
     {
         if (HasInputAuthority && uiManager != null)
@@ -298,6 +334,8 @@ public class Player : NetworkBehaviour
     {
         _controlLocked = locked;
     }
+
+    /*
     private void OnRescuedChanged()
     {
         if (IsRescued && HasInputAuthority)
@@ -306,4 +344,5 @@ public class Player : NetworkBehaviour
             successCanvas.enabled = true;
         }
     }
+    */
 }

@@ -42,6 +42,9 @@ public class VRFadeController : NetworkBehaviour
     private IEnumerator FadeToTransparent()
     {
         Color c = matInstance.GetColor(ColorProp);
+
+        if (c.a <= 0.01f) yield break;
+
         float t = 0f;
         while (t < fadeDuration)
         {
@@ -57,6 +60,9 @@ public class VRFadeController : NetworkBehaviour
     private IEnumerator FadeToWhite()
     {
         Color c = matInstance.GetColor(ColorProp);
+
+        if (c.a >= 0.99f) yield break;
+
         float t = 0f;
         while (t < fadeDuration)
         {

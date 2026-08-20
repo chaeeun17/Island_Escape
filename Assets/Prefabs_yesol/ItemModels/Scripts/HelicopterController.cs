@@ -182,23 +182,35 @@ public class HelicopterController : NetworkBehaviour
         }
     }
 
+    [SerializeField] private NetworkGameOverManager gameOverManager; // 인스펙터에서 연결
+
     private void OnHelicopterEscaped()
     {
         Debug.Log($"Helicopter escaped with {_escapedPlayers.Count} players!");
 
-        foreach (var playerRef in _escapedPlayers)
+        foreach (var playerRef in Runner.ActivePlayers)
         {
-            var playerObject = Runner.GetPlayerObject(playerRef); // 표준 Player 오브젝트 조회
-            if (playerObject != null)
+            var playerObject = Runner.GetPlayerObject(playerRef);
+            if (playerObject == null) continue;
+
+            var player = playerObject.GetComponent<Player>();
+            if (player == null) continue;
+
+            if (_escapedPlayers.Contains(playerRef))
             {
-                var player = playerObject.GetComponent<Player>();
-                if (player != null)
-                {
-                    player.IsRescued = true; // StateAuthority이므로 직접 대입 가능
-                }
+                player.IsRescued = true;
+            }
+            else
+            {
+                player.IsEscapeFailed = true;
             }
         }
 
-        // TODO: UI Fade Out 처리 및 승리 결과창 출력 후 세션 종료 로직 구현
+        // 🌟 헬기가 최종적으로 떠났으니, 결과와 무관하게 게임 세션을 종료
+        //    (이후 "전원 기절" 체크가 중복으로 게임오버를 띄우지 않도록)
+        if (Object.HasStateAuthority && gameOverManager != null)
+        {
+            gameOverManager.EndGameSession();
+        }
     }
 }
