@@ -15,7 +15,7 @@ MonoBehaviour:
   ItemNumber: 20
   ItemName: PurifiedWater
   ItemSprite: {fileID: 21300000, guid: 7a8177beb29bd3f499f4f09fbdf34e6c, type: 3}
-  ItemDescription: "Water purified by a water purifier. It\u2019s perfect for quenching
+  ItemDescription: "Water purified by a water purifier.\nIt\u2019s perfect for quenching
     your throat.\r\n"
   itemType: 5
   cookedVersion: {fileID: 0}

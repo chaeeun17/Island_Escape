@@ -15,8 +15,10 @@ MonoBehaviour:
   ItemNumber: 18
   ItemName: Thread
   ItemSprite: {fileID: 21300000, guid: dc91b4a6b9e219e489a502669b705add, type: 3}
-  ItemDescription: A sturdy cord made by weaving together various materials. It is
-    an essential material for making a fishing rod.
+  ItemDescription: 'A sturdy cord made by weaving together various materials.
+
+    It
+    is an essential material for making a fishing rod.'
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 1726619266319779241, guid: 3f243aaeba83bb4458021b689a496ab5, type: 3}

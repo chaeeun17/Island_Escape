@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: Item_Fish1_Cook
   m_EditorClassIdentifier: Assembly-CSharp::Item
   ItemNumber: 11
-  ItemName: Cooked Fish
+  ItemName: Cooked Fish (Red)
   ItemSprite: {fileID: 21300000, guid: 4cf2a91889dcfb74b87588cbfbbe40f7, type: 3}
-  ItemDescription: Fish grilled over a campfire. It smells great. It seems like it
-    will be a good nutrient supplement.
+  ItemDescription: 'Fish grilled over a campfire.
+
+    It smells great.
+
+    It seems
+    like it will be a good nutrient supplement.'
   itemType: 4
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 8155519088799159642, guid: 11664df2ca9a42c4aa7a6113a959ff1a, type: 3}

@@ -59,6 +59,7 @@ public class NetworkInventory : NetworkBehaviour
     }
 
     // 🌟 아이템 추가
+    /*
     public void AddItem(Item item)
     { 
         if (item == null) return;
@@ -80,6 +81,57 @@ public class NetworkInventory : NetworkBehaviour
 
         // UI 갱신
         FilterItems(currentFilterType);
+    }*/
+
+    public bool AddItem(Item item)
+    { 
+        if (item == null) return false;
+
+        // 1. 데이터 원본(masterItemList)에서 기존 아이템 수량 증가 (중첩 가능)
+        Item existingItem = masterItemList.Find(x => x != null && x.getItemName() == item.getItemName());
+        if (existingItem != null)
+        {
+            int amountToAdd = item.get_Item_Count() > 0 ? item.get_Item_Count() : 1;
+            existingItem.add_Item_Count(amountToAdd);
+            FilterItems(currentFilterType);
+            return true;
+        }
+
+        // 2. 🌟 [핵심 방어] 신규 아이템 추가 전, 해당 탭의 슬롯이 꽉 찼는지 검사
+        int categoryItemCount = GetCategoryItemCount(item.GetItemType());
+        int maxSlotCount = itemSlots != null ? itemSlots.Length : 0;
+
+        if (categoryItemCount >= maxSlotCount)
+        {
+            Debug.LogWarning($"⚠️ [인벤토리 가득 참] 슬롯이 부족하여 '{item.getItemName()}'을(를) 넣을 수 없습니다!");
+            return false; // 인벤토리 꽉 참으로 추가 실패
+        }
+
+        // 3. 신규 아이템 추가
+        Item newItem = Instantiate(item);
+        if (newItem.get_Item_Count() <= 0) newItem.set_Item_Count(1);
+        masterItemList.Add(newItem);
+
+        // UI 갱신
+        FilterItems(currentFilterType);
+        return true;
+    }
+
+    // 🌟 해당 아이템 타입이 속한 카테고리의 현재 아이템 종류 개수 계산
+    private int GetCategoryItemCount(ItemType type)
+    {
+        int count = 0;
+        foreach (Item item in masterItemList)
+        {
+            if (item == null) continue;
+            ItemType t = item.GetItemType();
+
+            if (type == ItemType.Material && t == ItemType.Material) count++;
+            else if (type == ItemType.Tool && t == ItemType.Tool) count++;
+            else if ((type == ItemType.CookedFood || type == ItemType.RawFood || type == ItemType.Water) &&
+                     (t == ItemType.CookedFood || t == ItemType.RawFood || t == ItemType.Water)) count++;
+        }
+        return count;
     }
 
     public void AddItemByName(string itemName)

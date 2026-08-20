@@ -15,7 +15,12 @@ MonoBehaviour:
   ItemNumber: 0
   ItemName: Apple
   ItemSprite: {fileID: 21300000, guid: c58bf75596586934b9654305b5b800fc, type: 3}
-  ItemDescription: A red, sweet fruit. It can be eaten raw. A good nutritional supplement.
+  ItemDescription: 'A red, sweet fruit.
+
+    It can be eaten raw.
+
+    A good nutritional
+    supplement.'
   itemType: 4
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 5826101109135345501, guid: 98cdb32bf43a25547bba26cbc69032f3, type: 3}

@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Item_Fish1
   m_EditorClassIdentifier: Assembly-CSharp::Item
   ItemNumber: 11
-  ItemName: Fish
+  ItemName: Fish (Red)
   ItemSprite: {fileID: 21300000, guid: e5bf69be82577cd478663fb72fac2724, type: 3}
-  ItemDescription: Fresh, bright red fish caught from the sea. Grilling it seems
-    safer.
+  ItemDescription: 'Fresh, bright red fish caught from the sea.
+
+    Grilling it
+    seems safer.'
   itemType: 3
   cookedVersion: {fileID: 11400000, guid: 10bf141cf67d040499545c82e8250271, type: 2}
   prefab3D: {fileID: 8155519088799159642, guid: 056c5e717343b8746bfe5318cc53a714, type: 3}

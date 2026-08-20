@@ -446,7 +446,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -12}
+  m_AnchoredPosition: {x: 0, y: -10.5}
   m_SizeDelta: {x: 60, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4911866044881896774
@@ -477,7 +477,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bowdrill
+  m_text: apple
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e65e96f1f64fee943b2cb8147fa04e26, type: 2}
   m_sharedMaterial: {fileID: -394943187809858069, guid: e65e96f1f64fee943b2cb8147fa04e26, type: 2}
@@ -507,12 +507,12 @@ MonoBehaviour:
   m_fontSize: 12
   m_fontSizeBase: 12
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 8
+  m_fontSizeMax: 12
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -523,7 +523,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 3
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -543,7 +543,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -1.0498047, y: 0, z: -1.5258789, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2250,7 +2250,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1983886149946661281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2307,6 +2307,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 18281ee3d8a27194985a33b08b4ed501, type: 2}
   - {fileID: 11400000, guid: 6772d93bc6364c84e81628d89906937e, type: 2}
   - {fileID: 11400000, guid: f9453c6245d985548bcbd15a86dadbe4, type: 2}
+  - {fileID: 11400000, guid: a7e3468125aa22a4282844735b37d672, type: 2}
+  - {fileID: 11400000, guid: 10bf141cf67d040499545c82e8250271, type: 2}
+  - {fileID: 11400000, guid: a3253524ee878c342b42ff74f0191034, type: 2}
+  - {fileID: 11400000, guid: 3de997e2bd0327d42b578d3b3552434a, type: 2}
+  - {fileID: 11400000, guid: ddfebda7fbb04c146acade74b164160c, type: 2}
+  - {fileID: 11400000, guid: a8b6dc4d38c7ae4488da3e0dd02af1c8, type: 2}
+  - {fileID: 11400000, guid: 5eb587071b73da041b0ebf016318dba7, type: 2}
+  - {fileID: 11400000, guid: 28819e1ab08949c45857682eb305f5f2, type: 2}
+  - {fileID: 11400000, guid: 2d809b3ee81a1284db6a848657cc5788, type: 2}
+  - {fileID: 11400000, guid: 8fe3159412acb944c9523cc0179e9100, type: 2}
+  - {fileID: 11400000, guid: eac67776684d5ce408fbb18af791ab87, type: 2}
 --- !u!114 &820699295513253280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5076,7 +5087,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -30}
+  m_AnchoredPosition: {x: 0, y: -29.2}
   m_SizeDelta: {x: 54, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8614309033984373745
@@ -5107,7 +5118,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: The tool that can make some fire by person's power.
+  m_text: "Fire-grilled clam. \nIts chewy texture and salty flavor are outstanding.
+    \nIt seems like it will satisfy your hunger."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b408a5c3b059b58429cc46d978a4f2a4, type: 2}
   m_sharedMaterial: {fileID: -5753681831282559654, guid: b408a5c3b059b58429cc46d978a4f2a4, type: 2}
@@ -5134,15 +5146,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
+  m_fontSize: 4
   m_fontSizeBase: 5
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 3
+  m_fontSizeMax: 5
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -5153,7 +5165,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 3
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -5173,7 +5185,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -0.6652832, y: 1.2329102, z: -2.130127, w: -2.255249}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

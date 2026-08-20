@@ -15,8 +15,10 @@ MonoBehaviour:
   ItemNumber: 16
   ItemName: Pet
   ItemSprite: {fileID: 21300000, guid: 5d29e5008451660459221207983b0608, type: 3}
-  ItemDescription: A PET bottle drifted in from the sea, with a familiar shape. It
-    seems like it could be used to hold water or make tools.
+  ItemDescription: 'A PET bottle drifted in from the sea, with a familiar shape.
+
+    It
+    seems like it could be used to hold water or make tools.'
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 3008231697720813712, guid: 3a6c8faa364ea344d9f9ead711beb9e1, type: 3}

@@ -15,7 +15,9 @@ MonoBehaviour:
   ItemNumber: 19
   ItemName: SeaWater
   ItemSprite: {fileID: 21300000, guid: 7a8177beb29bd3f499f4f09fbdf34e6c, type: 3}
-  ItemDescription: A PET bottle filled with seawater. Do not drink it!
+  ItemDescription: 'A PET bottle filled with seawater.
+
+    Do not drink it!'
   itemType: 3
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 44464080457299442, guid: 8030bbe14000ec34aa4213e6542504c0, type: 3}

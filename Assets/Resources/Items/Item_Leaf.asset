@@ -15,8 +15,10 @@ MonoBehaviour:
   ItemNumber: 15
   ItemName: Leaf
   ItemSprite: {fileID: 21300000, guid: d5e5aaeb0073382468f730d9981332f8, type: 3}
-  ItemDescription: Large, tough leaves. It seems like it could be used when creating
-    various tools.
+  ItemDescription: 'Large, tough leaves.
+
+    It seems like it could be used when
+    creating various tools.'
   itemType: 1
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 2432846809248961651, guid: d5da286e8d8ef98469639309c1514ffa, type: 3}

@@ -15,7 +15,10 @@ MonoBehaviour:
   ItemNumber: 17
   ItemName: Seaweed
   ItemSprite: {fileID: 21300000, guid: 7540d6074852fa444b7e80b1a7d61288, type: 3}
-  ItemDescription: A slippery plant that lives near rocks on the seashore. Raw edible.
+  ItemDescription: 'A slippery plant that lives near rocks on the seashore.
+
+    Raw
+    edible.'
   itemType: 4
   cookedVersion: {fileID: 0}
   prefab3D: {fileID: 2847091761736944037, guid: 05f8bef82f4bfc541a6351924515a495, type: 3}
