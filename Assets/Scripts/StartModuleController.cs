@@ -5,9 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using static Unity.Collections.Unicode;
 
+[RequireComponent(typeof(StartModuleUI))]
 public class StartModuleController : MonoBehaviour, INetworkRunnerCallbacks
 {
+    StartModuleUI ui;
     // 씬에서 태그로 찾은 스폰 지점들의 Transform을 저장할 리스트
     private List<Transform> _spawnPoints = new List<Transform>();
 
@@ -16,8 +20,10 @@ public class StartModuleController : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
+    private string roomPassword;
     async void StartGame(GameMode mode)
     {
+
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
@@ -30,20 +36,55 @@ public class StartModuleController : MonoBehaviour, INetworkRunnerCallbacks
         {
             sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
         }
-
-        // Start or join (depends on gamemode) a session with a specific name
-        await _runner.StartGame(new StartGameArgs()
+        StartGameArgs args = new StartGameArgs()
         {
             GameMode = mode,
-            SessionName = "TestRoom",
+            SessionName = ui.sessionName,
             Scene = SceneRef.FromIndex(sceneIndex),
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
-        });
+        };
+        if(mode == GameMode.Host)
+        {
+            roomPassword = ui.sessionPassword;
+            ui.ShowOKMessage("Creating Room", () => { });
+        }
+        else
+        {
+            args.ConnectionToken = System.Text.Encoding.UTF8.GetBytes(ui.sessionPassword);
+            ui.ShowOKMessage("Joining Room", () => { });
+        }
+        // Start or join (depends on gamemode) a session with a specific name
+        var result = await _runner.StartGame(args);
+        if (!result.Ok)
+        {
+            string createOrJoin = mode == GameMode.Host ? "Create" : "Join";
+            ui.ShowOKMessage($"Failed To {createOrJoin} Room\n{result.ShutdownReason}", ui.ShowPreviousPanel);
+        }
+        else
+        {
+            ui.ShowGameStartPanel();
+        }
     }
+    async void Logout()
+    {
+        /*
+        if (_runner.TryGetPlayerObject(_runner.LocalPlayer, out NetworkObject myPlayerObject))
+        {
+            _runner.Despawn(myPlayerObject);
+        }
 
+        await _runner.Shutdown();
+        */
+        //일단은 게임 종료
+    }
     private void Awake()
     {
-
+        ui = GetComponent<StartModuleUI>();
+        
+    }
+    private void Start()
+    {
+        ui.InitializeAllButtons(StartGame,() => { Logout(); });
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
@@ -138,7 +179,14 @@ public class StartModuleController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
-    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
+    {
+        string attempted = System.Text.Encoding.UTF8.GetString(token);
+        if (attempted == roomPassword)
+            request.Accept();
+        else
+            request.Refuse();
+    }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
