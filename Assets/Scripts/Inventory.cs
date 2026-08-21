@@ -9,7 +9,8 @@ public class Inventory: MonoBehaviour
 {
     public SLot[] itemSlots;
     public static Inventory Instance;
-
+    [Header("UI Panel")]
+    public GameObject uiPanel;
     [Header("Filter Buttons UI")]
     public Button[] filterButtons;     // ÀÎ½ºÆåÅÍ¿¡¼­ ÇÒ´çÇÒ ¹öÆ° ¹è¿­ (0:ÀüÃ¼, 1:Àç·á, 2:À½½Ä, 3:µµ±¸)
     public Color selectedColor = Color.yellow;  // ¼±ÅÃµÇ¾úÀ» ¶§ÀÇ »ö»ó 
@@ -183,6 +184,17 @@ public class Inventory: MonoBehaviour
         if (detailDescText != null) detailDescText.text = item.getItemDescription();
     }
 
+<<<<<<< Updated upstream
+=======
+    public void ToggleInventory()
+    {
+        if (uiPanel != null)
+        {
+            // í˜„ì¬ êº¼ì ¸ìˆìœ¼ë©´ ì¼œê³ , ì¼œì ¸ìˆìœ¼ë©´ ë•ë‹ˆë‹¤.
+            uiPanel.SetActive(!uiPanel.activeSelf);
+        }
+    }
+>>>>>>> Stashed changes
 
 }
 
