@@ -29,6 +29,7 @@ public class HelicopterController : NetworkBehaviour
     [SerializeField] private float rotationSpeed = 3f;
 
     [Header("Ladder & Escape Settings")]
+    [SerializeField] private GameObject helicopterObject;
     [SerializeField] private GameObject ropeLadderObject; // 사다리 프리팹/오브젝트
     [SerializeField] private float hoverDuration = 45f;    // 탑승 대기 시간 (초)
 
@@ -59,7 +60,11 @@ public class HelicopterController : NetworkBehaviour
 
     public override void Spawned()
     {
-        // 사다리는 초기 상태에서 비활성화
+        if(helicopterObject != null)
+        {
+            helicopterObject.SetActive(false);
+        }
+
         if (ropeLadderObject != null)
         {
             ropeLadderObject.SetActive(false);
@@ -85,6 +90,10 @@ public class HelicopterController : NetworkBehaviour
         switch (CurrentState)
         {
             case EHelicopterState.Approaching:
+                if (helicopterObject != null)
+                {
+                    helicopterObject.SetActive(true);
+                }
                 MoveTowardsWaypoint(hoverWaypoint.position, () =>
                 {
                     // 목표 지점 도착 시 호버링 상태로 전환 및 타이머 시작
