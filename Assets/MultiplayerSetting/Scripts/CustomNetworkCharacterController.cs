@@ -93,6 +93,21 @@ namespace Fusion
             Data.Grounded = _controller.isGrounded;
         }
 
+        public void MoveExternal(Vector3 delta)
+        {
+            if (!_controller.enabled)
+                return;
+
+            var previousPos = transform.position;
+
+            _controller.Move(delta);
+
+            Data.Velocity =
+                (transform.position - previousPos) * Runner.TickRate;
+
+            Data.Grounded = _controller.isGrounded;
+        }
+
         public void Rotate(float angle)
         {
             Quaternion currentRotation = Data.TRSPData.Rotation;

@@ -1,4 +1,4 @@
-using Fusion;
+ï»¿using Fusion;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -6,28 +6,32 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class RopeRung : MonoBehaviour
 {
     [SerializeField] private HelicopterController helicopterController;
-    private XRGrabInteractable _grabInteractable;
+    private XRSimpleInteractable _simpleInteractable; // ðŸŒŸ XRGrabInteractable â†’ XRSimpleInteractable
 
     private void Awake()
     {
-        _grabInteractable = GetComponent<XRGrabInteractable>();
+        _simpleInteractable = GetComponent<XRSimpleInteractable>();
+        if (helicopterController == null)
+        {
+            helicopterController = GetComponentInParent<HelicopterController>();
+        }
     }
 
     private void OnEnable()
     {
-        _grabInteractable.selectEntered.AddListener(OnGrab);
-        _grabInteractable.selectExited.AddListener(OnRelease); 
+        _simpleInteractable.selectEntered.AddListener(OnGrab);
+        _simpleInteractable.selectExited.AddListener(OnRelease);
     }
 
     private void OnDisable()
     {
-        _grabInteractable.selectEntered.RemoveListener(OnGrab);
-        _grabInteractable.selectExited.RemoveListener(OnRelease);
+        _simpleInteractable.selectEntered.RemoveListener(OnGrab);
+        _simpleInteractable.selectExited.RemoveListener(OnRelease);
     }
 
     private void OnGrab(SelectEnterEventArgs args)
     {
-        var interactorTransform = args.interactorObject.transform; // ÀâÀº ÄÁÆ®·Ñ·¯/¼Õ Transform
+        var interactorTransform = args.interactorObject.transform;
         var playerRoot = interactorTransform.root;
         var networkObject = playerRoot.GetComponent<NetworkObject>();
         var rider = playerRoot.GetComponent<PlayerHelicopterRider>();
@@ -36,10 +40,8 @@ public class RopeRung : MonoBehaviour
         {
             if (rider != null)
             {
-                // ÀâÀº ¼Õ(interactorTransform)À» ÇÔ²² Àü´Þ
-                rider.AttachToLadder(transform, interactorTransform);
+                rider.AttachToLadder(transform, interactorTransform, helicopterController);
             }
-
             if (helicopterController != null)
             {
                 helicopterController.RPC_RegisterEscapedPlayer(networkObject.InputAuthority, true);
@@ -49,27 +51,21 @@ public class RopeRung : MonoBehaviour
 
     private void OnRelease(SelectExitEventArgs args)
     {
-        var playerRoot = args.interactorObject.transform.root;
+        var interactorTransform = args.interactorObject.transform;
+        var playerRoot = interactorTransform.root;
         var networkObject = playerRoot.GetComponent<NetworkObject>();
         var rider = playerRoot.GetComponent<PlayerHelicopterRider>();
 
         if (networkObject != null && networkObject.HasInputAuthority)
         {
-            // ´Ù¸¥ ¼ÕÀ¸·Î ¿©ÀüÈ÷ »ç´Ù¸® ´Ù¸¥ ¹ßÆÇÀ» Àâ°í ÀÖ´ÂÁö È®ÀÎ (¾ç¼Õ Å¬¶óÀÌ¹Ö ´ëÀÀ)
-            bool isStillClimbing = _grabInteractable.isSelected;
-
-            if (!isStillClimbing)
+            if (rider != null)
             {
-                // ¿ÏÀüÈ÷ ¼ÕÀ» ³õ¾ÒÀ» ¶§¸¸ Å¾½Â ÇØÁ¦
-                if (rider != null)
-                {
-                    rider.DetachFromLadder();
-                }
+                rider.DetachHand(interactorTransform);
+            }
 
-                if (helicopterController != null)
-                {
-                    helicopterController.RPC_RegisterEscapedPlayer(networkObject.InputAuthority, false);
-                }
+            if (helicopterController != null && (rider == null || !rider.IsCurrentlyAttached))
+            {
+                helicopterController.RPC_RegisterEscapedPlayer(networkObject.InputAuthority, false);
             }
         }
     }

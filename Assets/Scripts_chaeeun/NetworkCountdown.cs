@@ -4,6 +4,9 @@ using Fusion; // 🌟 Photon Fusion 라이브러리
 
 public class NetworkCountdown : NetworkBehaviour
 {
+    [Header("Helicopter")]
+    [SerializeField] private HelicopterController helicopterController;
+
     [Header("UI 설정 (인스펙터에서 직접 연결)")]
     [SerializeField] private TextMeshProUGUI countdownText;
 
@@ -16,6 +19,8 @@ public class NetworkCountdown : NetworkBehaviour
 
     public override void Spawned()
     {
+        helicopterController = GameObject.Find("Helicopter").GetComponent<HelicopterController>();
+
         // 🌟 [핵심 1] 시작하자마자 UI를 끄지 않고, 켜둔 상태로 NO SIGNAL을 출력합니다.
         if (countdownText != null)
         {
@@ -120,12 +125,30 @@ public class NetworkCountdown : NetworkBehaviour
                 {
                     totalSurvivalTimeInSeconds = 0;
                     isCountingDown = false;
-                    
-                    // 성공 이벤트 전체 방송
+
+                    // 🌟 헬기 호출은 StateAuthority에서 직접 (CallHelicopter 내부에서도 
+                    //    HasStateAuthority 체크하지만, 이중 방어 차원에서 여기도 안전)
+                    if (helicopterController != null)
+                    {
+                        helicopterController.CallHelicopter();
+                    }
+
+                    // UI 등 시각 방송은 그대로 RPC 유지
                     RPC_TriggerSurvivalSuccessAll();
                 }
             }
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_TriggerSurvivalSuccessAll()
+    {
+        if (countdownText != null)
+        {
+            countdownText.text = GetRemainingTimeString();
+        }
+
+        Debug.Log("🎉 3일 생존 성공!");
     }
 
     // 🌟 [핵심 3] 조건문 제거: 시작 전/진행 중/종료 후 모두 실시간 텍스트 갱신
@@ -160,16 +183,5 @@ public class NetworkCountdown : NetworkBehaviour
         int minutes = Mathf.FloorToInt((totalGameHoursLeft * 60f) % 60);
 
         return $"{days} days\n{hours:D2}:{minutes:D2}";
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_TriggerSurvivalSuccessAll()
-    {
-        if (countdownText != null)
-        {
-            countdownText.text = GetRemainingTimeString();
-        }
-        
-        Debug.Log("🎉 3일 생존 성공!");
     }
 }
