@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7015836402936776399}
   - component: {fileID: 8714281639814546098}
   - component: {fileID: 8462045162733214109}
-  - component: {fileID: 5198319051529429775}
+  - component: {fileID: 3413397118802309753}
   m_Layer: 0
   m_Name: Item_SeaWater
   m_TagString: Untagged
@@ -319,9 +319,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3854541105175683778}
   - {fileID: 8714281639814546098}
-  - {fileID: 5198319051529429775}
+  - {fileID: 3413397118802309753}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &5198319051529429775
+--- !u!114 &3413397118802309753
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -330,14 +330,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 44464080457299442}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &1314308490574763261
 GameObject:
   m_ObjectHideFlags: 0

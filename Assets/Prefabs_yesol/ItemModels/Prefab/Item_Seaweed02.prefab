@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3956706949489972686}
   - component: {fileID: -6224780538765466606}
   - component: {fileID: -9149709751201042507}
-  - component: {fileID: -1240177479594420375}
+  - component: {fileID: 8648650652774561240}
   m_Layer: 0
   m_Name: Item_Seaweed02
   m_TagString: Untagged
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 1100206819121008466}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 0
+  m_UseDynamicAttach: 1
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
@@ -238,9 +238,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -3956706949489972686}
   - {fileID: -6224780538765466606}
-  - {fileID: -1240177479594420375}
+  - {fileID: 8648650652774561240}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &-1240177479594420375
+--- !u!114 &8648650652774561240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,14 +249,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 4703973415907996105}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &6516621528523071421
 GameObject:
   m_ObjectHideFlags: 0

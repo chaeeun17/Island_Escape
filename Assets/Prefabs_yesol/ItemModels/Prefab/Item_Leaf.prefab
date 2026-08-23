@@ -141,8 +141,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0038348644, y: 0.001112733, z: 0.00013086142}
-  m_Center: {x: -0.0001167728, y: 0.0000148223335, z: -0.000068925125}
+  m_Size: {x: 0.0038348644, y: 0.001112733, z: 0.00040763145}
+  m_Center: {x: -0.0001167728, y: 0.0000148223335, z: -0.00016888125}
 --- !u!1 &2432846809248961651
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 821189139928886072}
   - component: {fileID: 1943908745247610059}
   - component: {fileID: -6124638190479274335}
-  - component: {fileID: 4452286115180700728}
+  - component: {fileID: 6034512701461615782}
   m_Layer: 0
   m_Name: Item_Leaf
   m_TagString: Untagged
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 8378783371665473159}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 0
+  m_UseDynamicAttach: 1
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
@@ -381,9 +381,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 821189139928886072}
   - {fileID: 1943908745247610059}
-  - {fileID: 4452286115180700728}
+  - {fileID: 6034512701461615782}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &4452286115180700728
+--- !u!114 &6034512701461615782
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -392,11 +392,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2432846809248961651}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
