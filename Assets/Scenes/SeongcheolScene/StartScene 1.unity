@@ -801,10 +801,10 @@ MonoBehaviour:
   _leftHandTurnAction: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _rightHandMoveAction: {fileID: -8198699208435500284, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _jumpAction: {fileID: -3875704489234743591, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  _leftTriggerAction: {fileID: 0}
-  _leftGripAction: {fileID: 0}
-  _rightTriggerAction: {fileID: 0}
-  _rightGripAction: {fileID: 0}
+  _leftTriggerAction: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _leftGripAction: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _rightTriggerAction: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _rightGripAction: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!114 &371160870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1562,7 +1562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   _playerPrefab:
-    RawGuidValue: bf6dd9bed0793724d9bc594082a40bd1
+    RawGuidValue: 56ac8ab02c3f8734e9b96291f3e74fa1
 --- !u!4 &551823259
 Transform:
   m_ObjectHideFlags: 0
@@ -1592,7 +1592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1798,6 +1798,10 @@ PrefabInstance:
     - target: {fileID: 3731819340117378953, guid: d6fa8b95f3e6c1e428d695b527082ce6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3864411692825964935, guid: d6fa8b95f3e6c1e428d695b527082ce6, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3875019690850730023, guid: d6fa8b95f3e6c1e428d695b527082ce6, type: 3}
       propertyPath: m_Name
