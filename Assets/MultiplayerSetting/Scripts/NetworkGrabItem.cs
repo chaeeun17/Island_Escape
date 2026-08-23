@@ -1,4 +1,6 @@
-using Fusion;
+ï»¿using Fusion;
+using Fusion.Addons.Physics;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -6,19 +8,99 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 [RequireComponent(typeof(XRGrabInteractable))]
 public class NetworkGrabItem : NetworkBehaviour
 {
+    private enum GrabHand { None, Left, Right }
+
+    [Header("Velocity Sampling (Throw)")]
+    [SerializeField] private int velocitySampleCount = 5;
+
     private XRGrabInteractable _grabInteractable;
     private Rigidbody _rb;
+
+    // ğŸŒŸ ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ ë³µì œìš©
+    [Networked, OnChangedRender(nameof(OnIsGrabbedChanged))]
+    private NetworkBool IsGrabbed { get; set; }
+
+    private void OnIsGrabbedChanged()
+    {
+        if (!IsGrabbed && _isPendingDetach)
+        {
+            // ğŸŒŸ Hostì˜ í™•ì • ê°’ì´ ë„ì°©í–ˆìœ¼ë‹ˆ ì–¼ë ¤ë‘ë˜ ë¡œì»¬ ì˜¤ë²„ë¼ì´ë“œ í•´ì œ
+            //    ì´ ì‹œì ë¶€í„°ëŠ” NetworkRigidbody3Dì˜ ì •ìƒ ë³´ê°„(Teleportë¡œ í™•ì •ëœ finalPos ê¸°ì¤€)ì— ë§¡ê¹€
+            _isPendingDetach = false;
+        }
+    }
+    [Networked] private Vector3 GrabOffsetPosition { get; set; }
+    [Networked] private Quaternion GrabOffsetRotation { get; set; }
+    [Networked] private PlayerRef GrabbingPlayer { get; set; }
+    [Networked] private GrabHand GrabbingHandSide { get; set; }
+
+    [Networked] private Vector3 GrabStartWorldPosition { get; set; }
+    [Networked] private Quaternion GrabStartWorldRotation { get; set; }
+    [Networked] private float GrabStartTime { get; set; }
+    [Networked] private NetworkBool IsFarAttach { get; set; }
+    [Networked] private float GrabEaseInTime { get; set; }
+
+    // ë¡œì»¬ ì „ìš©
+    private Transform _localGrabbingHand;
+    private bool _isLocalGrabbing = false;
+    private Vector3 _localOffsetPosition;
+    private Quaternion _localOffsetRotation;
+    private Vector3 _localGrabStartPosition;
+    private Quaternion _localGrabStartRotation;
+    private float _localGrabStartTime;
+    private bool _localIsFarAttach;
+    private float _localEaseInTime;
+
+    private Player _cachedGrabberPlayer;
+
+    // ğŸŒŸ ë˜ì§€ê¸° ì†ë„ ê³„ì‚°ìš© ìƒ˜í”Œ ë²„í¼
+    private readonly Queue<(Vector3 pos, Quaternion rot, float time)> _velocitySamples = new Queue<(Vector3, Quaternion, float)>();
+
+    [SerializeField] private NetworkRigidbody3D _networkRb; // ì¸ìŠ¤í™í„°ì—ì„œ ì—°ê²° ë˜ëŠ” GetComponent
 
     private void Awake()
     {
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _rb = GetComponent<Rigidbody>();
+        if (_networkRb == null) _networkRb = GetComponent<NetworkRigidbody3D>();
 
-        // XRI ÀÌº¥Æ® ¿¬°á
         _grabInteractable.selectEntered.AddListener(OnGrabEntered);
         _grabInteractable.selectExited.AddListener(OnGrabExited);
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        if (_rb != null)
+        {
+            _rb.isKinematic = IsGrabbed ? true : !HasStateAuthority;
+        }
+
+        // ğŸŒŸ .enabled í† ê¸€ ëŒ€ì‹ , ì¡í˜€ ìˆëŠ” ë™ì•ˆ Hostê°€ ë§¤ í‹± ì •í™•í•œ ìœ„ì¹˜ë¥¼ ê°•ì œ ì£¼ì…
+        if (IsGrabbed && HasStateAuthority)
+        {
+            Transform grabberHand = ResolveGrabberHand();
+            if (grabberHand != null)
+            {
+                Vector3 targetPos = grabberHand.position + grabberHand.rotation * GrabOffsetPosition;
+                Quaternion targetRot = grabberHand.rotation * GrabOffsetRotation;
+
+                if (_networkRb != null)
+                {
+                    _networkRb.Teleport(targetPos, targetRot); // ë„¤íŠ¸ì›Œí¬ ê¶Œìœ„ ìœ„ì¹˜ë¥¼ ê°•ì œ ê°±ì‹ 
+                }
+                else
+                {
+                    transform.position = targetPos;
+                    transform.rotation = targetRot;
+
+
+                }
+
+                _networkRb.Teleport(targetPos, targetRot);
+                Debug.Log($"[Grab ì¤‘] transform.position={transform.position}, _rb.position={_rb.position}");
+            }
+        }
+    }
     private void OnDestroy()
     {
         if (_grabInteractable != null)
@@ -27,57 +109,288 @@ public class NetworkGrabItem : NetworkBehaviour
             _grabInteractable.selectExited.RemoveListener(OnGrabExited);
         }
     }
-
-    // 1. ¹°°ÇÀ» Àâ¾ÒÀ» ¶§ È£Ãâ
     private void OnGrabEntered(SelectEnterEventArgs args)
     {
-        // 1. ³×Æ®¿öÅ© ÃÊ±âÈ­(Spawn)°¡ ¿ÏÀüÈ÷ ³¡³µ´ÂÁö Ã¼Å©
-        if (Object == null || !Object.IsValid)
+        if (Object == null || !Object.IsValid) return;
+
+        var interactorTransform = args.interactorObject.transform;
+        var playerRoot = interactorTransform.root;
+        var networkObject = playerRoot.GetComponent<NetworkObject>();
+        var player = playerRoot.GetComponent<Player>();
+
+        if (networkObject == null || !networkObject.HasInputAuthority || player == null) return;
+
+        GrabHand handSide = GrabHand.None;
+        if (interactorTransform == player.NetLeftHand || interactorTransform.IsChildOf(player.NetLeftHand))
         {
-            Debug.LogWarning("[NetworkGrabItem] ¾ÆÁ÷ ³×Æ®¿öÅ©¿¡ ½ºÆùµÇÁö ¾Ê¾Æ ±ÇÇÑÀ» ¿äÃ»ÇÒ ¼ö ¾ø½À´Ï´Ù.");
-            return;
+            handSide = GrabHand.Left;
+        }
+        else if (interactorTransform == player.NetRightHand || interactorTransform.IsChildOf(player.NetRightHand))
+        {
+            handSide = GrabHand.Right;
         }
 
-        // 2. ±ÇÇÑ ¿äÃ» (Shared Mode / Host Mode ±¸ºĞ Ã³¸®)
-        if (Runner.IsSharedModeMasterClient || Runner.GameMode == GameMode.Shared)
+        _localGrabbingHand = interactorTransform;
+        _isLocalGrabbing = true;
+
+        var (offsetPos, offsetRot) = CalculateAttachOffset(_localGrabbingHand);
+        _localOffsetPosition = offsetPos;
+        _localOffsetRotation = offsetRot;
+
+        _localGrabStartPosition = transform.position;
+        _localGrabStartRotation = transform.rotation;
+        _localGrabStartTime = (float)Runner.SimulationTime;
+
+        float easeInTime = _grabInteractable.attachEaseInTime;
+        _localIsFarAttach = easeInTime > 0f;
+        _localEaseInTime = easeInTime;
+
+        _velocitySamples.Clear();
+
+        if (_rb != null) _rb.isKinematic = true;
+
+        SetGrabState(true, _localOffsetPosition, _localOffsetRotation, Runner.LocalPlayer, handSide,
+                     _localGrabStartPosition, _localGrabStartRotation, _localGrabStartTime, _localIsFarAttach, easeInTime);
+    }
+
+    // í•„ë“œ ì¶”ê°€
+    private bool _isPendingDetach = false;
+    private Vector3 _pendingFinalPosition;
+    private Quaternion _pendingFinalRotation;
+
+    private void OnGrabExited(SelectExitEventArgs args)
+    {
+        if (!_isLocalGrabbing) return;
+
+        Vector3 throwVelocity = Vector3.zero;
+        Vector3 throwAngularVelocity = Vector3.zero;
+
+        if (_velocitySamples.Count >= 2)
         {
-            // Shared Mode¿¡¼­´Â RequestStateAuthority°¡ State + Input ±ÇÇÑÀ» ¸ğµÎ °¡Á®¿È
-            Object.RequestStateAuthority();
-        }
-        else
-        {
-            // Host/Server Mode¿¡¼­´Â Host¿¡°Ô Input Authority ÇÒ´çÀ» ¿äÃ»ÇØ¾ß ÇÔ
-            if (!HasStateAuthority)
+            var samples = _velocitySamples.ToArray();
+            var oldest = samples[0];
+            var newest = samples[samples.Length - 1];
+
+            float dt = newest.time - oldest.time;
+            if (dt > 0.0001f)
             {
-                RPC_RequestAuthority(Runner.LocalPlayer);
+                throwVelocity = (newest.pos - oldest.pos) / dt * _grabInteractable.throwVelocityScale;
+
+                Quaternion deltaRot = newest.rot * Quaternion.Inverse(oldest.rot);
+                deltaRot.ToAngleAxis(out float angleDeg, out Vector3 axis);
+                if (angleDeg > 180f) angleDeg -= 360f;
+                if (float.IsNaN(axis.x) || axis.sqrMagnitude < 0.0001f) axis = Vector3.zero;
+
+                throwAngularVelocity = axis * (angleDeg * Mathf.Deg2Rad / dt) * _grabInteractable.throwAngularVelocityScale;
             }
         }
 
-        Debug.Log($"[NetworkGrabItem] ±ÇÇÑ ¿äÃ» ¿Ï·á! (ÇöÀç StateAuth: {HasStateAuthority}, InputAuth: {HasInputAuthority})");
+        Vector3 finalPos = transform.position;
+        Quaternion finalRot = transform.rotation;
+
+        _isLocalGrabbing = false;
+        _localGrabbingHand = null;
+        _velocitySamples.Clear();
+
+        // ğŸŒŸ ë„¤íŠ¸ì›Œí¬ í™•ì¸ ì „ê¹Œì§€ "ê·¸ ìë¦¬ì— ì–¼ë ¤ì„œ" ìœ ì§€
+        _isPendingDetach = true;
+        _pendingFinalPosition = finalPos;
+        _pendingFinalRotation = finalRot;
+
+        RPC_RequestDetach(finalPos, finalRot, throwVelocity, throwAngularVelocity);
+        Debug.Log("IsGrabbed : " + IsGrabbed);
     }
 
-    // 2. ¹°°ÇÀ» ³õ¾ÒÀ» ¶§ È£Ãâ
-    private void OnGrabExited(SelectExitEventArgs args)
-    {
-        // ÇÊ¿äÇÑ °æ¿ì ±ÇÇÑÀ» ´Ù½Ã È£½ºÆ®/¼­¹ö¿¡°Ô ¹İ³³ÇÒ ¼ö ÀÖ½À´Ï´Ù.
-        // (¹İ³³ÇÏÁö ¾Ê¾Æµµ ´ÙÀ½ ÇÃ·¹ÀÌ¾î°¡ ÀâÀ» ¶§ RequestStateAuthority()¸¦ ÇÏ¸é ³Ñ¾î°©´Ï´Ù)
-    }
-
-    // Host Mode Àü¿ë: ¼­¹ö¿¡ Input Authority ÇÒ´ç ¿äÃ»
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_RequestAuthority(PlayerRef player)
+    private void RPC_RequestDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
     {
-        Object.AssignInputAuthority(player);
+        ApplyDetach(finalPos, finalRot, velocity, angularVelocity);
     }
 
-    public override void FixedUpdateNetwork()
+    // ğŸŒŸ Hostì—ì„œë§Œ ì‹¤í–‰: ìœ„ì¹˜ í™•ì • â†’ Kinematic í•´ì œ â†’ ì†ë„ ì ìš© â†’ ìƒíƒœ ì´ˆê¸°í™”, ì´ ìˆœì„œë¥¼ í•˜ë‚˜ì˜ ë©”ì„œë“œ ì•ˆì—ì„œ ì›ìì ìœ¼ë¡œ ë³´ì¥
+    private void ApplyDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
     {
-        // ±ÇÇÑÀÌ ¾ø´Â Å¬¶óÀÌ¾ğÆ®¿¡¼­´Â ¹°¸®°¡ ¿¹Ãø(Prediction)µÇ¾î Ãæµ¹ÀÌ Æ¢´Â °ÍÀ» ¹æÁöÇÏ±â À§ÇØ
-        // ±ÇÇÑ ¼ÒÀ¯ ¿©ºÎ¿¡ µû¶ó Is KinematicÀ» Á¦¾îÇØÁİ´Ï´Ù.
-        if (_rb != null)
+        try
         {
-            // ±ÇÇÑÀÌ ÀÖÀ¸¸é ¹°¸® °è»êÀ» Á÷Á¢ ÇÏ°í(false), ¾øÀ¸¸é ³×Æ®¿öÅ© µ¿±âÈ­¸¸ ¹ŞÀ½(true)
-            _rb.isKinematic = !HasStateAuthority;
+            if (_networkRb != null)
+            {
+                _networkRb.Teleport(finalPos, finalRot);
+            }
+            else
+            {
+                transform.position = finalPos;
+                transform.rotation = finalRot;
+            }
+
+            if (_rb != null)
+            {
+                // ğŸŒŸ Kinematic â†’ Non-Kinematic ì „í™˜ ì „, Rigidbody ë‚´ë¶€ ìœ„ì¹˜ë¥¼ ëª…ì‹œì ìœ¼ë¡œ ê°•ì œ ë™ê¸°í™”
+                _rb.position = finalPos;
+                _rb.rotation = finalRot;
+                Physics.SyncTransforms(); // ë¬¼ë¦¬ ì—”ì§„ì— ì¦‰ì‹œ ë°˜ì˜ ê°•ì œ
+
+                _rb.isKinematic = false;
+                _rb.linearVelocity = velocity;
+                _rb.angularVelocity = angularVelocity;
+            }
         }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[NetworkGrabItem] ApplyDetach ì¤‘ ì˜ˆì™¸ ë°œìƒ: {e}");
+        }
+        finally
+        {
+            IsGrabbed = false;
+            GrabOffsetPosition = Vector3.zero;
+            GrabOffsetRotation = Quaternion.identity;
+            GrabbingPlayer = PlayerRef.None;
+            GrabbingHandSide = GrabHand.None;
+            GrabStartWorldPosition = Vector3.zero;
+            GrabStartWorldRotation = Quaternion.identity;
+            GrabStartTime = 0f;
+            IsFarAttach = false;
+            GrabEaseInTime = 0f;
+        }
+    }
+    private (Vector3 offsetPos, Quaternion offsetRot) CalculateAttachOffset(Transform hand)
+    {
+        Transform attachPoint = _grabInteractable.attachTransform != null
+            ? _grabInteractable.attachTransform
+            : transform;
+
+        Vector3 localPosToAttach = attachPoint == transform ? Vector3.zero : attachPoint.localPosition;
+        Quaternion localRotToAttach = attachPoint == transform ? Quaternion.identity : attachPoint.localRotation;
+
+        Quaternion itemRotAtHand = hand.rotation * Quaternion.Inverse(localRotToAttach);
+        Vector3 itemPosAtHand = hand.position - itemRotAtHand * localPosToAttach;
+
+        Vector3 offsetPos = Quaternion.Inverse(hand.rotation) * (itemPosAtHand - hand.position);
+        Quaternion offsetRot = Quaternion.Inverse(hand.rotation) * itemRotAtHand;
+
+        return (offsetPos, offsetRot);
+    }
+
+    private void LateUpdate()
+    {
+        if (_isLocalGrabbing && _localGrabbingHand != null)
+        {
+            Vector3 idealPos = _localGrabbingHand.position + _localGrabbingHand.rotation * _localOffsetPosition;
+            Quaternion idealRot = _localGrabbingHand.rotation * _localOffsetRotation;
+
+            if (_localIsFarAttach)
+            {
+                float elapsed = (float)Runner.SimulationTime - _localGrabStartTime;
+                float t = Mathf.Clamp01(elapsed / _localEaseInTime);
+                float smoothT = t * t * (3f - 2f * t);
+
+                transform.position = Vector3.Lerp(_localGrabStartPosition, idealPos, smoothT);
+                transform.rotation = Quaternion.Slerp(_localGrabStartRotation, idealRot, smoothT);
+            }
+            else
+            {
+                transform.position = idealPos;
+                transform.rotation = idealRot;
+            }
+
+            RecordVelocitySample();
+        }
+        else if (_isPendingDetach)  // ğŸŒŸ ë°”ê¹¥ìœ¼ë¡œ êº¼ëƒ„ - ì´ì œ ì •ìƒì ìœ¼ë¡œ ë„ë‹¬ ê°€ëŠ¥
+        {
+            transform.position = _pendingFinalPosition;
+            transform.rotation = _pendingFinalRotation;
+        }
+        else if (IsGrabbed)
+        {
+            Transform grabberHand = ResolveGrabberHand();
+            if (grabberHand == null) return;
+
+            Vector3 idealPos = grabberHand.position + grabberHand.rotation * GrabOffsetPosition;
+            Quaternion idealRot = grabberHand.rotation * GrabOffsetRotation;
+
+            if (IsFarAttach)
+            {
+                float elapsed = (float)Runner.SimulationTime - GrabStartTime;
+                float t = Mathf.Clamp01(elapsed / GrabEaseInTime);
+                float smoothT = t * t * (3f - 2f * t);
+
+                transform.position = Vector3.Lerp(GrabStartWorldPosition, idealPos, smoothT);
+                transform.rotation = Quaternion.Slerp(GrabStartWorldRotation, idealRot, smoothT);
+            }
+            else
+            {
+                transform.position = idealPos;
+                transform.rotation = idealRot;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F1)) // ì•„ë¬´ í‚¤ë‚˜ ì§€ì •
+        {
+            Debug.Log($"[GrabItem Debug] transform.position={transform.position}, " +
+                       $"_rb.position={_rb.position}, IsGrabbed={IsGrabbed}, " +
+                       $"_rb.isKinematic={_rb.isKinematic}");
+        }
+    }
+
+    private void RecordVelocitySample()
+    {
+        _velocitySamples.Enqueue((transform.position, transform.rotation, Time.time));
+        while (_velocitySamples.Count > velocitySampleCount)
+        {
+            _velocitySamples.Dequeue();
+        }
+    }
+
+    private Transform ResolveGrabberHand()
+    {
+        if (_cachedGrabberPlayer == null || _cachedGrabberPlayer.Object.InputAuthority != GrabbingPlayer)
+        {
+            var grabberObject = Runner.GetPlayerObject(GrabbingPlayer);
+            if (grabberObject == null) return null;
+
+            _cachedGrabberPlayer = grabberObject.GetComponent<Player>();
+            if (_cachedGrabberPlayer == null) return null;
+        }
+
+        return GrabbingHandSide switch
+        {
+            GrabHand.Left => _cachedGrabberPlayer.NetLeftHand,
+            GrabHand.Right => _cachedGrabberPlayer.NetRightHand,
+            _ => null
+        };
+    }
+
+    private void SetGrabState(bool grabbed, Vector3 offsetPos, Quaternion offsetRot, PlayerRef player, GrabHand handSide,
+                               Vector3 startPos, Quaternion startRot, float startTime, bool isFarAttach, float easeInTime)
+    {
+        if (Object.HasStateAuthority)
+        {
+            ApplyGrabState(grabbed, offsetPos, offsetRot, player, handSide, startPos, startRot, startTime, isFarAttach, easeInTime);
+        }
+        else
+        {
+            RPC_RequestSetGrabState(grabbed, offsetPos, offsetRot, player, handSide, startPos, startRot, startTime, isFarAttach, easeInTime);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestSetGrabState(bool grabbed, Vector3 offsetPos, Quaternion offsetRot, PlayerRef player, GrabHand handSide,
+                                          Vector3 startPos, Quaternion startRot, float startTime, bool isFarAttach, float easeInTime)
+    {
+        ApplyGrabState(grabbed, offsetPos, offsetRot, player, handSide, startPos, startRot, startTime, isFarAttach, easeInTime);
+    }
+
+    private void ApplyGrabState(bool grabbed, Vector3 offsetPos, Quaternion offsetRot, PlayerRef player, GrabHand handSide,
+                                 Vector3 startPos, Quaternion startRot, float startTime, bool isFarAttach, float easeInTime)
+    {
+        IsGrabbed = grabbed;
+        GrabOffsetPosition = offsetPos;
+        GrabOffsetRotation = offsetRot;
+        GrabbingPlayer = player;
+        GrabbingHandSide = handSide;
+        GrabStartWorldPosition = startPos;
+        GrabStartWorldRotation = startRot;
+        GrabStartTime = startTime;
+        IsFarAttach = isFarAttach;
+        GrabEaseInTime = easeInTime;
     }
 }

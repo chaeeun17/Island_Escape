@@ -1044,6 +1044,10 @@ MonoBehaviour:
   _LeftTrigger: 0
   _RightGrab: 0
   _RightTrigger: 0
+  _IsRescued:
+    _value: 0
+  vfc: {fileID: 0}
+  successCanvas: {fileID: 0}
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1104,10 +1108,15 @@ MonoBehaviour:
   maxThirst: 100
   maxStamina: 100
   animator: {fileID: 0}
+  reviveAnimationDuration: 2
   _IsVisible:
     _value: 1
   animatedHead: {fileID: 0}
+  networkedRightHand: []
+  networkedLeftHand: []
+  stateUI: {fileID: 0}
   networkedHead: {fileID: 0}
+  vfc: {fileID: 0}
   hungerDecreaseInterval: 2
   thirstDecreaseInterval: 1.5
   staminaDecreaseInterval: 3
@@ -1146,6 +1155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e5aa1397cf976499246035e6a4e260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkCountdown
+  helicopterController: {fileID: 0}
   countdownText: {fileID: 2260950223963328409}
   realMinutesPerGameDay: 10
 --- !u!114 &1366045897206673347
@@ -1163,8 +1173,9 @@ MonoBehaviour:
   characterController: {fileID: 5631152598068217068}
   playerScript: {fileID: 5294166491441838424}
   climbSpeedMultiplier: 1
-  maxClimbY: 10
-  minClimbY: -2
+  maxClimbY: -10
+  minClimbY: -10
+  preventReleaseWhileClimbing: 0
 --- !u!1 &4664735668597634432
 GameObject:
   m_ObjectHideFlags: 0

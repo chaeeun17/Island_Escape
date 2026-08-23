@@ -93,7 +93,10 @@ public class XRRayInteractionDetector : MonoBehaviour
 
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
-    
+        if (currentTargetInteractable != null) 
+        {
+            currentTargetInteractable.Interact();
+        }
     }
 
     private void ResetDetectorState()

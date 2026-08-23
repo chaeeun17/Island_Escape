@@ -13,6 +13,10 @@ public class Player : NetworkBehaviour
     [SerializeField] private Transform _netRightHand;
     [SerializeField] private Transform _netBody;
 
+    // 추가: 외부에서 손 Transform을 조회할 수 있는 프로퍼티
+    public Transform NetLeftHand => _netLeftHand;
+    public Transform NetRightHand => _netRightHand;
+
     [SerializeField] private Animator leftHandAnimator;
     [SerializeField] private Animator rightHandAnimator;
 
@@ -48,6 +52,65 @@ public class Player : NetworkBehaviour
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
     private NetworkButtons _previousButtons;
+
+    private bool _controlLocked = false;
+
+    [Networked, OnChangedRender(nameof(OnRescuedChanged))]
+    public NetworkBool IsRescued { get; set; }
+    [SerializeField] private VRFadeController vfc; // 인스펙터에서 연결
+    [SerializeField] private Canvas successCanvas;
+
+    [Networked, OnChangedRender(nameof(OnApproachNotifiedChanged))]
+    private int ApproachNotifyToken { get; set; } // 값 변화 자체가 트리거 (bool 토글보다 중복 알림에 안전)
+    [SerializeField] private NetworkUIManager uiManager; // 실제 UI 컴포넌트로 교체
+
+    [Networked, OnChangedRender(nameof(OnEscapeFailedChanged))]
+    public NetworkBool IsEscapeFailed { get; set; }
+
+    private void OnRescuedChanged()
+    {
+        if (IsRescued && HasInputAuthority)
+        {
+            vfc.StartFadeToWhite();
+
+            var uiManager = GetComponent<NetworkUIManager>(); // 실제 클래스명으로 교체 필요
+            if (uiManager != null)
+            {
+                uiManager.ShowSuccessUI(); // 실제 함수명으로 교체 필요
+            }
+        }
+    }
+
+    private void OnEscapeFailedChanged()
+    {
+        if (IsEscapeFailed && HasInputAuthority)
+        {
+            vfc.StartFadeToWhite();
+
+            var uiManager = GetComponent<NetworkUIManager>();
+            if (uiManager != null)
+            {
+                uiManager.ShowFailUI(); // 실제 함수명으로 교체 필요
+            }
+        }
+    }
+
+    private void OnApproachNotifiedChanged()
+    {
+        if (HasInputAuthority && uiManager != null)
+        {
+            uiManager.ShowApproachNotice(); // 각 프리팹에 붙은 실제 UI 표시 함수 호출
+        }
+    }
+
+    // 호스트가 호출할 공개 메서드
+    public void NotifyHelicopterApproaching()
+    {
+        if (Object.HasStateAuthority)
+        {
+            ApproachNotifyToken++;
+        }
+    }
 
     private void Awake()
     {
@@ -114,6 +177,21 @@ public class Player : NetworkBehaviour
 
             // 1. �Է� ��ȭ��(Pressed) ���
             // ���� ƽ�� �Է��� ������ �̹� ƽ�� '���� ����' ��ư�� �Ǻ��մϴ�.
+            if (IsEscaped)
+            {
+                // 🌟 사다리에 매달린 동안은 CC 로직(이동/입력 처리) 전체를 건너뜀
+                //    위치는 PlayerHelicopterRider가 전담
+                IsWalking = false;
+                return;
+            }
+
+            // 🌟 조작 잠금 중이면 이동/회전/점프 입력은 여기서 차단
+            if (_controlLocked)
+            {
+                IsWalking = false;
+                return;
+            }
+
             var pressed = data.buttons.GetPressed(_previousButtons);
             _previousButtons = data.buttons;
 
@@ -185,6 +263,8 @@ public class Player : NetworkBehaviour
 
     public override async void Spawned()
     {
+        Debug.Log($"[Player Debug] HasInputAuthority={HasInputAuthority}, HasStateAuthority={HasStateAuthority}, InputAuthority={Object.InputAuthority}, Runner.LocalPlayer={Runner.LocalPlayer}");
+
         // 1. ���� ���(��: 100ms = 0.1��) ����Ͽ� Fusion�� ����(Authority)�� ������ ������ �ð��� �ݴϴ�.
         await Task.Delay(100);
         // �� �ƹ�Ÿ ������Ʈ�� �� ��ǻ�� ��ǲ ������ ���� '���� ��¥ �ƹ�Ÿ'���?
@@ -290,4 +370,33 @@ public class Player : NetworkBehaviour
 
         _netBody.position = _netHead.position;
     }
+
+    // 추가 - NetHead의 NetworkTransform on/off
+    public void SetNetworkTransformHead(bool on)
+    {
+        _netHead.GetComponent<NetworkTransform>().enabled = on;
+    }
+
+    public void SyncControllerPositionToTransform()
+    {
+        if (_cc != null)
+        {
+            _cc.Teleport(transform.position); // Fusion NetworkCharacterController 기반이면 보통 제공됨
+        }
+    }
+    public void SetControlLocked(bool locked)
+    {
+        _controlLocked = locked;
+    }
+
+    /*
+    private void OnRescuedChanged()
+    {
+        if (IsRescued && HasInputAuthority)
+        {
+            vfc.StartFadeToWhite(); // 탈출 성공 연출 (필요에 따라 다른 함수로 교체)
+            successCanvas.enabled = true;
+        }
+    }
+    */
 }
