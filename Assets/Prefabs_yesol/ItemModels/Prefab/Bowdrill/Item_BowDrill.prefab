@@ -590,7 +590,7 @@ GameObject:
   - component: {fileID: 2299851098103077571}
   - component: {fileID: 4248702203397031376}
   - component: {fileID: 5081251874494804324}
-  - component: {fileID: 2156604610897281733}
+  - component: {fileID: -1111461426539788561}
   m_Layer: 0
   m_Name: Item_BowDrill
   m_TagString: Untagged
@@ -845,7 +845,7 @@ MonoBehaviour:
   - {fileID: 3726957892608938264}
   - {fileID: 2299851098103077571}
   - {fileID: 5081251874494804324}
-  - {fileID: 2156604610897281733}
+  - {fileID: -1111461426539788561}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &5081251874494804324
 MonoBehaviour:
@@ -859,7 +859,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
---- !u!114 &2156604610897281733
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
+--- !u!114 &-1111461426539788561
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -868,11 +870,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8597585134487882557}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
