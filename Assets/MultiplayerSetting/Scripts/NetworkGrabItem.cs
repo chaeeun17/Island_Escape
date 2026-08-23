@@ -1,4 +1,5 @@
-﻿using Fusion;
+﻿/*
+using Fusion;
 using Fusion.Addons.Physics;
 using System.Collections.Generic;
 using UnityEngine;
@@ -339,8 +340,8 @@ public class NetworkGrabItem : NetworkBehaviour
         Debug.Log($"[GrabDebug] attachTransform={_grabInteractable.attachTransform?.name ?? "NULL"}");
     }
 }
+*/
 
-/*
 using Fusion;
 using Fusion.Addons.Physics;
 using System.Collections.Generic;
@@ -735,8 +736,5 @@ public class NetworkGrabItem : NetworkBehaviour
         GrabStartTime = startTime;
         IsFarAttach = isFarAttach;
         GrabEaseInTime = easeInTime;
-
-        Debug.Log($"[GrabDebug] attachTransform={_grabInteractable.attachTransform?.name ?? "NULL"}");
     }
 }
-*/
