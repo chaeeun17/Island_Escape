@@ -288,13 +288,13 @@ MonoBehaviour:
   m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 38962103039894259}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 1
+  m_UseDynamicAttach: 0
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 0
+  m_MovementType: 1
   m_PredictedVisualsTransform: {fileID: 0}
   m_VelocityDamping: 1
   m_VelocityScale: 1
@@ -365,6 +365,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
 --- !u!114 &-2928023482717929655
 MonoBehaviour:
   m_ObjectHideFlags: 0

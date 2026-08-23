@@ -66,7 +66,7 @@ public class WarningVignetteController : MonoBehaviour
     IEnumerator IncreaseVignetteLevel()
     {
         float intensity = (float)vignette.intensity;
-        while (intensity < 0.6f)
+        while (intensity < 0.8f)
         {
             vignette.intensity.Override(intensity += 0.01f);
             yield return null;
