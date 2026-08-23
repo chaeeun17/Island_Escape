@@ -3762,7 +3762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4758535606872324442, guid: e1292d68a4c6d3749be5295e42279d37, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.6833333
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5369563083385584608, guid: e1292d68a4c6d3749be5295e42279d37, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3838,7 +3838,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7006781877746578173, guid: e1292d68a4c6d3749be5295e42279d37, type: 3}
       propertyPath: m_Size
-      value: 0.3166667
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8043360093134432507, guid: e1292d68a4c6d3749be5295e42279d37, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4244,6 +4244,10 @@ PrefabInstance:
     - target: {fileID: 4145338414253585319, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4314196632093740300, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4956275082762422473, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: iconImage
@@ -4670,6 +4674,10 @@ PrefabInstance:
     - target: {fileID: 7659746486222793266, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8301635121484299206, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

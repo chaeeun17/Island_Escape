@@ -1357,7 +1357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2036,19 +2036,40 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4717166130497286318, guid: 5efda51ced7b8894e811892d623ff9b5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 580321912}
   m_SourcePrefab: {fileID: 100100000, guid: 5efda51ced7b8894e811892d623ff9b5, type: 3}
 --- !u!114 &580321910 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8664721900842780416, guid: 5efda51ced7b8894e811892d623ff9b5, type: 3}
   m_PrefabInstance: {fileID: 580321909}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 580321911}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+--- !u!1 &580321911 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4717166130497286318, guid: 5efda51ced7b8894e811892d623ff9b5, type: 3}
+  m_PrefabInstance: {fileID: 580321909}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &580321912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580321911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b21199c03badbb4997a6772e9c0238f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WarningVignetteController
+  globalVolume: {fileID: 580321910}
 --- !u!114 &688830071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3659,6 +3680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88763b21a85e99344bf10fb8c3cd28bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SOSManager
+  testForceComplete: 0
   totalRequiredSlots: 1
   tutorialNoticeUI: {fileID: 1415681648}
   successCutsceneObject: {fileID: 2086901594}

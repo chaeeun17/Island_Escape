@@ -11,6 +11,10 @@ public class SOSManager : NetworkBehaviour
 {
     public static SOSManager Instance { get; private set; }
 
+    [Header("🧪 디버그/테스트 모드")]
+    [Tooltip("체크 시 게임 시작 즉시 강제로 미션 완료 신호를 전체 플레이어에게 보냅니다.")]
+    [SerializeField] private bool testForceComplete = false;
+
     [Header("SOS를 구성하는 총 소켓 개수")]
     [SerializeField] private int totalRequiredSlots = 9;
 
@@ -71,6 +75,17 @@ public class SOSManager : NetworkBehaviour
         isGameStarted = true;
 
         Debug.Log("🚀 [SOSManager] SOS 미션이 시작되었습니다!");
+
+        // 🌟 테스트 강제 완료가 켜져 있으면 즉시 성공 트리거 호출
+        if (testForceComplete)
+        {
+            Debug.Log("🧪 [SOSManager] 테스트 모드 활성화: 즉시 미션 완료 신호를 브로드캐스트합니다.");
+            if (Object.HasStateAuthority)
+            {
+                RPC_TriggerSuccessAll();
+            }
+            return;
+        }
 
         // 튜토리얼 UI 활성화
         if (tutorialNoticeUI != null)
