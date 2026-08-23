@@ -9704,8 +9704,8 @@ GameObject:
   - component: {fileID: 7264250160500490888}
   - component: {fileID: 7195621099445655056}
   - component: {fileID: 648165186866253272}
-  - component: {fileID: 1931414879603832262}
   - component: {fileID: -2620012226135088314}
+  - component: {fileID: 6149675453480888089}
   m_Layer: 0
   m_Name: Pedestal
   m_TagString: Untagged
@@ -9905,7 +9905,7 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
-  m_FarAttachMode: 0
+  m_FarAttachMode: 1
   m_LimitLinearVelocity: 0
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
@@ -9922,6 +9922,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
 --- !u!114 &648165186866253272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9941,53 +9943,8 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 7195621099445655056}
   - {fileID: -2620012226135088314}
+  - {fileID: 6149675453480888089}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &1931414879603832262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236633688745268528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!114 &-2620012226135088314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10002,6 +9959,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PedestalPart
   startParticleSystem: {fileID: 8722055967066139796}
   completeParticleSystem: {fileID: 5249225844457003105}
+--- !u!114 &6149675453480888089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236633688745268528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &1245288445743046310
 GameObject:
   m_ObjectHideFlags: 0

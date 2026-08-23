@@ -68,6 +68,349 @@ public class NetworkGrabItem : NetworkBehaviour
         _grabInteractable.selectExited.AddListener(OnGrabExited);
     }
 
+    [Header("Velocity Tracking Settings")]
+    [SerializeField] private float maxLinearVelocity = 10f;
+    [SerializeField] private float maxAngularVelocity = 20f; // rad/s
+
+    public override void FixedUpdateNetwork()
+    {
+        if (!HasStateAuthority) return; // 물리는 오직 Host에서만 계산
+
+        if (IsGrabbed)
+        {
+            _rb.isKinematic = false; // 🌟 물리 충돌이 가능하도록 유지
+
+            Transform grabberHand = ResolveGrabberHand();
+            if (grabberHand != null)
+            {
+                Vector3 targetPos = grabberHand.position + grabberHand.rotation * GrabOffsetPosition;
+                Quaternion targetRot = grabberHand.rotation * GrabOffsetRotation;
+
+                // 🌟 PD 컨트롤러: 목표 위치와의 차이만큼 속도 부여 (물리적으로 밀려서 이동)
+                Vector3 posError = targetPos - _rb.position;
+                Vector3 desiredVelocity = posError / Runner.DeltaTime;
+                _rb.linearVelocity = Vector3.ClampMagnitude(desiredVelocity, maxLinearVelocity);
+
+                Quaternion rotError = targetRot * Quaternion.Inverse(_rb.rotation);
+                rotError.ToAngleAxis(out float angleDeg, out Vector3 axis);
+                if (angleDeg > 180f) angleDeg -= 360f;
+
+                if (!float.IsNaN(axis.x) && axis.sqrMagnitude > 0.0001f)
+                {
+                    Vector3 desiredAngularVelocity = axis * (angleDeg * Mathf.Deg2Rad / Runner.DeltaTime);
+                    _rb.angularVelocity = Vector3.ClampMagnitude(desiredAngularVelocity, maxAngularVelocity);
+                }
+            }
+        }
+        else
+        {
+            _rb.isKinematic = !HasStateAuthority; // 안 잡혔을 때는 기존 로직 유지
+        }
+    }
+    private void OnDestroy()
+    {
+        if (_grabInteractable != null)
+        {
+            _grabInteractable.selectEntered.RemoveListener(OnGrabEntered);
+            _grabInteractable.selectExited.RemoveListener(OnGrabExited);
+        }
+    }
+    private void OnGrabEntered(SelectEnterEventArgs args)
+    {
+        if (Object == null || !Object.IsValid) return;
+
+        var interactorTransform = args.interactorObject.transform;
+        var playerRoot = interactorTransform.root;
+        var networkObject = playerRoot.GetComponent<NetworkObject>();
+        var player = playerRoot.GetComponent<Player>();
+
+        if (networkObject == null || !networkObject.HasInputAuthority || player == null) return;
+
+        GrabHand handSide = GrabHand.None;
+        if (interactorTransform == player.NetLeftHand || interactorTransform.IsChildOf(player.NetLeftHand))
+        {
+            handSide = GrabHand.Left;
+        }
+        else if (interactorTransform == player.NetRightHand || interactorTransform.IsChildOf(player.NetRightHand))
+        {
+            handSide = GrabHand.Right;
+        }
+
+        _localGrabbingHand = interactorTransform;
+        _isLocalGrabbing = true;
+
+        var (offsetPos, offsetRot) = CalculateAttachOffset(_localGrabbingHand);
+        _localOffsetPosition = offsetPos;
+        _localOffsetRotation = offsetRot;
+
+        _localGrabStartPosition = transform.position;
+        _localGrabStartRotation = transform.rotation;
+        _localGrabStartTime = (float)Runner.SimulationTime;
+
+        float easeInTime = _grabInteractable.attachEaseInTime;
+        _localIsFarAttach = easeInTime > 0f;
+        _localEaseInTime = easeInTime;
+
+        _velocitySamples.Clear();
+
+        // if (_rb != null) _rb.isKinematic = true;
+
+        SetGrabState(true, _localOffsetPosition, _localOffsetRotation, Runner.LocalPlayer, handSide,
+                _localGrabStartPosition, _localGrabStartRotation, _localGrabStartTime, _localIsFarAttach, easeInTime);
+    }
+    
+    // 필드 추가
+    private bool _isPendingDetach = false;
+    private Vector3 _pendingFinalPosition;
+    private Quaternion _pendingFinalRotation;
+
+    private void OnGrabExited(SelectExitEventArgs args)
+    {
+        if (!_isLocalGrabbing) return;
+
+        Vector3 throwVelocity = Vector3.zero;
+        Vector3 throwAngularVelocity = Vector3.zero;
+
+        if (_velocitySamples.Count >= 2)
+        {
+            var samples = _velocitySamples.ToArray();
+            var oldest = samples[0];
+            var newest = samples[samples.Length - 1];
+
+            float dt = newest.time - oldest.time;
+            if (dt > 0.0001f)
+            {
+                throwVelocity = (newest.pos - oldest.pos) / dt * _grabInteractable.throwVelocityScale;
+
+                Quaternion deltaRot = newest.rot * Quaternion.Inverse(oldest.rot);
+                deltaRot.ToAngleAxis(out float angleDeg, out Vector3 axis);
+                if (angleDeg > 180f) angleDeg -= 360f;
+                if (float.IsNaN(axis.x) || axis.sqrMagnitude < 0.0001f) axis = Vector3.zero;
+
+                throwAngularVelocity = axis * (angleDeg * Mathf.Deg2Rad / dt) * _grabInteractable.throwAngularVelocityScale;
+            }
+        }
+
+        Vector3 finalPos = transform.position;
+        Quaternion finalRot = transform.rotation;
+
+        _isLocalGrabbing = false;
+        _localGrabbingHand = null;
+        _velocitySamples.Clear();
+
+        // 🌟 네트워크 확인 전까지 "그 자리에 얼려서" 유지
+        _isPendingDetach = true;
+        _pendingFinalPosition = finalPos;
+        _pendingFinalRotation = finalRot;
+
+        RPC_RequestDetach(finalPos, finalRot, throwVelocity, throwAngularVelocity);
+        Debug.Log("IsGrabbed : " + IsGrabbed);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
+    {
+        ApplyDetach(finalPos, finalRot, velocity, angularVelocity);
+    }
+
+    // 🌟 Host에서만 실행: 위치 확정 → Kinematic 해제 → 속도 적용 → 상태 초기화, 이 순서를 하나의 메서드 안에서 원자적으로 보장
+    private void ApplyDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
+    {
+        try
+        {
+            if (_rb != null)
+            {
+                // 🌟 Teleport/위치 강제 설정 불필요 - 이미 물리적으로 정확한 위치에 있음
+                _rb.isKinematic = false;
+
+                // 손 추적 속도에 던지기 속도를 더함 (또는 원하시면 덮어쓰기만 해도 됨)
+                _rb.linearVelocity = velocity;
+                _rb.angularVelocity = angularVelocity;
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[NetworkGrabItem] ApplyDetach 중 예외 발생: {e}");
+        }
+        finally
+        {
+            IsGrabbed = false;
+            GrabOffsetPosition = Vector3.zero;
+            GrabOffsetRotation = Quaternion.identity;
+            GrabbingPlayer = PlayerRef.None;
+            GrabbingHandSide = GrabHand.None;
+            GrabStartWorldPosition = Vector3.zero;
+            GrabStartWorldRotation = Quaternion.identity;
+            GrabStartTime = 0f;
+            IsFarAttach = false;
+            GrabEaseInTime = 0f;
+        }
+    }
+    private (Vector3 offsetPos, Quaternion offsetRot) CalculateAttachOffset(Transform hand)
+    {
+        Transform attachPoint = _grabInteractable.attachTransform != null
+            ? _grabInteractable.attachTransform
+            : transform;
+
+        Vector3 localPosToAttach = attachPoint == transform ? Vector3.zero : attachPoint.localPosition;
+        Quaternion localRotToAttach = attachPoint == transform ? Quaternion.identity : attachPoint.localRotation;
+
+        Quaternion itemRotAtHand = hand.rotation * Quaternion.Inverse(localRotToAttach);
+        Vector3 itemPosAtHand = hand.position - itemRotAtHand * localPosToAttach;
+
+        Vector3 offsetPos = Quaternion.Inverse(hand.rotation) * (itemPosAtHand - hand.position);
+        Quaternion offsetRot = Quaternion.Inverse(hand.rotation) * itemRotAtHand;
+
+        return (offsetPos, offsetRot);
+    }
+
+    private void LateUpdate()
+    {
+        // 🌟 더 이상 transform을 직접 강제 조작하지 않음
+        //    NetworkRigidbody3D가 Host의 물리 시뮬레이션 결과를 모든 클라이언트에 보간해서 반영
+
+        if (_isLocalGrabbing && _localGrabbingHand != null)
+        {
+            RecordVelocitySample(); // 던지기 속도 계산용 샘플링은 계속 필요
+        }
+    }
+    private void RecordVelocitySample()
+    {
+        _velocitySamples.Enqueue((transform.position, transform.rotation, Time.time));
+        while (_velocitySamples.Count > velocitySampleCount)
+        {
+            _velocitySamples.Dequeue();
+        }
+    }
+
+    private Transform ResolveGrabberHand()
+    {
+        if (_cachedGrabberPlayer == null || _cachedGrabberPlayer.Object.InputAuthority != GrabbingPlayer)
+        {
+            var grabberObject = Runner.GetPlayerObject(GrabbingPlayer);
+            if (grabberObject == null) return null;
+
+            _cachedGrabberPlayer = grabberObject.GetComponent<Player>();
+            if (_cachedGrabberPlayer == null) return null;
+        }
+
+        return GrabbingHandSide switch
+        {
+            GrabHand.Left => _cachedGrabberPlayer.NetLeftHand,
+            GrabHand.Right => _cachedGrabberPlayer.NetRightHand,
+            _ => null
+        };
+    }
+
+    private void SetGrabState(bool grabbed, Vector3 offsetPos, Quaternion offsetRot, PlayerRef player, GrabHand handSide,
+                               Vector3 startPos, Quaternion startRot, float startTime, bool isFarAttach, float easeInTime)
+    {
+        if (Object.HasStateAuthority)
+        {
+            ApplyGrabState(grabbed, offsetPos, offsetRot, player, handSide, startPos, startRot, startTime, isFarAttach, easeInTime);
+        }
+        else
+        {
+            RPC_RequestSetGrabState(grabbed, offsetPos, offsetRot, player, handSide, startPos, startRot, startTime, isFarAttach, easeInTime);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestSetGrabState(bool grabbed, Vector3 offsetPos, Quaternion offsetRot, PlayerRef player, GrabHand handSide,
+                                          Vector3 startPos, Quaternion startRot, float startTime, bool isFarAttach, float easeInTime)
+    {
+        ApplyGrabState(grabbed, offsetPos, offsetRot, player, handSide, startPos, startRot, startTime, isFarAttach, easeInTime);
+    }
+
+    private void ApplyGrabState(bool grabbed, Vector3 offsetPos, Quaternion offsetRot, PlayerRef player, GrabHand handSide,
+                                 Vector3 startPos, Quaternion startRot, float startTime, bool isFarAttach, float easeInTime)
+    {
+        IsGrabbed = grabbed;
+        GrabOffsetPosition = offsetPos;
+        GrabOffsetRotation = offsetRot;
+        GrabbingPlayer = player;
+        GrabbingHandSide = handSide;
+        GrabStartWorldPosition = startPos;
+        GrabStartWorldRotation = startRot;
+        GrabStartTime = startTime;
+        IsFarAttach = isFarAttach;
+        GrabEaseInTime = easeInTime;
+
+        Debug.Log($"[GrabDebug] attachTransform={_grabInteractable.attachTransform?.name ?? "NULL"}");
+    }
+}
+
+/*
+using Fusion;
+using Fusion.Addons.Physics;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+
+[RequireComponent(typeof(XRGrabInteractable))]
+public class NetworkGrabItem : NetworkBehaviour
+{
+    private enum GrabHand { None, Left, Right }
+
+    [Header("Velocity Sampling (Throw)")]
+    [SerializeField] private int velocitySampleCount = 5;
+
+    private XRGrabInteractable _grabInteractable;
+    private Rigidbody _rb;
+
+    // 🌟 다른 클라이언트 복제용
+    [Networked, OnChangedRender(nameof(OnIsGrabbedChanged))]
+    private NetworkBool IsGrabbed { get; set; }
+
+    private void OnIsGrabbedChanged()
+    {
+        if (!IsGrabbed && _isPendingDetach)
+        {
+            // 🌟 Host의 확정 값이 도착했으니 얼려두던 로컬 오버라이드 해제
+            //    이 시점부터는 NetworkRigidbody3D의 정상 보간(Teleport로 확정된 finalPos 기준)에 맡김
+            _isPendingDetach = false;
+        }
+    }
+    [Networked] private Vector3 GrabOffsetPosition { get; set; }
+    [Networked] private Quaternion GrabOffsetRotation { get; set; }
+    [Networked] private PlayerRef GrabbingPlayer { get; set; }
+    [Networked] private GrabHand GrabbingHandSide { get; set; }
+
+    [Networked] private Vector3 GrabStartWorldPosition { get; set; }
+    [Networked] private Quaternion GrabStartWorldRotation { get; set; }
+    [Networked] private float GrabStartTime { get; set; }
+    [Networked] private NetworkBool IsFarAttach { get; set; }
+    [Networked] private float GrabEaseInTime { get; set; }
+
+    // 로컬 전용
+    private Transform _localGrabbingHand;
+    private bool _isLocalGrabbing = false;
+    private Vector3 _localOffsetPosition;
+    private Quaternion _localOffsetRotation;
+    private Vector3 _localGrabStartPosition;
+    private Quaternion _localGrabStartRotation;
+    private float _localGrabStartTime;
+    private bool _localIsFarAttach;
+    private float _localEaseInTime;
+
+    private Player _cachedGrabberPlayer;
+
+    // 🌟 던지기 속도 계산용 샘플 버퍼
+    private readonly Queue<(Vector3 pos, Quaternion rot, float time)> _velocitySamples = new Queue<(Vector3, Quaternion, float)>();
+
+    [SerializeField] private NetworkRigidbody3D _networkRb; // 인스펙터에서 연결 또는 GetComponent
+
+    private void Awake()
+    {
+        _grabInteractable = GetComponent<XRGrabInteractable>();
+        _rb = GetComponent<Rigidbody>();
+        if (_networkRb == null) _networkRb = GetComponent<NetworkRigidbody3D>();
+
+        _grabInteractable.selectEntered.AddListener(OnGrabEntered);
+        _grabInteractable.selectExited.AddListener(OnGrabExited);
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (_rb != null)
@@ -396,3 +739,4 @@ public class NetworkGrabItem : NetworkBehaviour
         Debug.Log($"[GrabDebug] attachTransform={_grabInteractable.attachTransform?.name ?? "NULL"}");
     }
 }
+*/
