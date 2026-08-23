@@ -389,6 +389,31 @@ public class Player : NetworkBehaviour
         _controlLocked = locked;
     }
 
+    public void TeleportTo(Vector3 targetPos, Quaternion targetRot)
+    {
+        // 1. CustomNetworkCharacterController 텔레포트 호출 (핵심!)
+        if (_cc != null)
+        {
+            _cc.Teleport(targetPos);
+        }
+        else
+        {
+            transform.position = targetPos;
+        }
+
+        transform.rotation = targetRot;
+
+        // 2. 자식 XR Origin의 로컬 위치를 (0,0,0)으로 재정렬
+        GameObject xrOrigin = transform.Find("XR Origin")?.gameObject;
+        if (xrOrigin != null)
+        {
+            xrOrigin.transform.localPosition = Vector3.zero;
+            xrOrigin.transform.localRotation = Quaternion.identity;
+        }
+
+        Debug.Log($"🚀 [Player {Object.InputAuthority.PlayerId}] CustomNetworkCharacterController 텔레포트 완료 -> {targetPos}");
+    }
+
     /*
     private void OnRescuedChanged()
     {

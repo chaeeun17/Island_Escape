@@ -1809,7 +1809,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6718314013088193245}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
@@ -1939,7 +1939,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7450480779583404542}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
@@ -2609,6 +2609,14 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 0.0065
       objectReference: {fileID: 0}
+    - target: {fileID: 2247352438429787912, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0036
+      objectReference: {fileID: 0}
+    - target: {fileID: 2247352438429787912, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.0192
+      objectReference: {fileID: 0}
     - target: {fileID: 2306169893734249291, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2729,6 +2737,10 @@ PrefabInstance:
       propertyPath: SortKey
       value: 327413382
       objectReference: {fileID: 0}
+    - target: {fileID: 8180771968609425052, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1669146969, guid: c149ed5e094417242ab291c83333d50f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3834522106821595462, guid: b51b9028e9d91324bbdf17ed94458dba, type: 3}
