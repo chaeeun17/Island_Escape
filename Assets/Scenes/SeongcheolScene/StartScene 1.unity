@@ -776,6 +776,7 @@ GameObject:
   - component: {fileID: 371160871}
   - component: {fileID: 371160870}
   - component: {fileID: 371160869}
+  - component: {fileID: 371160872}
   m_Layer: 0
   m_Name: BasicSpawner
   m_TagString: Untagged
@@ -836,6 +837,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &371160872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371160868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67dc9dab610d14546a627cea983429d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
+  _playerPrefab:
+    RawGuidValue: 61fbb252d21738e42b9a3137f340fe3e
 --- !u!1 &377017474
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,7 +1563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &551823258
 MonoBehaviour:
   m_ObjectHideFlags: 0
