@@ -33,8 +33,8 @@ public class NetworkCountdown : NetworkBehaviour
         {
             float oneDayInSeconds = realMinutesPerGameDay * 60f;
             totalSurvivalTimeInSeconds = oneDayInSeconds * 3f;
-            //isCountingDown = false;
-            isCountingDown = true;
+            isCountingDown = false;
+            //isCountingDown = true;
 
         }
 

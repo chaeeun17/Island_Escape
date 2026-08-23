@@ -74,15 +74,15 @@ public class NetworkPlayerStats : NetworkBehaviour
             CurrentStamina = maxStamina;
 
             // 🌟 [Networked] 프로퍼티는 권한에 맞게 라우팅
-            SetSurvivalStarted(true);
+            //SetSurvivalStarted(true);
             SetFainted(false);
         }
 
         Debug.Log("✅ [PlayerStats] Spawned 완료!");
 
-        if (NetworkTutorialManager.Instance != null)
+        if (SOSManager.Instance != null)
         {
-            NetworkTutorialManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
+            SOSManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
         }
 
         wvc = GameObject.Find("Global Volume").GetComponent<WarningVignetteController>();
