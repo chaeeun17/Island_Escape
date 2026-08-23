@@ -20,6 +20,7 @@ public class TimeManager : MonoBehaviour
     [SerializeField] Material skyboxMaterial;
 
     ColorAdjustments colorAdjustments;
+    private bool started = false;
 
     [SerializeField] TimeSettings timeSettings;
 
@@ -42,9 +43,15 @@ public class TimeManager : MonoBehaviour
     }
 
     TimeService service;
-
-    void Start()
+    private void Start()
     {
+        StartTimeChange();
+    }
+
+    public void StartTimeChange()
+    {
+        started = true;
+
         service = new TimeService(timeSettings);
         volume.profile.TryGet(out colorAdjustments);
         OnSunrise += () => Debug.Log("Sunrise");
@@ -54,10 +61,13 @@ public class TimeManager : MonoBehaviour
 
     void Update()
     {
-        UpdateTimeOfDay();
-        RotateSun();
-        UpdateLightSettings();
-        UpdateSkyBlend();
+        if (started)
+        {
+            UpdateTimeOfDay();
+            RotateSun();
+            UpdateLightSettings();
+            UpdateSkyBlend();
+        }
     }
 
     void UpdateSkyBlend()

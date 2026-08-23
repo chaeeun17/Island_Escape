@@ -59,11 +59,17 @@ Shader "Skybox/NightDay 2D"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // [VR 필수] 픽셀 셰이더에서 현재 눈 인덱스 연산 적용
-
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 float2 tc = ToRadialCoords(i.texcoord);
-                fixed4 tex1 = tex2D(_Texture1, tc);
-                fixed4 tex2 = tex2D(_Texture2, tc);
+
+                // 이음선에서 미분값이 튀는 것 보정
+                float2 dx = ddx(tc);
+                float2 dy = ddy(tc);
+                dx.x -= round(dx.x);
+                dy.x -= round(dy.x);
+
+                fixed4 tex1 = tex2Dgrad(_Texture1, tc, dx, dy);
+                fixed4 tex2 = tex2Dgrad(_Texture2, tc, dx, dy);
                 return lerp(tex1, tex2, _Blend);
             }
             ENDCG

@@ -392,5 +392,7 @@ public class NetworkGrabItem : NetworkBehaviour
         GrabStartTime = startTime;
         IsFarAttach = isFarAttach;
         GrabEaseInTime = easeInTime;
+
+        Debug.Log($"[GrabDebug] attachTransform={_grabInteractable.attachTransform?.name ?? "NULL"}");
     }
 }

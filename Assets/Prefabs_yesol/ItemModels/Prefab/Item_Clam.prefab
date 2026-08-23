@@ -137,7 +137,7 @@ Transform:
   m_GameObject: {fileID: 4180445690584083581}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.0048, y: 0.0413, z: -0.0243}
+  m_LocalPosition: {x: 0.005, y: 0.037, z: -0.0243}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 293946953081980295}
   - component: {fileID: 6200019169884091445}
   - component: {fileID: 345848859040897389}
-  - component: {fileID: 3869126666715057111}
+  - component: {fileID: 2543436621460324943}
   m_Layer: 0
   m_Name: Item_Clam
   m_TagString: Untagged
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 0
+  m_MovementType: 1
   m_PredictedVisualsTransform: {fileID: 0}
   m_VelocityDamping: 1
   m_VelocityScale: 1
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
   velocitySampleCount: 5
-  _networkRb: {fileID: 3869126666715057111}
+  _networkRb: {fileID: 0}
 --- !u!114 &345848859040897389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,9 +383,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 293946953081980295}
   - {fileID: 6200019169884091445}
-  - {fileID: 3869126666715057111}
+  - {fileID: 2543436621460324943}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &3869126666715057111
+--- !u!114 &2543436621460324943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

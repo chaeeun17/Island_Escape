@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 2691394982
+  SortKey: 3664819216
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -533,7 +533,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10
+  m_Intensity: 2
   m_Range: 100
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -992,7 +992,7 @@ GameObject:
   - component: {fileID: 7241603834985068280}
   m_Layer: 0
   m_Name: SpawnSpot_00
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1756,7 +1756,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10
+  m_Intensity: 2
   m_Range: 100
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2228,7 +2228,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 7
+  m_Intensity: 2
   m_Range: 100
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2580,7 +2580,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10
+  m_Intensity: 2
   m_Range: 100
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -3588,7 +3588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6966613190866260072, guid: 49ea26bf520e76443a2fc6c4a9fdc6f2, type: 3}
       propertyPath: SortKey
-      value: 1932284470
+      value: 2905708704
       objectReference: {fileID: 0}
     - target: {fileID: 8360448134229742951, guid: 49ea26bf520e76443a2fc6c4a9fdc6f2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3934,7 +3934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5249138640870205476, guid: 98cdb32bf43a25547bba26cbc69032f3, type: 3}
       propertyPath: SortKey
-      value: 1863907402
+      value: 2837331636
       objectReference: {fileID: 0}
     - target: {fileID: 5826101109135345501, guid: 98cdb32bf43a25547bba26cbc69032f3, type: 3}
       propertyPath: m_Name
@@ -3960,7 +3960,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6124638190479274335, guid: d5da286e8d8ef98469639309c1514ffa, type: 3}
       propertyPath: SortKey
-      value: 2906606869
+      value: 3880031103
       objectReference: {fileID: 0}
     - target: {fileID: 2432846809248961651, guid: d5da286e8d8ef98469639309c1514ffa, type: 3}
       propertyPath: m_Name
@@ -4336,7 +4336,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -616394578318174149, guid: 36e22b93634682649980a9d9c109e7ba, type: 3}
       propertyPath: SortKey
-      value: 1361663233
+      value: 2335087467
       objectReference: {fileID: 0}
     - target: {fileID: 3522306037809863404, guid: 36e22b93634682649980a9d9c109e7ba, type: 3}
       propertyPath: m_LocalScale.x
@@ -4536,7 +4536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8616140537360684260, guid: dfc261d20b461e844add277f5c16e102, type: 3}
       propertyPath: SortKey
-      value: 1641428662
+      value: 2614852896
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4558,7 +4558,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4248702203397031376, guid: 7063b3530f6cb8e4990789917c1be3bc, type: 3}
       propertyPath: SortKey
-      value: 3107973790
+      value: 4081398024
       objectReference: {fileID: 0}
     - target: {fileID: 7992587096563541508, guid: 7063b3530f6cb8e4990789917c1be3bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4628,7 +4628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2069199540715479617, guid: a9e990b5d1914504eb393ab0e3448a42, type: 3}
       propertyPath: SortKey
-      value: 3203771661
+      value: 4177195895
       objectReference: {fileID: 0}
     - target: {fileID: 8432760941247116120, guid: a9e990b5d1914504eb393ab0e3448a42, type: 3}
       propertyPath: m_LocalScale.x

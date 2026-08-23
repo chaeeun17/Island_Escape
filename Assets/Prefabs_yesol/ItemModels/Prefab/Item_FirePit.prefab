@@ -259,7 +259,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 2
+  m_MovementType: 1
   m_PredictedVisualsTransform: {fileID: 0}
   m_VelocityDamping: 1
   m_VelocityScale: 1
@@ -318,6 +318,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
 --- !u!65 &5780091077453059578
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -585,8 +587,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 7646fc44ec290a749b9fa61afd9ce730, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -855,13 +857,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3113536047526123876}
     m_Modifications:
+    - target: {fileID: 1583002366523852651, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1668042549742053530, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: m_Name
       value: FX_Campfire
       objectReference: {fileID: 0}
+    - target: {fileID: 1751340534893261016, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3845997542604005772, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4126188381490873324, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: m_RenderAlignment
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985114468429862773, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8529723575973832795, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: m_LocalPosition.x

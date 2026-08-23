@@ -124,9 +124,9 @@ GameObject:
   - component: {fileID: 9155261583416709293}
   - component: {fileID: 8920204937864651028}
   - component: {fileID: 8700052711545926470}
-  - component: {fileID: -5773244653745362007}
   - component: {fileID: -3394828411077904229}
   - component: {fileID: -8735313739840579625}
+  - component: {fileID: 5245283451064164000}
   m_Layer: 0
   m_Name: Item_Trash
   m_TagString: Untagged
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 0
+  m_MovementType: 1
   m_PredictedVisualsTransform: {fileID: 0}
   m_VelocityDamping: 1
   m_VelocityScale: 1
@@ -319,23 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 506c922da90cb9e4186aa8ac37ef8808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemRemove
---- !u!114 &-5773244653745362007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7723232089280703118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
 --- !u!114 &-3394828411077904229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,8 +337,8 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8700052711545926470}
-  - {fileID: -5773244653745362007}
   - {fileID: -8735313739840579625}
+  - {fileID: 5245283451064164000}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-8735313739840579625
 MonoBehaviour:
@@ -369,6 +352,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
+--- !u!114 &5245283451064164000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7723232089280703118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &7806679189833542073
 GameObject:
   m_ObjectHideFlags: 0

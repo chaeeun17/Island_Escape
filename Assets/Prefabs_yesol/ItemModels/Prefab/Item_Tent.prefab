@@ -178,7 +178,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4544961507442679362}
-  m_Mesh: {fileID: 3831150628792652405, guid: 5617571efe5b578489604f6b20dd2e95, type: 3}
+  m_Mesh: {fileID: 3831150628792652405, guid: dd3fd30afc2eb9f4f8ad9a3d9a1410f4, type: 3}
 --- !u!23 &735535430740580420
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29ee51a159ebbbb4e8de5447df9881bd, type: 2}
+  - {fileID: 2100000, guid: 30b380beff10e3c4aa15dae720f01373, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -268,7 +268,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5582355021792007878}
-  m_Mesh: {fileID: 8061611026942051142, guid: 5617571efe5b578489604f6b20dd2e95, type: 3}
+  m_Mesh: {fileID: 8061611026942051142, guid: dd3fd30afc2eb9f4f8ad9a3d9a1410f4, type: 3}
 --- !u!23 &3284879713819793113
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -294,7 +294,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29ee51a159ebbbb4e8de5447df9881bd, type: 2}
+  - {fileID: 2100000, guid: 30b380beff10e3c4aa15dae720f01373, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -389,7 +389,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7738292765190550609}
-  m_Mesh: {fileID: 7508339130541859874, guid: 5617571efe5b578489604f6b20dd2e95, type: 3}
+  m_Mesh: {fileID: 7508339130541859874, guid: dd3fd30afc2eb9f4f8ad9a3d9a1410f4, type: 3}
 --- !u!23 &2714861561434397930
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -415,7 +415,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29ee51a159ebbbb4e8de5447df9881bd, type: 2}
+  - {fileID: 2100000, guid: 30b380beff10e3c4aa15dae720f01373, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -601,7 +601,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 2
+  m_MovementType: 1
   m_PredictedVisualsTransform: {fileID: 0}
   m_VelocityDamping: 1
   m_VelocityScale: 1
@@ -660,6 +660,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
 --- !u!114 &6966613190866260072
 MonoBehaviour:
   m_ObjectHideFlags: 0

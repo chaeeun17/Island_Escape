@@ -1,5 +1,58 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &52377662891000874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4610995876580213378}
+  - component: {fileID: 331435173235278821}
+  m_Layer: 10
+  m_Name: FishingSpot (25)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4610995876580213378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52377662891000874}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.8412415, z: -0, w: -0.5406596}
+  m_LocalPosition: {x: -1.48174, y: 0.19, z: 1.5781759}
+  m_LocalScale: {x: 0.53299993, y: 50, z: 0.53299993}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -245.457, z: 0}
+--- !u!65 &331435173235278821
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52377662891000874}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.9539306, y: 0.02, z: 2.3915055}
+  m_Center: {x: 1.2189767, y: 0, z: -1.791114}
 --- !u!1 &122733954932092525
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,6 +166,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: fa2e670bb3648a84b9df8d16da25b85e, type: 3}
+--- !u!1 &125107464934262019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900682764930512823}
+  - component: {fileID: 64584880670080665}
+  m_Layer: 10
+  m_Name: FishingSpot (17)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &900682764930512823
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125107464934262019}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.014522975, z: -0, w: 0.99989456}
+  m_LocalPosition: {x: 0, y: 0.19, z: -1.978}
+  m_LocalScale: {x: 0.5330001, y: 50, z: 0.5330001}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: 1.664, z: 0}
+--- !u!65 &64584880670080665
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125107464934262019}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.4758925, y: 0.02, z: 2.5743852}
+  m_Center: {x: -0.29677168, y: 0, z: -1.6997046}
 --- !u!1 &334131070502621697
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +996,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 3a775dc2c1a334b45a5667a56fe92c23, type: 3}
+--- !u!1 &1408317764979914440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9087904151210236589}
+  - component: {fileID: 3792386659780602488}
+  m_Layer: 10
+  m_Name: FishingSpot (20)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9087904151210236589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408317764979914440}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7133664, z: -0, w: 0.70079136}
+  m_LocalPosition: {x: 1.96144, y: 0.19, z: -0.04747408}
+  m_LocalScale: {x: 0.5330001, y: 50, z: 0.5330001}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -91.019, z: 0}
+--- !u!65 &3792386659780602488
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408317764979914440}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.1378462, y: 0.02, z: 2.3915062}
+  m_Center: {x: -1.1452048, y: 0, z: -1.7911197}
 --- !u!1 &1419269000553999610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,6 +1616,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 14125b656fb71fd4d9d65bfe344107ad, type: 3}
+--- !u!1 &2367229535055963173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2684560394608027209}
+  - component: {fileID: 7651066499357490909}
+  m_Layer: 10
+  m_Name: FishingSpot (16)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2684560394608027209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367229535055963173}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.003762842, z: -0, w: 0.9999929}
+  m_LocalPosition: {x: 0, y: 0.19, z: -1.978}
+  m_LocalScale: {x: 0.53300005, y: 50, z: 0.53300005}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -0.431, z: 0}
+--- !u!65 &7651066499357490909
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367229535055963173}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.6713238, y: 0.02, z: 2.7770948}
+  m_Center: {x: -0.061518554, y: 0, z: -1.5983409}
 --- !u!1 &2432995044950846592
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1985,112 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 33ebf3440b12ec245bd008cd464f8d9a, type: 3}
+--- !u!1 &2601360566872196267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2737378096497930328}
+  - component: {fileID: 5358838335453293550}
+  m_Layer: 10
+  m_Name: FishingSpot (28)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2737378096497930328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2601360566872196267}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.39642572, z: -0, w: -0.9180668}
+  m_LocalPosition: {x: -2.32388, y: 0.19, z: -1.2787042}
+  m_LocalScale: {x: 0.533, y: 50, z: 0.533}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -313.29, z: 0}
+--- !u!65 &5358838335453293550
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2601360566872196267}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.8750277, y: 0.02, z: 2.3915052}
+  m_Center: {x: 0.957456, y: 0, z: -1.7911272}
+--- !u!1 &2652545595084944715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1315719909393040174}
+  - component: {fileID: 450300596536810848}
+  m_Layer: 10
+  m_Name: FishingSpot (18)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1315719909393040174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2652545595084944715}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.033562157, z: -0, w: 0.9994367}
+  m_LocalPosition: {x: 1.76423, y: 0.19, z: -1.978}
+  m_LocalScale: {x: 0.5330001, y: 50, z: 0.5330001}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -3.847, z: 0}
+--- !u!65 &450300596536810848
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2652545595084944715}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.6820426, y: 0.02, z: 2.3915067}
+  m_Center: {x: -0.8981133, y: 0, z: -1.7911198}
 --- !u!1 &2663626641760250591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2422,6 +2740,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.5044827, y: 0.02, z: 2.2989063}
   m_Center: {x: -0.3093357, y: 0, z: -1.8374141}
+--- !u!1 &3222153178496116096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4113977154488429499}
+  - component: {fileID: 5504469108708009300}
+  m_Layer: 10
+  m_Name: FishingSpot (29)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4113977154488429499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3222153178496116096}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.05284248, z: -0, w: 0.9986029}
+  m_LocalPosition: {x: -1.40712, y: 0.19, z: -1.978}
+  m_LocalScale: {x: 0.53299993, y: 50, z: 0.53299993}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: 6.058, z: 0}
+--- !u!65 &5504469108708009300
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3222153178496116096}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.5044827, y: 0.02, z: 2.2989063}
+  m_Center: {x: -0.3093357, y: 0, z: -1.8374141}
 --- !u!1 &3358449308889694178
 GameObject:
   m_ObjectHideFlags: 0
@@ -2672,6 +3043,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6304626060486807847}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4285283167557273444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6674877951168854728}
+  - component: {fileID: 6202327073831810909}
+  m_Layer: 10
+  m_Name: FishingSpot (19)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6674877951168854728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285283167557273444}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.48486805, z: -0, w: 0.8745874}
+  m_LocalPosition: {x: 2.1852999, y: 0.19, z: -1.0068741}
+  m_LocalScale: {x: 0.533, y: 50, z: 0.533}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -58.008, z: 0}
+--- !u!65 &6202327073831810909
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285283167557273444}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.9816318, y: 0.02, z: 2.3915064}
+  m_Center: {x: -1.2233047, y: 0, z: -1.7911198}
 --- !u!1 &4510814333451757504
 GameObject:
   m_ObjectHideFlags: 0
@@ -2946,6 +3370,7 @@ Transform:
   - {fileID: 5499695845324539424}
   - {fileID: 8913869840082399213}
   - {fileID: 4611423475268925234}
+  - {fileID: 4786714364039609871}
   m_Father: {fileID: 6304626060486807847}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7863704918702991720
@@ -3153,6 +3578,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 3a775dc2c1a334b45a5667a56fe92c23, type: 3}
+--- !u!1 &4788076172103135336
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2481367874817251096}
+  - component: {fileID: 4100112815889566437}
+  m_Layer: 10
+  m_Name: FishingSpot (27)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2481367874817251096
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4788076172103135336}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.64711595, z: -0, w: -0.7623916}
+  m_LocalPosition: {x: -2.04139, y: 0.19, z: -1.449264}
+  m_LocalScale: {x: 0.53299993, y: 50, z: 0.53299993}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -279.351, z: 0}
+--- !u!65 &4100112815889566437
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4788076172103135336}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.4417517, y: 0.02, z: 2.3915055}
+  m_Center: {x: -0.04931003, y: 0, z: -1.7911142}
 --- !u!1 &4969555508490820197
 GameObject:
   m_ObjectHideFlags: 0
@@ -3930,6 +4408,52 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.1378462, y: 0.02, z: 2.3915062}
   m_Center: {x: -1.1452048, y: 0, z: -1.7911197}
+--- !u!1 &6500344020861161781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4786714364039609871}
+  m_Layer: 4
+  m_Name: Collision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4786714364039609871
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500344020861161781}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7039201846125845514}
+  - {fileID: 2684560394608027209}
+  - {fileID: 900682764930512823}
+  - {fileID: 1315719909393040174}
+  - {fileID: 6674877951168854728}
+  - {fileID: 9087904151210236589}
+  - {fileID: 5443515259186698154}
+  - {fileID: 4729172868726686563}
+  - {fileID: 7347963703297460193}
+  - {fileID: 4066510939920069916}
+  - {fileID: 4610995876580213378}
+  - {fileID: 2909327313694466629}
+  - {fileID: 2481367874817251096}
+  - {fileID: 2737378096497930328}
+  - {fileID: 4113977154488429499}
+  m_Father: {fileID: 6683143327628346592}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6804791786214707395
 GameObject:
   m_ObjectHideFlags: 0
@@ -4081,6 +4605,112 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 33ebf3440b12ec245bd008cd464f8d9a, type: 3}
+--- !u!1 &7282626281067646347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4729172868726686563}
+  - component: {fileID: 1446230983031051830}
+  m_Layer: 10
+  m_Name: FishingSpot (22)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4729172868726686563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282626281067646347}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.9770433, z: -0, w: 0.21304102}
+  m_LocalPosition: {x: 0.68223995, y: 0.19, z: 1.9885861}
+  m_LocalScale: {x: 0.5330002, y: 50, z: 0.5330002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -155.399, z: 0}
+--- !u!65 &1446230983031051830
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282626281067646347}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.6591945, y: 0.02, z: 2.391506}
+  m_Center: {x: -1.405879, y: 0, z: -1.79113}
+--- !u!1 &7318013392336346761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2909327313694466629}
+  - component: {fileID: 2303538572071072577}
+  m_Layer: 10
+  m_Name: FishingSpot (26)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2909327313694466629
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7318013392336346761}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7012157, z: -0, w: -0.7129492}
+  m_LocalPosition: {x: -1.96677, y: 0.19, z: 0.3629359}
+  m_LocalScale: {x: 0.53299993, y: 50, z: 0.53299993}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -270.951, z: 0}
+--- !u!65 &2303538572071072577
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7318013392336346761}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.6651554, y: 0.02, z: 2.3915055}
+  m_Center: {x: 0.56239206, y: 0, z: -1.7911141}
 --- !u!1 &7350989381087014004
 GameObject:
   m_ObjectHideFlags: 0
@@ -4194,6 +4824,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e9089b1db16b58f4282a94e020b9c0e8, type: 3}
+--- !u!1 &7424527382866112401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7039201846125845514}
+  - component: {fileID: 756520593682045953}
+  m_Layer: 10
+  m_Name: FishingSpot (15)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7039201846125845514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7424527382866112401}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.014522975, z: -0, w: 0.99989456}
+  m_LocalPosition: {x: 0, y: 0.19, z: -1.978}
+  m_LocalScale: {x: 0.5330001, y: 50, z: 0.5330001}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: 1.664, z: 0}
+--- !u!65 &756520593682045953
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7424527382866112401}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.98040444, y: 0.02, z: 2.892739}
+  m_Center: {x: 0.09131637, y: 0, z: -1.5405153}
 --- !u!1 &7490486021423068162
 GameObject:
   m_ObjectHideFlags: 0
@@ -4247,6 +4930,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.6591945, y: 0.02, z: 2.391506}
   m_Center: {x: -1.405879, y: 0, z: -1.79113}
+--- !u!1 &7817258838091118601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7347963703297460193}
+  - component: {fileID: 1885453142948998808}
+  m_Layer: 10
+  m_Name: FishingSpot (23)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7347963703297460193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7817258838091118601}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.99985814, z: -0, w: -0.01684767}
+  m_LocalPosition: {x: -0.69822997, y: 0.19, z: 1.9033059}
+  m_LocalScale: {x: 0.5330004, y: 50, z: 0.5330004}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -181.931, z: 0}
+--- !u!65 &1885453142948998808
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7817258838091118601}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.23571, y: 0.02, z: 2.391506}
+  m_Center: {x: -1.1234633, y: 0, z: -1.7911301}
 --- !u!1 &7822653406867270486
 GameObject:
   m_ObjectHideFlags: 0
@@ -4413,6 +5149,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.9816318, y: 0.02, z: 2.3915064}
   m_Center: {x: -1.2233047, y: 0, z: -1.7911198}
+--- !u!1 &8104005878900338873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5443515259186698154}
+  - component: {fileID: 4625324996121168340}
+  m_Layer: 10
+  m_Name: FishingSpot (21)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5443515259186698154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8104005878900338873}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.78908336, z: -0, w: 0.6142862}
+  m_LocalPosition: {x: 1.5457001, y: 0.19, z: 1.5248759}
+  m_LocalScale: {x: 0.53299993, y: 50, z: 0.53299993}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -104.2, z: 0}
+--- !u!65 &4625324996121168340
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8104005878900338873}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.6591945, y: 0.02, z: 2.391506}
+  m_Center: {x: -1.405879, y: 0, z: -1.79113}
 --- !u!1 &8324088234492471428
 GameObject:
   m_ObjectHideFlags: 0
@@ -4579,6 +5368,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 14125b656fb71fd4d9d65bfe344107ad, type: 3}
+--- !u!1 &8537552292289812210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4066510939920069916}
+  - component: {fileID: 4372619517678144809}
+  m_Layer: 10
+  m_Name: FishingSpot (24)
+  m_TagString: Water
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4066510939920069916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537552292289812210}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.96103144, z: -0, w: -0.27643916}
+  m_LocalPosition: {x: -0.70356, y: 0.19, z: 1.9352859}
+  m_LocalScale: {x: 0.53300005, y: 50, z: 0.53300005}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4786714364039609871}
+  m_LocalEulerAnglesHint: {x: 0, y: -212.096, z: 0}
+--- !u!65 &4372619517678144809
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537552292289812210}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.9539306, y: 0.02, z: 2.3915055}
+  m_Center: {x: 1.2189767, y: 0, z: -1.791114}
 --- !u!1 &8570038900812527711
 GameObject:
   m_ObjectHideFlags: 0
