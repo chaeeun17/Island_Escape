@@ -106,6 +106,11 @@ public class SOSManager : NetworkBehaviour
         {
             tutorialNoticeUI.SetActive(false);
         }
+
+        if (successCutsceneObject != null)
+        {
+            successCutsceneObject.SetActive(false);
+        }
     }
 
     public void OnSocketSelected(SelectEnterEventArgs args)
