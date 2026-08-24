@@ -43,7 +43,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _FadeDistance: 0.5
-    - _FoamAmount: 1
+    - _FoamAmount: 0
     - _FoamCutoff: 50
     - _FoamScale: 300
     - _FoamSpeed: 0.007

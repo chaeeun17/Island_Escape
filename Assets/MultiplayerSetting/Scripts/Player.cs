@@ -263,7 +263,7 @@ public class Player : NetworkBehaviour
 
     public override async void Spawned()
     {
-        Debug.Log($"[Player Debug] HasInputAuthority={HasInputAuthority}, HasStateAuthority={HasStateAuthority}, InputAuthority={Object.InputAuthority}, Runner.LocalPlayer={Runner.LocalPlayer}");
+        // Debug.Log($"[Player Debug] HasInputAuthority={HasInputAuthority}, HasStateAuthority={HasStateAuthority}, InputAuthority={Object.InputAuthority}, Runner.LocalPlayer={Runner.LocalPlayer}");
 
         // 1. ���� ���(��: 100ms = 0.1��) ����Ͽ� Fusion�� ����(Authority)�� ������ ������ �ð��� �ݴϴ�.
         await Task.Delay(100);

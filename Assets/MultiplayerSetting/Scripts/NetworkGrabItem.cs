@@ -666,13 +666,6 @@ public class NetworkGrabItem : NetworkBehaviour
                 transform.rotation = idealRot;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.F1)) // 아무 키나 지정
-        {
-            Debug.Log($"[GrabItem Debug] transform.position={transform.position}, " +
-                       $"_rb.position={_rb.position}, IsGrabbed={IsGrabbed}, " +
-                       $"_rb.isKinematic={_rb.isKinematic}");
-        }
     }
 
     private void RecordVelocitySample()

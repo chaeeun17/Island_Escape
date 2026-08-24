@@ -1895,9 +1895,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2317ceab4d3d38419fe16eebc1c0cd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit.Samples.SpatialKeyboard::UnityEngine.XR.Interaction.Toolkit.Samples.SpatialKeyboard.XRKeyboardDisplay
-  m_InputField: {fileID: 0}
-  m_Keyboard: {fileID: 0}
-  m_UseSceneKeyboard: 0
+  m_InputField: {fileID: 262892330}
+  m_Keyboard: {fileID: 1051829744}
+  m_UseSceneKeyboard: 1
   m_UpdateOnKeyPress: 1
   m_AlwaysObserveKeyboard: 0
   m_MonitorInputFieldCharacterLimit: 0

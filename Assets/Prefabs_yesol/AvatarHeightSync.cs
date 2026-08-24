@@ -1,32 +1,40 @@
-using Fusion;
+ï»¿using Fusion;
 using UnityEngine;
 using Unity.XR.CoreUtils;
 
 public class AvatarHeightSync : NetworkBehaviour
 {
-    // ¾Æ¹ÙÅ¸ ½Ã°¢Àû Å©±â - ³×Æ®¿öÅ©·Î µ¿±âÈ­µÇ´Â °ª
+    // ì•„ë°”íƒ€ ì‹œê°ì  í¬ê¸° - ë„¤íŠ¸ì›Œí¬ë¡œ ë™ê¸°í™”ë˜ëŠ” ê°’
     [Networked, OnChangedRender(nameof(OnAvatarScaleChanged))]
     public float AvatarScale { get; set; } = 1f;
 
-    [SerializeField] private Transform avatarHeadRoot; // ¾Æ¹ÙÅ¸ ¸Ş½¬ ·çÆ® (XR Origin ¾Æ´Ô!)
-    [SerializeField] private Transform avatarBodyRoot; // ¾Æ¹ÙÅ¸ ¸Ş½¬ ·çÆ® (XR Origin ¾Æ´Ô!)
-    [SerializeField] private XROrigin xrOrigin;           // ·ÎÄÃ Æ®·¡Å·¿ë (Input Authority¸¸ »ç¿ë)
+    [SerializeField] private Transform avatarHeadRoot; // ì•„ë°”íƒ€ ë©”ì‰¬ ë£¨íŠ¸ (XR Origin ì•„ë‹˜!)
+    [SerializeField] private Transform avatarBodyRoot; // ì•„ë°”íƒ€ ë©”ì‰¬ ë£¨íŠ¸ (XR Origin ì•„ë‹˜!)
+    [SerializeField] private XROrigin xrOrigin;           // ë¡œì»¬ íŠ¸ë˜í‚¹ìš© (Input Authorityë§Œ ì‚¬ìš©)
     [SerializeField] private float avatarDefaultEyeHeight = 1.7f;
 
     public override void Spawned()
     {
-        // ½ºÆù ½ÃÁ¡¿¡ ÇöÀç °ªÀ¸·Î Áï½Ã ¹İ¿µ (´Ê°Ô µé¾î¿Â Å¬¶óÀÌ¾ğÆ® ´ëºñ)
         GameObject xrOriginObject = GameObject.FindWithTag("XROrigin");
-        xrOrigin = xrOriginObject.GetComponent<XROrigin>();
+        if (xrOriginObject != null)
+        {
+            xrOrigin = xrOriginObject.GetComponent<XROrigin>();
+        }
 
-        // ApplyVisualScale(AvatarScale);
-        CalibrateHeight();
+        // ğŸŒŸ ëª¨ë“  í”¼ì–´ì—ì„œ, ì´ ì‹œì ì˜ ë„¤íŠ¸ì›Œí¬ ê°’ì„ ëª…ì‹œì ìœ¼ë¡œ ì¦‰ì‹œ ë°˜ì˜
+        //    (OnChangedRenderê°€ "ìµœì´ˆ ìˆ˜ì‹ "ì—ëŠ” ë°œë™í•˜ì§€ ì•Šì„ ìˆ˜ ìˆìœ¼ë¯€ë¡œ ì•ˆì „ì¥ì¹˜)
+        ApplyVisualScale(AvatarScale);
+
+        if (HasInputAuthority)
+        {
+            CalibrateHeight();
+        }
     }
 
-    // ·ÎÄÃ »ç¿ëÀÚ°¡ Ä¶¸®ºê·¹ÀÌ¼Ç ¹öÆ°À» ´­·¶À» ¶§ È£Ãâ
+    // ë¡œì»¬ ì‚¬ìš©ìê°€ ìº˜ë¦¬ë¸Œë ˆì´ì…˜ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ í˜¸ì¶œ
     public void CalibrateHeight()
     {
-        if (!HasInputAuthority) return; // ³» ¾Æ¹ÙÅ¸¿¡ ´ëÇØ¼­¸¸ ½ÇÇà
+        if (!HasInputAuthority) return; // ë‚´ ì•„ë°”íƒ€ì— ëŒ€í•´ì„œë§Œ ì‹¤í–‰
 
         float realHeight = xrOrigin.CameraInOriginSpaceHeight;
         float scale = realHeight / avatarDefaultEyeHeight;
@@ -34,25 +42,48 @@ public class AvatarHeightSync : NetworkBehaviour
         RPC_RequestSetAvatarScale(scale);
     }
 
-    // Host ¸ğµå ±âÁØ: Å¬¶óÀÌ¾ğÆ® -> StateAuthority(È£½ºÆ®)·Î ¿äÃ»
+    // Host ëª¨ë“œ ê¸°ì¤€: í´ë¼ì´ì–¸íŠ¸ -> StateAuthority(í˜¸ìŠ¤íŠ¸)ë¡œ ìš”ì²­
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_RequestSetAvatarScale(float scale)
     {
-        AvatarScale = scale; // StateAuthority°¡ °ªÀ» ¹Ù²Ù¸é ÀÚµ¿À¸·Î ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡ ¸®ÇÃ¸®ÄÉÀÌ¼ÇµÊ
+        AvatarScale = scale; // StateAuthorityê°€ ê°’ì„ ë°”ê¾¸ë©´ ìë™ìœ¼ë¡œ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì— ë¦¬í”Œë¦¬ì¼€ì´ì…˜ë¨
     }
 
-    // [Networked] °ªÀÌ ¹Ù²ğ ¶§¸¸ È£ÃâµÊ (¸Å ÇÁ·¹ÀÓ X, È¿À²Àû)
+    // [Networked] ê°’ì´ ë°”ë€” ë•Œë§Œ í˜¸ì¶œë¨ (ë§¤ í”„ë ˆì„ X, íš¨ìœ¨ì )
     private void OnAvatarScaleChanged()
     {
         ApplyVisualScale(AvatarScale);
     }
 
+    [SerializeField] private Transform avatarLeftHandVisual;  // ğŸŒŸ ì† ë©”ì‰¬ ì „ìš© (íŠ¸ë˜í‚¹ Transformì˜ ìì‹)
+    [SerializeField] private Transform avatarRightHandVisual; // ğŸŒŸ ì† ë©”ì‰¬ ì „ìš©
+
+    [Header("Hand Scale Damping")]
+    [SerializeField, Range(0f, 1f)] private float handGrowDamping = 0.5f;   // scale > 1ì¼ ë•Œ (ì»¤ì§ˆ ë•Œ) ê°ì‡ ìœ¨
+    [SerializeField, Range(0f, 1f)] private float handShrinkDamping = 1f;   // scale < 1ì¼ ë•Œ (ì‘ì•„ì§ˆ ë•Œ) ê°ì‡ ìœ¨ - ê¸°ë³¸ 1.0ì´ë©´ ì‹¤ì œ ë¹„ìœ¨ ê·¸ëŒ€ë¡œ
+
     private void ApplyVisualScale(float scale)
     {
         if (avatarHeadRoot != null)
             avatarHeadRoot.localScale = Vector3.one * scale;
-
         if (avatarBodyRoot != null)
             avatarBodyRoot.localScale = Vector3.one * scale;
+
+        float dampedHandScale;
+        if (scale >= 1f)
+        {
+            // ğŸŒŸ 1ë³´ë‹¤ ì»¤ì§€ëŠ” ë°©í–¥ì€ dampingì„ ê°•í•˜ê²Œ ê±¸ì–´ì„œ ì‹¤ì œ scaleë³´ë‹¤ ì‘ê²Œ
+            dampedHandScale = 1f + (scale - 1f) * handGrowDamping;
+        }
+        else
+        {
+            // ì‘ì•„ì§€ëŠ” ë°©í–¥ì€ ë³„ë„ damping (ê¸°ë³¸ê°’ 1.0 = ê·¸ëŒ€ë¡œ ë°˜ì˜)
+            dampedHandScale = 1f - (1f - scale) * handShrinkDamping;
+        }
+
+        if (avatarLeftHandVisual != null)
+            avatarLeftHandVisual.localScale = Vector3.one * dampedHandScale;
+        if (avatarRightHandVisual != null)
+            avatarRightHandVisual.localScale = Vector3.one * dampedHandScale;
     }
 }
