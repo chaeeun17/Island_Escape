@@ -1806,8 +1806,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishingCaster
   lineRenderer: {fileID: 0}
-  redFish: {fileID: 0}
-  blueFish: {fileID: 0}
+  redFish: {fileID: 8155519088799159642, guid: 056c5e717343b8746bfe5318cc53a714, type: 3}
+  blueFish: {fileID: 6989118519755742221, guid: 035c9d27efc1a294895db239f662d12c, type: 3}
+  redFishItem: {fileID: 11400000, guid: be07eb5cdedb8f94ba8f32fb4ee8ea4c, type: 2}
+  blueFishItem: {fileID: 11400000, guid: eac67776684d5ce408fbb18af791ab87, type: 2}
   _waitingTime: 0
   _catchTime: 0
   _targetWaitTime: 0
@@ -3267,10 +3269,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 326941340732666519, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      propertyPath: m_UseForceGrab
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2848720900698956439, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.13667
@@ -3311,73 +3309,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3807662835016236483, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      propertyPath: m_Name
-      value: Left Ray Interactor
-      objectReference: {fileID: 0}
     - target: {fileID: 3928485144730400599, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_Name
       value: VR Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5748637308902536778, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      propertyPath: m_Name
-      value: Right Ray Interactor
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521133034350328119, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      propertyPath: m_UseForceGrab
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3807662835016236483, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6351564541594538769}
-    - targetCorrespondingSourceObject: {fileID: 5748637308902536778, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6351564541594538768}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
---- !u!1 &6351564541594538766 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5748637308902536778, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-  m_PrefabInstance: {fileID: 6351564541594538765}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6351564541594538767 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3807662835016236483, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-  m_PrefabInstance: {fileID: 6351564541594538765}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6351564541594538768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6351564541594538766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b00e33c7a1f361f43adc32b37286acf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::XRRayInteractionDetector
-  highlightMaterial: {fileID: 2100000, guid: cdc5f2d8a8e2c6840908374ae45cdb31, type: 2}
-  guideUI: {fileID: 0}
-  xButtonActionReference: {fileID: -2441894373077348105, guid: c348712bda248c246b8c49b3db54643f, type: 3}
---- !u!114 &6351564541594538769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6351564541594538767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b00e33c7a1f361f43adc32b37286acf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::XRRayInteractionDetector
-  highlightMaterial: {fileID: 2100000, guid: cdc5f2d8a8e2c6840908374ae45cdb31, type: 2}
-  guideUI: {fileID: 0}
-  xButtonActionReference: {fileID: -2441894373077348105, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!23 &6661948199246491930
 MeshRenderer:
   m_ObjectHideFlags: 0

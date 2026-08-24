@@ -20,9 +20,21 @@ public class OceanSound : MonoBehaviour
 
     private void SetVolumeWithDistance()
     {
-        if(player == null)
+        if (oceanSound == null) return;
+
+        // 플레이어가 할당되지 않았다면 찾기를 시도합니다.
+        if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("PlayerRoot");
+
+            // [핵심 방어 코드] 
+            // Server 모드이거나 아직 유저가 안 들어와서 플레이어가 없다면, 
+            // 거리 계산을 하지 않고 바로 함수를 빠져나갑니다 (return).
+            if (player == null)
+            {
+                if (audioSource != null) audioSource.volume = 0f;
+                return;
+            }
         }
 
         float minDistance = GetMinDistance();
@@ -34,39 +46,32 @@ public class OceanSound : MonoBehaviour
         {
             audioSource.volume = 0;
         }
-
     }
 
     float GetMinDistance()
     {
+        // [2차 방어 코드] 여기서 player가 null이면 에러가 나므로 한 번 더 확인합니다.
+        if (player == null) return float.MaxValue;
+
         Collider colA = player.GetComponent<CharacterController>();
+
+        // CharacterController가 없는 경우를 대비한 추가 방어
+        if (colA == null) return float.MaxValue;
+
         BoxCollider[] collidersB = oceanSound.GetComponentsInChildren<BoxCollider>();
 
         float minDistance = float.MaxValue;
         foreach (var colB in collidersB)
         {
-            // 1. colB의 중심점을 기준으로 colA의 가장 가까운 점을 찾음
             Vector3 closestOnA = colA.ClosestPoint(colB.transform.position);
-
-            // 2. 위에서 구한 점(closestOnA)이 colB 내부 또는 표면에 있는지 확인
             Vector3 closestOnB = colB.ClosestPoint(closestOnA);
 
-            // [핵심] 만약 closestOnA가 colB 내부에 있다면, colB.ClosestPoint는 closestOnA와 같은 좌표를 반환함
-            if (closestOnA == closestOnB)
-            {
-                return 0f; // 하나라도 완전히 겹쳐 있다면 즉시 거리 0 반환
-            }
+            if (closestOnA == closestOnB) return 0f;
 
-            // 3. 겹치지 않았다면 역방향으로 한 번 더 확인 (정밀도 보완)
             Vector3 finalClosestOnA = colA.ClosestPoint(closestOnB);
-            if (finalClosestOnA == closestOnB)
-            {
-                return 0f; // 겹침 감지 시 즉시 0 반환
-            }
+            if (finalClosestOnA == closestOnB) return 0f;
 
-            // 4. 둘 다 외부에 있을 때만 실제 거리 계산
             float currentDistance = Vector3.Distance(finalClosestOnA, closestOnB);
-
             if (currentDistance < minDistance)
             {
                 minDistance = currentDistance;

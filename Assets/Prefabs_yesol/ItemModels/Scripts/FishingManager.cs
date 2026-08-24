@@ -57,6 +57,7 @@ public class FishingManager : NetworkBehaviour
                 // 3. 기회 시간 초과시 놓침
                 if (caster.catchTime > catchFishWindow)
                 {
+                    Debug.Log("[Fishing Debug] 낚시 실패 : 기회 시간을 초과하여 물고기가 도망갔습니다!");
                     caster.isCatch = false;
                     caster.waitingTime = 0f;
                     caster.targetWaitTime = UnityEngine.Random.Range(minFishingTime, maxFishingTime);

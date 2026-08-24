@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d942ab5e849944996256aa981ea7c6, type: 3}
+  m_Name: redFish
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  ItemNumber: 6
+  ItemName: redfish
+  ItemSprite: {fileID: 0}
+  ItemDescription: 
+  itemType: 3
+  cookedVersion: {fileID: 0}
+  prefab3D: {fileID: 104517609856167801, guid: 5c054814b51bc664e9c92d7b8dd03cbe, type: 3}

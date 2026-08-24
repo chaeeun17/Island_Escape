@@ -5,23 +5,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using Fusion;
 
-public class NetworkInventory : NetworkBehaviour 
+public class NetworkInventory : NetworkBehaviour
 {
     public SLot[] itemSlots;
-    
+
     // 🌟 [핵심] 정적 싱글톤 - 내 조종 권한(HasInputAuthority)이 있는 캐릭터의 인벤토리만 할당!
     public static NetworkInventory Instance { get; private set; }
 
+    [Header("UI Panel")]
+    [Tooltip("껐다 켤 실제 UI 패널 (inventory_panel 연결)")]
+    public GameObject inventoryPanel;
+
     [Header("Filter Buttons UI")]
-    public Button[] filterButtons;     
-    public Color selectedColor = Color.yellow;   
+    public Button[] filterButtons;
+    public Color selectedColor = Color.yellow;
     public Color defaultColor = new Color(1.0f, 0.8f, 0.3f, 1f);
 
     [Header("Item Detail Panel UI")]
-    public GameObject detailPanel;         
-    public Image detailItemImage;          
-    public TMP_Text detailNameText;        
-    public TMP_Text detailDescText;        
+    public GameObject detailPanel;
+    public Image detailItemImage;
+    public TMP_Text detailNameText;
+    public TMP_Text detailDescText;
 
     [Header("🧪 시작 테스트용 아이템 목록")]
     [SerializeField] private List<Item> testStartItems = new List<Item>();
@@ -32,15 +36,18 @@ public class NetworkInventory : NetworkBehaviour
 
     public override void Spawned()
     {
-        // 내 조종 권한이 없는 멀티 상대방 캐릭터라면 스크립트 비활성화
+        // 🌟 수정됨: 권한 체크를 잠시 주석 처리하거나, 무조건 Instance를 등록하도록 변경
+        /* 
         if (!HasInputAuthority)
         {
             enabled = false;
             return;
         }
+        */
 
-        // 내 캐릭터의 인벤토리만 싱글톤으로 등록
+        // 내 캐릭터의 인벤토리만 싱글톤으로 등록 (일단 무조건 등록)
         Instance = this;
+        Debug.Log("✅ [Inventory Debug] 싱글톤 Instance가 강제로 등록되었습니다!");
 
         if (detailPanel != null) detailPanel.SetActive(false);
 
@@ -50,18 +57,30 @@ public class NetworkInventory : NetworkBehaviour
             if (testItem != null)
             {
                 AddItem(testItem);
-                Debug.Log($"🧪 [테스트 아이템 지급 완료] {testItem.getItemName()}");
             }
         }
 
-        // 시작 시 0번(Material) 탭 화면 갱신
         FilterItems(0);
     }
 
+    // 🌟 인벤토리 창 껐다 켜기 (최상위 오브젝트 말고 UI 패널만 조작)
+    public void ToggleInventory()
+    {
+        if (inventoryPanel != null)
+        {
+            bool isActive = inventoryPanel.activeSelf;
+            inventoryPanel.SetActive(!isActive);
+            Debug.Log($"[Inventory] 인벤토리 창이 {(inventoryPanel.activeSelf ? "열렸습니다" : "닫혔습니다")}");
+        }
+        else
+        {
+            Debug.LogWarning("❌ inventoryPanel 변수에 UI 패널(inventory_panel)이 연결되지 않았습니다!");
+        }
+    }
+
     // 🌟 아이템 추가
-    /*
     public void AddItem(Item item)
-    { 
+    {
         if (item == null) return;
 
         // 1. 데이터 원본(masterItemList)에서 기존 아이템 수량 증가
@@ -81,57 +100,6 @@ public class NetworkInventory : NetworkBehaviour
 
         // UI 갱신
         FilterItems(currentFilterType);
-    }*/
-
-    public bool AddItem(Item item)
-    { 
-        if (item == null) return false;
-
-        // 1. 데이터 원본(masterItemList)에서 기존 아이템 수량 증가 (중첩 가능)
-        Item existingItem = masterItemList.Find(x => x != null && x.getItemName() == item.getItemName());
-        if (existingItem != null)
-        {
-            int amountToAdd = item.get_Item_Count() > 0 ? item.get_Item_Count() : 1;
-            existingItem.add_Item_Count(amountToAdd);
-            FilterItems(currentFilterType);
-            return true;
-        }
-
-        // 2. 🌟 [핵심 방어] 신규 아이템 추가 전, 해당 탭의 슬롯이 꽉 찼는지 검사
-        int categoryItemCount = GetCategoryItemCount(item.GetItemType());
-        int maxSlotCount = itemSlots != null ? itemSlots.Length : 0;
-
-        if (categoryItemCount >= maxSlotCount)
-        {
-            Debug.LogWarning($"⚠️ [인벤토리 가득 참] 슬롯이 부족하여 '{item.getItemName()}'을(를) 넣을 수 없습니다!");
-            return false; // 인벤토리 꽉 참으로 추가 실패
-        }
-
-        // 3. 신규 아이템 추가
-        Item newItem = Instantiate(item);
-        if (newItem.get_Item_Count() <= 0) newItem.set_Item_Count(1);
-        masterItemList.Add(newItem);
-
-        // UI 갱신
-        FilterItems(currentFilterType);
-        return true;
-    }
-
-    // 🌟 해당 아이템 타입이 속한 카테고리의 현재 아이템 종류 개수 계산
-    private int GetCategoryItemCount(ItemType type)
-    {
-        int count = 0;
-        foreach (Item item in masterItemList)
-        {
-            if (item == null) continue;
-            ItemType t = item.GetItemType();
-
-            if (type == ItemType.Material && t == ItemType.Material) count++;
-            else if (type == ItemType.Tool && t == ItemType.Tool) count++;
-            else if ((type == ItemType.CookedFood || type == ItemType.RawFood || type == ItemType.Water) &&
-                     (t == ItemType.CookedFood || t == ItemType.RawFood || t == ItemType.Water)) count++;
-        }
-        return count;
     }
 
     public void AddItemByName(string itemName)
@@ -150,7 +118,7 @@ public class NetworkInventory : NetworkBehaviour
         }
     }
 
-    // 🌟 [수정 완료] 데이터 원본(masterItemList)에서 아이템 총수량 조회
+    // 🌟 데이터 원본(masterItemList)에서 아이템 총수량 조회
     public int GetItemCount(string itemName)
     {
         int count = 0;
@@ -164,7 +132,7 @@ public class NetworkInventory : NetworkBehaviour
         return count;
     }
 
-    // 🌟 [수정 완료] 아이템 소모 (데이터 원본에서 깎고 UI 자동 재정렬)
+    // 🌟 아이템 소모 (데이터 원본에서 깎고 UI 자동 재정렬)
     public void ConsumeItem(string itemName, int amountToConsume)
     {
         Item targetItem = masterItemList.Find(x => x != null && x.getItemName() == itemName);
@@ -186,7 +154,7 @@ public class NetworkInventory : NetworkBehaviour
 
         // UI 자동 재정렬 갱신
         FilterItems(currentFilterType);
-    } 
+    }
 
     // 🌟 탭 이동 시 0번 슬롯부터 앞쪽으로 빽빽하게 재배치
     public void FilterItems(int filterType)
@@ -215,7 +183,7 @@ public class NetworkInventory : NetworkBehaviour
                     if (type == ItemType.Tool) isMatch = true;
                     break;
                 case 2: // Food 탭
-                    if (type == ItemType.CookedFood || type == ItemType.RawFood|| type == ItemType.Water) isMatch = true;
+                    if (type == ItemType.CookedFood || type == ItemType.RawFood || type == ItemType.Water) isMatch = true;
                     break;
             }
 
@@ -275,7 +243,7 @@ public class NetworkInventory : NetworkBehaviour
             if (found != null) detailPanel = found.gameObject;
         }
 
-        if (detailPanel != null) 
+        if (detailPanel != null)
         {
             detailPanel.SetActive(true);
         }
