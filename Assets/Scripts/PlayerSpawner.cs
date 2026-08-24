@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     StartSceneUI ui;
-    // ¾À¿¡¼­ ÅÂ±×·Î Ã£Àº ½ºÆù ÁöÁ¡µéÀÇ TransformÀ» ÀúÀåÇÒ ¸®½ºÆ®
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â±×·ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Transformï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
     private List<Transform> _spawnPoints = new List<Transform>();
 
     private NetworkRunner _runner;
@@ -16,13 +16,20 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
-    //È¤½Ã³ª ÃßÈÄ¿¡ password¸¦ ¹Ù²Ü¼öµµ ÀÖµµ·Ï ÇØµÓ½Ã´Ù...
+    public static string CurrentRoomName { get; private set; }
+    public static string CurrentRoomPassword { get; private set; }
+
+    //È¤ï¿½Ã³ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ passwordï¿½ï¿½ ï¿½Ù²Ü¼ï¿½ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ØµÓ½Ã´ï¿½...
     private string roomPassword;
     bool isStarting = false;
     async void StartGame(GameMode mode)
     {
         if (isStarting) return;
         isStarting = true;
+
+        CurrentRoomName = ui.sessionName;
+        CurrentRoomPassword = ui.sessionPassword;
+
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
@@ -31,7 +38,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = mode,
             SessionName = ui.sessionName,
-            Scene = SceneRef.FromIndex(1),//¹«Á¶°Ç ´ÙÀ½ SceneÀ¸·Î ½ÇÇà
+            Scene = SceneRef.FromIndex(1),//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Sceneï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         };
         if (mode == GameMode.Host)
@@ -64,7 +71,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
-            // ¾À ·Îµå°¡ ÀÌ¹Ì ³¡³µ°í, ¾ÆÁ÷ ½ºÆù ¾È µÈ ÇÃ·¹ÀÌ¾î¶ó¸é ½ºÆù
+            // ï¿½ï¿½ ï¿½Îµå°¡ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (_spawnPoints.Count > 0 && !_spawnedCharacters.ContainsKey(player))
             {
                 SpawnPlayer(runner, player);
@@ -73,7 +80,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        // ¾îÂ÷ÇÇ Host°¡ ¾Æ´Ï¶ó¸é _spawnedCharacters¿¡´Â ¾Æ¹«°Íµµ Ã¤¿öÁöÁö ¾Ê¾Ò´Ù.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Hostï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ï¿½ _spawnedCharactersï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½ï¿½Íµï¿½ Ã¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´ï¿½.
         if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
@@ -82,16 +89,16 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        // 1. ¾À ·Îµå°¡ ³¡³­ ½ÃÁ¡¿¡ SpawnPoint ÅÂ±× ¼öÁý
+        // 1. ï¿½ï¿½ ï¿½Îµå°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ SpawnPoint ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
         FindSpawnPoints();
 
-        // 2. ½ºÆù Ã³¸®´Â Server/Host ±ÇÇÑ¸¸ ¼öÇà
+        // 2. ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ Server/Host ï¿½ï¿½ï¿½Ñ¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (runner.IsServer)
         {
-            // ÇöÀç ¹æ¿¡ Á¢¼ÓÇØ ÀÖ´Â ¸ðµç ÇÃ·¹ÀÌ¾î ¸ñ·Ï ¼øÈ¸
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½æ¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
             foreach (var player in runner.ActivePlayers)
             {
-                // ¾ÆÁ÷ ½ºÆùµÇÁö ¾ÊÀº ÇÃ·¹ÀÌ¾î¶ó¸é ½ºÆù ÁøÇà
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (!_spawnedCharacters.ContainsKey(player))
                 {
                     SpawnPlayer(runner, player);
@@ -113,7 +120,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
             inputAuthority: player
         );
 
-        Debug.Log($"[Spawn °á°ú] player={player.PlayerId}, playerObject == null ? {playerObject == null}, pos={spawnPosition}");
+        Debug.Log($"[Spawn ï¿½ï¿½ï¿½] player={player.PlayerId}, playerObject == null ? {playerObject == null}, pos={spawnPosition}");
 
         _spawnedCharacters.Add(player, playerObject);
 
@@ -122,7 +129,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private System.Collections.IEnumerator CheckAlive(NetworkObject obj, PlayerRef player)
     {
         yield return new WaitForSeconds(1f);
-        Debug.Log($"[1ÃÊ ÈÄ »ýÁ¸ È®ÀÎ] player={player.PlayerId}, obj == null ? {obj == null}");
+        Debug.Log($"[1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½] player={player.PlayerId}, obj == null ? {obj == null}");
     }
 
     private void FindSpawnPoints()
@@ -137,7 +144,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_spawnPoints.Count == 0)
         {
-            Debug.LogWarning("[CharacterSpawner] ¾À¿¡¼­ 'SpawnPoint' ÅÂ±×¸¦ Ã£Áö ¸øÇß½À´Ï´Ù.");
+            Debug.LogWarning("[CharacterSpawner] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 'SpawnPoint' ï¿½Â±×¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
         }
     }
     private Transform GetSpawnPoint(PlayerRef player)
@@ -155,15 +162,15 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
         bool wasInStartScene = SceneManager.GetActiveScene().buildIndex == 0;
         if (wasInStartScene)
         {
-            //¸¸¾à¿¡ StartScene¿¡ ÀÖÀ¸¸é Runner¸¸ »èÁ¦
-            //¿À·ù ¼ÛÃâ
+            //ï¿½ï¿½ï¿½à¿¡ StartSceneï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Runnerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             Destroy(_runner);
         }
         else
         {
-            //ÀÌ¿Ü Àå¼Ò¿¡ ÀÖ¾úÀ¸¸é StartSceneÀ¸·Î ÀÌµ¿ ÈÄ ÀÌ ¿ÀºêÁ§Æ® Á¦°Å(ÃÊ±âÈ­)
+            //ï¿½Ì¿ï¿½ ï¿½ï¿½Ò¿ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ StartSceneï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½(ï¿½Ê±ï¿½È­)
             SceneManager.LoadScene(0);
-            //¿À·ù ¼ÛÃâ
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             Destroy(gameObject);
         }
 
