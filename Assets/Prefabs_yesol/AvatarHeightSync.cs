@@ -82,8 +82,8 @@ public class AvatarHeightSync : NetworkBehaviour
         }
 
         if (avatarLeftHandVisual != null)
-            avatarLeftHandVisual.localScale = Vector3.one * dampedHandScale;
+            avatarLeftHandVisual.localScale = new Vector3 (-0.1f,0.1f,0.1f) * dampedHandScale;
         if (avatarRightHandVisual != null)
-            avatarRightHandVisual.localScale = Vector3.one * dampedHandScale;
+            avatarRightHandVisual.localScale = new Vector3 (0.1f,0.1f,0.1f) * dampedHandScale;
     }
 }

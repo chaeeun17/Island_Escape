@@ -5033,7 +5033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkSeaWaterScooper
   seaWaterBucketPrefab:
-    RawGuidValue: 8030bbe14000ec34aa4213e6542504c0
+    RawGuidValue: 919431d7190adf1479cdd2de96e47105
 --- !u!114 &1451172908
 MonoBehaviour:
   m_ObjectHideFlags: 0
