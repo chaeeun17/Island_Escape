@@ -833,8 +833,8 @@ MonoBehaviour:
   _localHead: {fileID: 6896570456279578119}
   _localLeftHand: {fileID: 5609769882074950458}
   _localRightHand: {fileID: 2536753694552642864}
-  _leftHandTurnAction: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  _rightHandMoveAction: {fileID: -8198699208435500284, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _leftHandTurnAction: {fileID: -8525429354371678379, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _rightHandMoveAction: {fileID: 6972639530819350904, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _jumpAction: {fileID: -3875704489234743591, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _leftTriggerAction: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _leftGripAction: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -1641,7 +1641,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7987,7 +7987,7 @@ MonoBehaviour:
   m_EnableTurnAround: 1
   m_DelayTime: 0
   m_LeftHandTurnInput:
-    m_InputSourceMode: 2
+    m_InputSourceMode: 0
     m_InputAction:
       m_Name: Left Hand Snap Turn
       m_Type: 0
@@ -8001,7 +8001,7 @@ MonoBehaviour:
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualValue: {x: 0, y: 0}
   m_RightHandTurnInput:
-    m_InputSourceMode: 0
+    m_InputSourceMode: 2
     m_InputAction:
       m_Name: Right Hand Snap Turn
       m_Type: 0
@@ -8011,7 +8011,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_InputActionReference: {fileID: 0}
+    m_InputActionReference: {fileID: -8525429354371678379, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualValue: {x: 0, y: 0}
 --- !u!114 &1721555465279872839
@@ -8727,7 +8727,7 @@ MonoBehaviour:
   m_EnableFly: 0
   m_ForwardSource: {fileID: 6896570456279578119}
   m_LeftHandMoveInput:
-    m_InputSourceMode: 0
+    m_InputSourceMode: 2
     m_InputAction:
       m_Name: Left Hand Move
       m_Type: 0
@@ -8741,7 +8741,7 @@ MonoBehaviour:
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualValue: {x: 0, y: 0}
   m_RightHandMoveInput:
-    m_InputSourceMode: 2
+    m_InputSourceMode: 0
     m_InputAction:
       m_Name: Right Hand Move
       m_Type: 0
@@ -8751,7 +8751,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_InputActionReference: {fileID: -8198699208435500284, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_InputActionReference: {fileID: 6972639530819350904, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualValue: {x: 0, y: 0}
   m_UseGravity: 1

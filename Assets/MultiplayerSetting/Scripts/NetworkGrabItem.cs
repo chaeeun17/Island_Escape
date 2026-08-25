@@ -419,7 +419,6 @@ public class NetworkGrabItem : NetworkBehaviour
             _rb.isKinematic = IsGrabbed ? true : !HasStateAuthority;
         }
 
-        // 🌟 .enabled 토글 대신, 잡혀 있는 동안 Host가 매 틱 정확한 위치를 강제 주입
         if (IsGrabbed && HasStateAuthority)
         {
             Transform grabberHand = ResolveGrabberHand();
@@ -430,18 +429,17 @@ public class NetworkGrabItem : NetworkBehaviour
 
                 if (_networkRb != null)
                 {
-                    _networkRb.Teleport(targetPos, targetRot); // 네트워크 권위 위치를 강제 갱신
+                    _networkRb.Teleport(targetPos, targetRot);
                 }
                 else
                 {
                     transform.position = targetPos;
                     transform.rotation = targetRot;
-
-
                 }
 
-                _networkRb.Teleport(targetPos, targetRot);
-                Debug.Log($"[Grab 중] transform.position={transform.position}, _rb.position={_rb.position}");
+                // 🌟 아래 두 줄(중복 Teleport, 디버그 로그) 삭제
+                // _networkRb.Teleport(targetPos, targetRot);
+                // Debug.Log($"[Grab 중] transform.position={transform.position}, _rb.position={_rb.position}");
             }
         }
     }
@@ -636,12 +634,15 @@ public class NetworkGrabItem : NetworkBehaviour
                 transform.rotation = idealRot;
             }
 
+            Physics.SyncTransforms(); // 🌟 콜라이더 위치 즉시 갱신 - 잡고 있는 동안도 물리적으로 정확한 위치 유지
+
             RecordVelocitySample();
         }
-        else if (_isPendingDetach)  // 🌟 바깥으로 꺼냄 - 이제 정상적으로 도달 가능
+        else if (_isPendingDetach)
         {
             transform.position = _pendingFinalPosition;
             transform.rotation = _pendingFinalRotation;
+            Physics.SyncTransforms(); // 🌟 놓은 직후 콜라이더 위치 즉시 갱신 - 재상호작용 가능하도록
         }
         else if (IsGrabbed)
         {
@@ -665,9 +666,10 @@ public class NetworkGrabItem : NetworkBehaviour
                 transform.position = idealPos;
                 transform.rotation = idealRot;
             }
+
+            Physics.SyncTransforms(); // 🌟 다른 사람이 잡고 있는 걸 보는 화면에서도 동일하게 동기화
         }
     }
-
     private void RecordVelocitySample()
     {
         _velocitySamples.Enqueue((transform.position, transform.rotation, Time.time));

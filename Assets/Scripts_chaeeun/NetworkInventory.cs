@@ -37,13 +37,13 @@ public class NetworkInventory : NetworkBehaviour
     public override void Spawned()
     {
         // 🌟 수정됨: 권한 체크를 잠시 주석 처리하거나, 무조건 Instance를 등록하도록 변경
-        /* 
+        
         if (!HasInputAuthority)
         {
             enabled = false;
             return;
         }
-        */
+       
 
         // 내 캐릭터의 인벤토리만 싱글톤으로 등록 (일단 무조건 등록)
         Instance = this;

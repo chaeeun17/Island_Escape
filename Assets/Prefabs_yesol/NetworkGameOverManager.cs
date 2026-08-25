@@ -34,9 +34,13 @@ public class NetworkGameOverManager : NetworkBehaviour
         foreach (var playerRef in Runner.ActivePlayers)
         {
             var playerObject = Runner.GetPlayerObject(playerRef);
+            Debug.Log($"[GameOver Check] playerRef={playerRef}, playerObject={(playerObject == null ? "NULL" : playerObject.name)}");
+
             if (playerObject == null) continue;
 
             var stats = playerObject.GetComponent<NetworkPlayerStats>();
+            Debug.Log($"[GameOver Check] stats={(stats == null ? "NULL" : "OK")}, IsPlayerFainted={(stats != null ? stats.IsPlayerFainted().ToString() : "N/A")}");
+
             if (stats == null) continue;
 
             anyPlayerFound = true;
@@ -47,6 +51,7 @@ public class NetworkGameOverManager : NetworkBehaviour
             }
         }
 
+        Debug.Log($"[GameOver Check] anyPlayerFound={anyPlayerFound}");
         return anyPlayerFound;
     }
 

@@ -8,7 +8,7 @@ public class NetworkUIManager : NetworkBehaviour
     public Transform headTransform; // XR Origin의 Camera
 
     [Header("연결할 UI 패널 오브젝트")]
-    [SerializeField] private Canvas itemInventoryPanel; // 아이템 창 (B 버튼)
+    [SerializeField] private GameObject itemInventoryPanel; // 아이템 창 (B 버튼)
     [SerializeField] private GameObject craftMenuPanel;     // 크래프트 창 (Y 버튼)
     [SerializeField] private Canvas notifyPanel;
     [SerializeField] private Canvas failPanel;
@@ -23,34 +23,32 @@ public class NetworkUIManager : NetworkBehaviour
     // 🌟 Fusion NetworkObject 생성(Spawn) 시점에 입력 권한 체크
     public override void Spawned()
     {
-        // 최상위 플레이어의 NetworkObject 탐색
         parentPlayerNetObj = GetComponentInParent<NetworkObject>();
 
-        // 내 플레이어(HasInputAuthority)가 아닌 멀티 상대방 캐릭터라면 UI 수신 스크립트 비활성화
         if (parentPlayerNetObj != null && !parentPlayerNetObj.HasInputAuthority)
         {
             enabled = false;
             return;
         }
 
-        // 초기 시작 시 UI 창 끄기
-        if (itemInventoryPanel != null) itemInventoryPanel.enabled = false;//itemInventoryPanel.SetActive(false);
+        if (itemInventoryPanel != null) itemInventoryPanel.SetActive(false);
         if (craftMenuPanel != null) craftMenuPanel.SetActive(false);
+
+        RegisterInputEvents(); // 🌟 여기서 등록
     }
 
-    void OnEnable()
+    public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        // 🌟 내 플레이어 권한이 있을 때만 버튼 이벤트 바인딩
-        if (parentPlayerNetObj != null && !parentPlayerNetObj.HasInputAuthority) return;
+        UnregisterInputEvents(); // 🌟 여기서 해제
+    }
 
-        // B 버튼 이벤트 연결
+    private void RegisterInputEvents()
+    {
         if (bButtonAction != null)
         {
             bButtonAction.action.Enable();
             bButtonAction.action.performed += OnBButtonPressed;
         }
-
-        // Y 버튼 이벤트 연결
         if (yButtonAction != null)
         {
             yButtonAction.action.Enable();
@@ -58,24 +56,26 @@ public class NetworkUIManager : NetworkBehaviour
         }
     }
 
-    void OnDisable()
+    private void UnregisterInputEvents()
     {
         if (bButtonAction != null)
         {
             bButtonAction.action.performed -= OnBButtonPressed;
             bButtonAction.action.Disable();
         }
-
         if (yButtonAction != null)
         {
             yButtonAction.action.performed -= OnYButtonPressed;
+            yButtonAction.action.Disable();
         }
     }
+
+    // OnEnable/OnDisable은 아예 제거하거나 비워두기
 
     // 🎒 B 버튼 눌렸을 때: 아이템 창 토글
     private void OnBButtonPressed(InputAction.CallbackContext context)
     {
-        if (!itemInventoryPanel.enabled)
+        if (!itemInventoryPanel.activeSelf)
         {
             Vector3 forward = headTransform.forward;
             forward.y = 0; // 위아래 기울임 무시 (수평 배치)
@@ -89,19 +89,7 @@ public class NetworkUIManager : NetworkBehaviour
                 itemInventoryPanel.transform.position - headTransform.position);
         }
 
-        //itemInventoryPanel.SetActive(!itemInventoryPanel.activeSelf);
-        itemInventoryPanel.enabled = !itemInventoryPanel.enabled;
-        /*
-        if (itemInventoryPanel == null) return;
-
-        // 크래프트 창이 켜져있다면 먼저 닫기
-        if (craftMenuPanel != null && craftMenuPanel.activeSelf) craftMenuPanel.SetActive(false);
-
-        bool isCurrentlyActive = itemInventoryPanel.activeSelf;
-        itemInventoryPanel.SetActive(!isCurrentlyActive);
-
-        Debug.Log($"🎒 [내 캐릭터] 아이템 인벤토리 창 토글: {!isCurrentlyActive}");
-        */
+        itemInventoryPanel.SetActive(!itemInventoryPanel.activeSelf);
     }
 
     // 🛠️ Y 버튼 눌렸을 때: 크래프트 창 토글
@@ -122,23 +110,12 @@ public class NetworkUIManager : NetworkBehaviour
         }
 
         craftMenuPanel.SetActive(!craftMenuPanel.activeSelf);
-        /*
-        if (craftMenuPanel == null) return;
-
-        // 아이템 창이 켜져있다면 먼저 닫기
-        if (itemInventoryPanel != null && itemInventoryPanel.activeSelf) itemInventoryPanel.SetActive(false);
-
-        bool isCurrentlyActive = craftMenuPanel.activeSelf;
-        craftMenuPanel.SetActive(!isCurrentlyActive);
-
-        Debug.Log($"🛠️ [내 캐릭터] 크래프트 제작 창 토글: {!isCurrentlyActive}");
-        */
     }
 
     // 외부 스크립트에서 인벤토리/크래프트 UI가 열려있는지 확인할 수 있는 함수
     public bool IsAnyUIOpen()
     {
-        bool isInvOpen = itemInventoryPanel != null && itemInventoryPanel.enabled;// itemInventoryPanel.activeSelf;
+        bool isInvOpen = itemInventoryPanel != null && itemInventoryPanel.activeSelf;// itemInventoryPanel.activeSelf;
         bool isCraftOpen = craftMenuPanel != null && craftMenuPanel.activeSelf;
         return isInvOpen || isCraftOpen;
     }

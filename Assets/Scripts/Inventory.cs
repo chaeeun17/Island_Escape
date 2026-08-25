@@ -184,8 +184,6 @@ public class Inventory: MonoBehaviour
         if (detailDescText != null) detailDescText.text = item.getItemDescription();
     }
 
-<<<<<<< Updated upstream
-=======
     public void ToggleInventory()
     {
         if (uiPanel != null)
@@ -194,7 +192,6 @@ public class Inventory: MonoBehaviour
             uiPanel.SetActive(!uiPanel.activeSelf);
         }
     }
->>>>>>> Stashed changes
 
 }
 

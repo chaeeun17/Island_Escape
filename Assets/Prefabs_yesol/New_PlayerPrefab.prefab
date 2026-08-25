@@ -1065,6 +1065,7 @@ MonoBehaviour:
   - {fileID: 6484348692411538944}
   - {fileID: 1366045897206673347}
   - {fileID: 8955611546197181613}
+  - {fileID: 7258854015619518422}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
   ForceRemoteRenderTimeframe: 0
@@ -1097,6 +1098,13 @@ MonoBehaviour:
   _LeftTrigger: 0
   _RightGrab: 0
   _RightTrigger: 0
+  _IsRescued:
+    _value: 0
+  vfc: {fileID: 0}
+  successCanvas: {fileID: 0}
+  uiManager: {fileID: 0}
+  _IsEscapeFailed:
+    _value: 0
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1157,10 +1165,15 @@ MonoBehaviour:
   maxThirst: 100
   maxStamina: 100
   animator: {fileID: 186448883145184124}
+  reviveAnimationDuration: 2
   _IsVisible:
     _value: 1
   animatedHead: {fileID: 4911261311002681269}
+  networkedRightHand: []
+  networkedLeftHand: []
+  stateUI: {fileID: 0}
   networkedHead: {fileID: 7470500107274796381}
+  vfc: {fileID: 0}
   hungerDecreaseInterval: 2
   thirstDecreaseInterval: 1.5
   staminaDecreaseInterval: 3
@@ -1185,6 +1198,9 @@ MonoBehaviour:
   headTransform: {fileID: 4431677544889963613}
   itemInventoryPanel: {fileID: 7618243762592921881}
   craftMenuPanel: {fileID: 8541122246649605062}
+  notifyPanel: {fileID: 0}
+  failPanel: {fileID: 0}
+  successPanel: {fileID: 0}
   bButtonAction: {fileID: 530629899127318567, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   yButtonAction: {fileID: -7108236239894351648, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!114 &6484348692411538944
@@ -1199,6 +1215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e5aa1397cf976499246035e6a4e260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkCountdown
+  helicopterController: {fileID: 0}
   countdownText: {fileID: 2260950223963328409}
   realMinutesPerGameDay: 10
 --- !u!114 &1366045897206673347
@@ -1218,6 +1235,7 @@ MonoBehaviour:
   climbSpeedMultiplier: 1
   maxClimbY: 10
   minClimbY: -2
+  preventReleaseWhileClimbing: 0
 --- !u!114 &8955611546197181613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1235,6 +1253,10 @@ MonoBehaviour:
   avatarBodyRoot: {fileID: 5317829829436036228}
   xrOrigin: {fileID: 0}
   avatarDefaultEyeHeight: 0.55
+  avatarLeftHandVisual: {fileID: 0}
+  avatarRightHandVisual: {fileID: 0}
+  handGrowDamping: 0.5
+  handShrinkDamping: 1
 --- !u!114 &1529006575780444567
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -123,6 +123,7 @@ public class PlayerSpawner : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log($"[Spawn ���] player={player.PlayerId}, playerObject == null ? {playerObject == null}, pos={spawnPosition}");
 
         _spawnedCharacters.Add(player, playerObject);
+        runner.SetPlayerObject(player, playerObject);
 
         StartCoroutine(CheckAlive(playerObject, player));
     }
