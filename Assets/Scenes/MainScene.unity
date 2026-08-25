@@ -7418,7 +7418,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 141725444630601030, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.423
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 326941340732666519, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
@@ -7430,7 +7430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 517162035037314655, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.423
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1648593605690525422, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7490,7 +7490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4321836182375201476, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.423
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5652037289489784132, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_StartingInteractionOverridesMap.Array.size
@@ -7514,7 +7514,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6000782822294578241, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.423
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6099919438341047227, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_InteractionLayers.m_Bits

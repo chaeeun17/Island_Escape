@@ -12,6 +12,19 @@ public class AvatarHeightSync : NetworkBehaviour
     [SerializeField] private Transform avatarBodyRoot; // 아바타 메쉬 루트 (XR Origin 아님!)
     [SerializeField] private XROrigin xrOrigin;           // 로컬 트래킹용 (Input Authority만 사용)
     [SerializeField] private float avatarDefaultEyeHeight = 1.7f;
+    [SerializeField] private CharacterController playerCharacterController;
+
+    private float baseCCHeight;
+    private float baseCCRadius;
+    private Vector3 baseCCCenter;
+    private float baseCCSkinWidth;
+
+    private Transform cachedMouth;
+    private float baseMouthLocalY; // scale=1 기준 mouth의 로컬 Y (localPosition은 scale 영향 안 받음)
+
+    [SerializeField] private LayerMask ownAvatarLayer; // 인스펙터에서 "OwnAvatar" 레이어로 지정 (혹은 int layer 하나로)
+    [SerializeField] private string ownAvatarLayerName = "OwnAvatar";
+
 
     public override void Spawned()
     {
@@ -19,17 +32,69 @@ public class AvatarHeightSync : NetworkBehaviour
         if (xrOriginObject != null)
         {
             xrOrigin = xrOriginObject.GetComponent<XROrigin>();
+
+            if (HasInputAuthority)
+            {
+                playerCharacterController = xrOriginObject.GetComponentInChildren<CharacterController>();
+                if (playerCharacterController != null)
+                {
+                    baseCCHeight = playerCharacterController.height;
+                    baseCCRadius = playerCharacterController.radius;
+                    baseCCCenter = playerCharacterController.center;
+                    baseCCSkinWidth = playerCharacterController.skinWidth;
+                }
+            }
         }
 
-        // 🌟 모든 피어에서, 이 시점의 네트워크 값을 명시적으로 즉시 반영
-        //    (OnChangedRender가 "최초 수신"에는 발동하지 않을 수 있으므로 안전장치)
+        if (avatarHeadRoot != null)
+        {
+            cachedMouth = avatarHeadRoot.Find("MouthZone");
+            if (cachedMouth != null)
+                baseMouthLocalY = cachedMouth.localPosition.y; // transform.localPosition은 부모 scale과 무관한 authoring 값
+        }
+
         ApplyVisualScale(AvatarScale);
 
         if (HasInputAuthority)
         {
             CalibrateHeight();
+            HideOwnAvatarFromSelf();
         }
     }
+    private void HideOwnAvatarFromSelf()
+    {
+        int ownLayer = LayerMask.NameToLayer(ownAvatarLayerName);
+        if (ownLayer < 0)
+        {
+            Debug.LogWarning($"레이어 '{ownAvatarLayerName}'가 존재하지 않습니다. Project Settings에서 추가하세요.");
+            return;
+        }
+
+        // 헤드/바디 메쉬만 자기 눈엔 안 보이게 (손은 보통 VR에서 계속 보여주는 게 자연스러움)
+        SetLayerRecursively(avatarHeadRoot, ownLayer);
+        SetLayerRecursively(avatarBodyRoot, ownLayer);
+
+        // 로컬 카메라의 culling mask에서 해당 레이어 제외
+        if (xrOrigin != null && xrOrigin.Camera != null)
+        {
+            xrOrigin.Camera.cullingMask &= ~(1 << ownLayer);
+        }
+    }
+    private void SetLayerRecursively(Transform root, int layer)
+    {
+        if (root == null) return;
+        root.gameObject.layer = layer;
+        foreach (Transform child in root)
+            SetLayerRecursively(child, layer);
+    }
+
+    // 다른 스크립트(Player)가 참조할 수 있도록 공개
+    public float GetHeadYCorrection()
+    {
+        // mouth가 scale배만큼 pivot에서 벌어진 만큼, 반대로 pivot을 밀어서 상쇄
+        return -baseMouthLocalY * AvatarScale;
+    }
+
 
     // 로컬 사용자가 캘리브레이션 버튼을 눌렀을 때 호출
     public void CalibrateHeight()
@@ -85,5 +150,17 @@ public class AvatarHeightSync : NetworkBehaviour
             avatarLeftHandVisual.localScale = new Vector3(-0.1f, 0.1f, 0.1f) * dampedHandScale;
         if (avatarRightHandVisual != null)
             avatarRightHandVisual.localScale = new Vector3(0.1f, 0.1f, 0.1f) * dampedHandScale;
+
+        // 🌟 CharacterController는 로컬 플레이어만
+        if (HasInputAuthority && playerCharacterController != null)
+        {
+            playerCharacterController.height = baseCCHeight * scale;
+            playerCharacterController.radius = Mathf.Max(baseCCRadius * scale, 0.05f); // 너무 얇아지지 않게 clamp
+            playerCharacterController.center = baseCCCenter * scale;
+            playerCharacterController.skinWidth = baseCCSkinWidth * scale; // radius 대비 비율 유지
+        }
+
+        // Transform mouth = avatarHeadRoot.Find("MouthZone");
+        // xrOrigin.transform.position = new Vector3(avatarHeadRoot.position.x, mouth.position.y, avatarHeadRoot.position.z);
     }
 }

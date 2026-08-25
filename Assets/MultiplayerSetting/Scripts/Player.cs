@@ -67,6 +67,8 @@ public class Player : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnEscapeFailedChanged))]
     public NetworkBool IsEscapeFailed { get; set; }
 
+    [SerializeField] private AvatarHeightSync avatarHeightSync; // 인스펙터에서 연결
+
     private void OnRescuedChanged()
     {
         if (IsRescued && HasInputAuthority)
@@ -152,6 +154,8 @@ public class Player : NetworkBehaviour
         // �� ƽ���� �Է��� �����ϴ��� Ȯ��
         if (GetInput(out NetworkInputData data))
         {
+            float headYCorrection = avatarHeightSync != null ? avatarHeightSync.GetHeadYCorrection() : 0f;
+
             // 0. ���޹��� ���� Ʈ��ŷ ��ǥ�� ��Ʈ��ũ �ƹ�Ÿ �ڽĵ鿡�� �״�� �����մϴ�.
             _netHead.localPosition = data.headPos;
             _netHead.localRotation = data.headRot;
@@ -270,11 +274,8 @@ public class Player : NetworkBehaviour
         // �� �ƹ�Ÿ ������Ʈ�� �� ��ǻ�� ��ǲ ������ ���� '���� ��¥ �ƹ�Ÿ'���?
         if (HasInputAuthority)
         {
-            // ��(���� �÷��̾�)�� �����ϴ� ĳ������ ���� ����
             if (HasInputAuthority)
             {
-                // 1. ���� �ִ� XR Origin ������Ʈ�� ã���ϴ�.
-                // (XR Origin ������Ʈ�� Unity�� ���� XR Origin (XR Interaction Toolkit) ������Ʈ ����)
                 GameObject xrOrigin = GameObject.FindWithTag("XROrigin");
 
                 if (xrOrigin != null)
@@ -282,9 +283,8 @@ public class Player : NetworkBehaviour
                     // 2. XR Origin�� �θ� �� Player Prefab(�ڽ�)���� �����մϴ�.
                     xrOrigin.transform.SetParent(transform);
 
-                    // 3. ���� ��ǥ�� (0, 0, 0)���� ���߾� �� ĳ���� ��ġ�� ��Ȯ�� ��ġ��ŵ�ϴ
                     Transform mouth = _netHead.Find("MouthZone");
-                    xrOrigin.transform.localPosition = new Vector3(0, mouth.transform.localPosition.y, 0);
+                    xrOrigin.transform.localPosition = Vector3.zero;
                     xrOrigin.transform.localRotation = Quaternion.identity;
 
                     InputHandler.Instance._localHead = xrOrigin.transform.Find("Camera Offset/Main Camera");
@@ -294,7 +294,6 @@ public class Player : NetworkBehaviour
                     Debug.Log("Player : " + transform.position);
                     Debug.Log("XR Origin : " + xrOrigin.transform.position);
                     Debug.Log("Main Camera : " + InputHandler.Instance._localHead.position);
-                    // Debug.Log("XR Origin�� ���������� Player Prefab ������ ���յǾ����ϴ�.");
 
                     _localControllers = xrOrigin.GetComponentsInChildren<ActionBasedController>(true);
                     _localInteractors = xrOrigin.GetComponentsInChildren<XRBaseInteractor>(true);
