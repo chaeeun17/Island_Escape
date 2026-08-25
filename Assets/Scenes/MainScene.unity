@@ -1537,7 +1537,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6278,6 +6278,10 @@ PrefabInstance:
     - target: {fileID: 4219193602840699981, guid: b28540be518014942851c8cad1a42d87, type: 3}
       propertyPath: helicopterObject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979258096089912573, guid: b28540be518014942851c8cad1a42d87, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
