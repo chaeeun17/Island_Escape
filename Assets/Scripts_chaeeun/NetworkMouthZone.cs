@@ -1,71 +1,77 @@
 using UnityEngine;
 using Fusion;
 
-public class NetworkMouthZone : MonoBehaviour
+public class NetworkMouthZone : NetworkBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
+        // 1. 내 캐릭터(Local Player)의 입에 들어왔을 때만 감지
+        if (!Object.HasInputAuthority) return;
+
         NetworkObject itemNetworkObj = other.GetComponentInParent<NetworkObject>();
         if (itemNetworkObj == null) return;
 
-        // 2. 내 플레이어가 집어서 권한(Authority)을 가지고 있는 아이템만 처리
-        if (itemNetworkObj.HasStateAuthority || itemNetworkObj.HasInputAuthority)
+        // 2. 프리팹/오브젝트 이름에서 "(Clone)" 제거
+        string cleanPrefabName = itemNetworkObj.gameObject.name.Replace("(Clone)", "").Trim();
+
+        // 3. SO 로드
+        Item itemSO = Resources.Load<Item>($"Items/{cleanPrefabName}");
+        if (itemSO == null)
         {
-            // 🌟 프리팹/오브젝트 이름에서 "(Clone)" 문자열 제거하여 원래 프리팹 이름 구하기
-            string cleanPrefabName = itemNetworkObj.gameObject.name.Replace("(Clone)", "").Trim();
+            return;
+        }
 
-            // 🌟 인벤토리 방식: Resources 폴더에서 프리팹 이름과 동일한 SO 로드
-            Item itemSO = Resources.Load<Item>($"{"Items/"}{cleanPrefabName}");
-
-            if (itemSO != null)
-            {
-                Eat(itemNetworkObj, itemSO);
-            }
-            else
-            {
-                Debug.LogWarning($"❌ [NetworkMouthZone] 경로에서 SO를 찾을 수 없습니다.");
-            }
+        // 4. 먹을 수 있는 타입인지 확인 후 로컬 스탯 적용 + 호스트에 Despawn 요청
+        if (ApplyEatEffect(itemSO))
+        {
+            // 호스트에게 아이템 삭제(Despawn) 요청 RPC
+            RPC_RequestEat(itemNetworkObj);
         }
     }
 
-    // 진짜 음식을 먹고 처리하는 함수
-    private void Eat(NetworkObject itemNetworkObj, Item itemSO)
+    /// <summary>
+    /// 로컬 플레이어의 스탯 회복/감소 처리
+    /// </summary>
+    private bool ApplyEatEffect(Item itemSO)
     {
         if (NetworkPlayerStats.LocalInstance == null)
         {
             Debug.LogWarning("❌ NetworkPlayerStats.LocalInstance를 찾을 수 없습니다.");
-            return;
+            return false;
         }
 
-        // 🌟 SO에 정의된 ItemType 기반으로 스탯 분기 처리
         switch (itemSO.GetItemType())
         {
             case ItemType.RawFood:
-                // 날음식 ➔ 체력 감소
                 NetworkPlayerStats.LocalInstance.ReduceStamina(20);
-                Debug.LogWarning($"🤢 (날음식)을 먹었습니다! 체력 감소");
-                break;
+                Debug.Log("🤢 (날음식)을 먹었습니다! 체력 감소");
+                return true;
 
             case ItemType.Water:
-                // 물/음료 ➔ 갈증 회복
                 NetworkPlayerStats.LocalInstance.RestoreThirst(20);
-                Debug.LogWarning($"💧  (물/음료)을 마셨습니다! 갈증 회복");
-                break;
+                Debug.Log("💧 (물/음료)을 마셨습니다! 갈증 회복");
+                return true;
 
             case ItemType.CookedFood:
                 NetworkPlayerStats.LocalInstance.RestoreHunger(20);
-                Debug.LogWarning($"🍎 (음식)을 먹었습니다! 배고픔 회복");
-                break;
-            default:
-                Debug.Log($"📦먹을 수 있는 아이템이 아닙니다.");
-                return;
-        }
+                Debug.Log("🍎 (음식)을 먹었습니다! 배고픔 회복");
+                return true;
 
-        // Fusion의 Despawn을 호출해 네트워크상에서 아이템 파괴
-        if (itemNetworkObj.Runner != null && itemNetworkObj.Runner.IsRunning)
+            default:
+                Debug.Log("📦 먹을 수 있는 아이템이 아닙니다.");
+                return false;
+        }
+    }
+
+    /// <summary>
+    /// 호스트(StateAuthority)에서 실행되어 네트워크 오브젝트를 안전하게 제거하는 RPC
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestEat(NetworkObject itemNetworkObj)
+    {
+        if (itemNetworkObj != null && Runner != null && Runner.IsRunning)
         {
-            itemNetworkObj.Runner.Despawn(itemNetworkObj);
+            Runner.Despawn(itemNetworkObj);
         }
     }
 }
-

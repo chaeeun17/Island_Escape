@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,8 +21,8 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     [Header("바닥 설치형 아이템 설정")]
     [Tooltip("손에 쥐지 않고 바닥에 바로 스폰할 아이템/프리팹 이름 키워드")]
     private List<string> groundSpawnItemNames = new List<string> { "Purifier", "Tent", "BowDrill", "FirePit" };
-    private float spawnForwardDistance = 1.2f;       // 일반 설치물 플레이어 앞거리
-    private float tentSpawnForwardDistance = 3.0f;  // 텐트 전용 앞거리
+    private float spawnForwardDistance = 1.2f;
+    private float tentSpawnForwardDistance = 3.0f;
 
     private XRRayInteractor leftRayInteractor;
     private XRRayInteractor rightRayInteractor;
@@ -38,7 +37,6 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         ownerInventory = GetComponentInParent<NetworkInventory>();
 
-        // VR 컨트롤러 그랩 입력 바인딩
         leftGripAction = new InputAction("LeftGripDirect", binding: "<XRController>{LeftHand}/grip");
         rightGripAction = new InputAction("RightGripDirect", binding: "<XRController>{RightHand}/grip");
     }
@@ -130,16 +128,13 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 targetInteractor = leftGripPressed ? leftRayInteractor : rightRayInteractor;
             }
 
-            // 바닥 설치형 아이템 여부 확인
             bool isGroundItem = IsGroundSpawnItem(item);
 
-            // 손에 쥐는 아이템인데 이미 다른 물건을 들고 있다면 패스
             if (!isGroundItem && (targetInteractor == null || targetInteractor.hasSelection))
             {
                 return;
             }
 
-            // 스폰 위치 및 회전 계산
             Vector3 spawnPos;
             Quaternion spawnRot;
 
@@ -154,45 +149,27 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 spawnRot = handTransform.rotation;
             }
 
-            // NetworkRunner를 통한 네트워크 스폰
             NetworkInventory targetInventory = ownerInventory != null ? ownerInventory : NetworkInventory.Instance;
-            GameObject spawned = null;
 
+            // 🌟 leftGripPressed를 전달하여 왼손/오른손 구분
             if (targetInventory != null && targetInventory.Runner != null && targetInventory.Runner.IsRunning)
             {
-                NetworkObject spawnedNetObj = targetInventory.Runner.Spawn(prefabToSpawn, spawnPos, spawnRot);
-                if (spawnedNetObj != null)
-                {
-                    spawned = spawnedNetObj.gameObject;
-                }
+                targetInventory.RequestSpawnItemByName(item.name, spawnPos, spawnRot, isGroundItem, targetInventory.Runner.LocalPlayer, leftGripPressed);
             }
             else
             {
-                spawned = Instantiate(prefabToSpawn, spawnPos, spawnRot);
-            }
-
-            if (spawned == null) return;
-
-            // 설치형 아이템 vs 손 쥐기 아이템 분기 처리
-            if (isGroundItem)
-            {
-                Debug.Log($"⛺ [설치형 아이템] {item.getItemName()}을(를) 바닥에 네트워크 스폰했습니다.");
-            }
-            else
-            {
-                var grabInteractable = spawned.GetComponent<XRGrabInteractable>();
-                if (grabInteractable != null && targetInteractor != null)
+                GameObject spawned = Instantiate(prefabToSpawn, spawnPos, spawnRot);
+                if (!isGroundItem && spawned != null && targetInteractor != null)
                 {
-                    XRInteractionManager interactionManager = Object.FindFirstObjectByType<XRInteractionManager>();
-                    if (interactionManager != null)
+                    var grab = spawned.GetComponent<XRGrabInteractable>();
+                    var mgr = UnityEngine.Object.FindFirstObjectByType<XRInteractionManager>();
+                    if (grab != null && mgr != null)
                     {
-                        interactionManager.SelectEnter((IXRSelectInteractor)targetInteractor, (IXRSelectInteractable)grabInteractable);
-                        Debug.Log($"★ [성공] {item.getItemName()}을(를) 꺼내 손에 쥐었습니다! ★");
+                        mgr.SelectEnter((IXRSelectInteractor)targetInteractor, (IXRSelectInteractable)grab);
                     }
                 }
             }
 
-            // 인벤토리 수량 1개 차감
             if (targetInventory != null)
             {
                 targetInventory.ConsumeItem(item.getItemName(), 1);
@@ -245,7 +222,6 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
         Vector3 targetXZ = camTransform.position + (forward * targetDistance);
         
-        // 레이 시작점을 머리 위 0.5m 지점으로 잡고 아래로 20m 넉넉하게 투사 (트리거 콜라이더 무시)
         Vector3 rayStart = new Vector3(targetXZ.x, camTransform.position.y + 0.5f, targetXZ.z);
 
         if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, 20f, ~0, QueryTriggerInteraction.Ignore))
@@ -254,7 +230,6 @@ public class SLot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
         else
         {
-            // 바닥을 찾지 못했을 경우 눈높이가 아닌 지면 추정치(눈높이 아래 1.4m)로 배치
             position = new Vector3(targetXZ.x, camTransform.position.y - 1.4f, targetXZ.z);
         }
 

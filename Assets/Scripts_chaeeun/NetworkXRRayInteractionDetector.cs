@@ -108,8 +108,12 @@ public class NetworkXRRayInteractionDetector : MonoBehaviour
                                 grabObject.GetComponentInParent<NetworkWaterPurifier>() != null ||
                                 grabObject.GetComponentInChildren<NetworkWaterPurifier>() != null;
 
+        bool isBowDrillObject = grabObject.name.ToLower().Contains("bowdrill") ||
+                                grabObject.name.ToLower().Contains("bow_drill") ||
+                                grabObject.name.ToLower().Contains("bow drill");
+
         // 바다가 아닐 때만 하이라이트 머티리얼 교체
-        if (!isSeaObject && !isPurifierObject)
+        if (!isSeaObject && !isPurifierObject && !isBowDrillObject)
         {
             MeshRenderer targetRenderer = grabObject.GetComponentInChildren<MeshRenderer>();
             if (targetRenderer != null && highlightMaterial != null)

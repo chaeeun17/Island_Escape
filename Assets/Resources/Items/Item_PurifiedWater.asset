@@ -19,7 +19,7 @@ MonoBehaviour:
     your throat.\r\n"
   itemType: 5
   cookedVersion: {fileID: 0}
-  prefab3D: {fileID: 44464080457299442, guid: aed834af25ff96643a253aba2183132a, type: 3}
+  prefab3D: {fileID: 5801078978265799479, guid: aed834af25ff96643a253aba2183132a, type: 3}
   restoreHunger: 0
   restoreThirst: 0
   restoreStamina: 0

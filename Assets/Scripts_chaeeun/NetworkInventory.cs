@@ -4,12 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Fusion;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class NetworkInventory : NetworkBehaviour
 {
     public SLot[] itemSlots;
 
-    // 🌟 [핵심] 정적 싱글톤 - 내 조종 권한(HasInputAuthority)이 있는 캐릭터의 인벤토리만 할당!
     public static NetworkInventory Instance { get; private set; }
 
     [Header("UI Panel")]
@@ -30,28 +32,22 @@ public class NetworkInventory : NetworkBehaviour
     [Header("🧪 시작 테스트용 아이템 목록")]
     [SerializeField] private List<Item> testStartItems = new List<Item>();
 
-    // 🌟 아이템 원본 데이터 관리용 리스트 및 현재 필터 탭
     private List<Item> masterItemList = new List<Item>();
     private int currentFilterType = 0;
 
     public override void Spawned()
     {
-        // 🌟 수정됨: 권한 체크를 잠시 주석 처리하거나, 무조건 Instance를 등록하도록 변경
-        
         if (!HasInputAuthority)
         {
             enabled = false;
             return;
         }
-       
 
-        // 내 캐릭터의 인벤토리만 싱글톤으로 등록 (일단 무조건 등록)
         Instance = this;
-        Debug.Log("✅ [Inventory Debug] 싱글톤 Instance가 강제로 등록되었습니다!");
+        Debug.Log("✅ [NetworkInventory] 내 인벤토리 싱글톤 Instance 등록 완료");
 
         if (detailPanel != null) detailPanel.SetActive(false);
 
-        // 테스트 아이템 지급
         foreach (Item testItem in testStartItems)
         {
             if (testItem != null)
@@ -63,7 +59,6 @@ public class NetworkInventory : NetworkBehaviour
         FilterItems(0);
     }
 
-    // 🌟 인벤토리 창 껐다 켜기 (최상위 오브젝트 말고 UI 패널만 조작)
     public void ToggleInventory()
     {
         if (inventoryPanel != null)
@@ -74,16 +69,14 @@ public class NetworkInventory : NetworkBehaviour
         }
         else
         {
-            Debug.LogWarning("❌ inventoryPanel 변수에 UI 패널(inventory_panel)이 연결되지 않았습니다!");
+            Debug.LogWarning("❌ inventoryPanel 변수에 UI 패널이 연결되지 않았습니다!");
         }
     }
 
-    // 🌟 아이템 추가
     public void AddItem(Item item)
     {
         if (item == null) return;
 
-        // 1. 데이터 원본(masterItemList)에서 기존 아이템 수량 증가
         Item existingItem = masterItemList.Find(x => x != null && x.getItemName() == item.getItemName());
         if (existingItem != null)
         {
@@ -92,13 +85,11 @@ public class NetworkInventory : NetworkBehaviour
         }
         else
         {
-            // 2. 신규 아이템 추가 (새 인스턴스 생성)
             Item newItem = Instantiate(item);
             if (newItem.get_Item_Count() <= 0) newItem.set_Item_Count(1);
             masterItemList.Add(newItem);
         }
 
-        // UI 갱신
         FilterItems(currentFilterType);
     }
 
@@ -118,7 +109,6 @@ public class NetworkInventory : NetworkBehaviour
         }
     }
 
-    // 🌟 데이터 원본(masterItemList)에서 아이템 총수량 조회
     public int GetItemCount(string itemName)
     {
         int count = 0;
@@ -132,7 +122,6 @@ public class NetworkInventory : NetworkBehaviour
         return count;
     }
 
-    // 🌟 아이템 소모 (데이터 원본에서 깎고 UI 자동 재정렬)
     public void ConsumeItem(string itemName, int amountToConsume)
     {
         Item targetItem = masterItemList.Find(x => x != null && x.getItemName() == itemName);
@@ -147,16 +136,13 @@ public class NetworkInventory : NetworkBehaviour
         }
         else
         {
-            // 수량이 다 떨어지면 원본 리스트에서 제거 후 메모리 해제
             masterItemList.Remove(targetItem);
             Destroy(targetItem);
         }
 
-        // UI 자동 재정렬 갱신
         FilterItems(currentFilterType);
     }
 
-    // 🌟 탭 이동 시 0번 슬롯부터 앞쪽으로 빽빽하게 재배치
     public void FilterItems(int filterType)
     {
         if (itemSlots == null || itemSlots.Length == 0) return;
@@ -165,7 +151,6 @@ public class NetworkInventory : NetworkBehaviour
 
         ShowItemDetails(null);
 
-        // 선택된 탭 조건에 맞는 아이템 추출
         List<Item> filteredList = new List<Item>();
 
         foreach (Item item in masterItemList)
@@ -176,13 +161,13 @@ public class NetworkInventory : NetworkBehaviour
 
             switch (filterType)
             {
-                case 0: // Material 탭
+                case 0:
                     if (type == ItemType.Material) isMatch = true;
                     break;
-                case 1: // Tool 탭 
+                case 1:
                     if (type == ItemType.Tool) isMatch = true;
                     break;
-                case 2: // Food 탭
+                case 2:
                     if (type == ItemType.CookedFood || type == ItemType.RawFood || type == ItemType.Water) isMatch = true;
                     break;
             }
@@ -190,12 +175,11 @@ public class NetworkInventory : NetworkBehaviour
             if (isMatch) filteredList.Add(item);
         }
 
-        // 0번 슬롯부터 필터링된 아이템 차곡차곡 배치
         for (int i = 0; i < itemSlots.Length; i++)
         {
             if (itemSlots[i] == null) continue;
 
-            itemSlots[i].gameObject.SetActive(true); // 칸 레이아웃 유지
+            itemSlots[i].gameObject.SetActive(true);
 
             if (i < filteredList.Count)
             {
@@ -203,7 +187,7 @@ public class NetworkInventory : NetworkBehaviour
             }
             else
             {
-                itemSlots[i].Clear_Slot(); // 남은 빈 칸 처리
+                itemSlots[i].Clear_Slot();
             }
         }
 
@@ -227,7 +211,6 @@ public class NetworkInventory : NetworkBehaviour
         }
     }
 
-    // 🌟 아이템 상세 정보 패널 출력
     public void ShowItemDetails(Item item)
     {
         if (item == null)
@@ -236,7 +219,6 @@ public class NetworkInventory : NetworkBehaviour
             return;
         }
 
-        // 부모 인벤토리에 detailPanel 참조가 비어있다면 자동 바인딩 (안전장치)
         if (detailPanel == null)
         {
             Transform found = transform.Find("DetailPanel");
@@ -258,5 +240,116 @@ public class NetworkInventory : NetworkBehaviour
         if (detailDescText != null) detailDescText.text = item.getItemDescription();
 
         Debug.Log($"🔎 [디테일 패널 출력] 아이템: {item.getItemName()}");
+    }
+
+    // =========================================================================
+    // 🌟 슬롯 아이템 스폰 요청 RPC (문자열 기반으로 안전하게 처리)
+    // =========================================================================
+
+    // =========================================================================
+    // 🌟 슬롯 아이템 스폰 요청 RPC (어느 손인지 isLeftHand 추가)
+    // =========================================================================
+
+    public void RequestSpawnItemByName(string itemName, Vector3 position, Quaternion rotation, bool isGroundItem, PlayerRef requestingPlayer, bool isLeftHand)
+    {
+        if (Runner != null && Runner.IsRunning)
+        {
+            RPC_RequestSpawnItem(itemName, position, rotation, isGroundItem, requestingPlayer, isLeftHand);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestSpawnItem(string itemName, Vector3 position, Quaternion rotation, bool isGroundItem, PlayerRef requestingPlayer, bool isLeftHand)
+    {
+        if (!Runner.IsRunning) return;
+
+        string cleanItemName = itemName.Replace("(Clone)", "").Trim();
+
+        Item foundItem = Resources.Load<Item>($"Items/{cleanItemName}");
+        if (foundItem == null || foundItem.GetPrefab3D() == null)
+        {
+            Debug.LogError($"❌ [Spawn 실패] Resources/Items/ 폴더에서 '{cleanItemName}' Item SO 또는 3D 프리팹을 찾을 수 없습니다.");
+            return;
+        }
+
+        GameObject prefabToSpawn = foundItem.GetPrefab3D();
+        PlayerRef authority = isGroundItem ? PlayerRef.None : requestingPlayer;
+
+        NetworkObject spawnedNetObj = Runner.Spawn(prefabToSpawn, position, rotation, authority);
+
+        if (spawnedNetObj != null)
+        {
+            RPC_OnItemSpawned(spawnedNetObj, requestingPlayer, isGroundItem, isLeftHand);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_OnItemSpawned(NetworkObject spawnedNetObj, PlayerRef requestingPlayer, bool isGroundItem, bool isLeftHand)
+    {
+        if (spawnedNetObj == null) return;
+
+        // 본인(로컬 플레이어)에게만 손 쥐기 처리
+        if (!isGroundItem && Runner.LocalPlayer == requestingPlayer)
+        {
+            var grabInteractable = spawnedNetObj.GetComponentInChildren<XRGrabInteractable>();
+            if (grabInteractable != null)
+            {
+                var interactionManager = UnityEngine.Object.FindFirstObjectByType<XRInteractionManager>();
+
+                // 내 캐릭터 하위에서 인터랙터 탐색
+                var myInteractors = GetComponentsInChildren<XRRayInteractor>(true);
+                if (myInteractors == null || myInteractors.Length == 0)
+                {
+                    myInteractors = transform.root.GetComponentsInChildren<XRRayInteractor>(true);
+                }
+
+                XRRayInteractor targetHand = null;
+
+                // 🌟 누른 손(Left vs Right)을 이름으로 정확히 타겟팅
+                foreach (var interactor in myInteractors)
+                {
+                    string objName = interactor.gameObject.name.ToLower();
+                    if (isLeftHand && objName.Contains("left"))
+                    {
+                        targetHand = interactor;
+                        break;
+                    }
+                    else if (!isLeftHand && objName.Contains("right"))
+                    {
+                        targetHand = interactor;
+                        break;
+                    }
+                }
+
+                // 만약 특정 손을 못 찾았다면 비어있는 손 아무거나 폴백
+                if (targetHand == null)
+                {
+                    foreach (var interactor in myInteractors)
+                    {
+                        if (interactor != null && !interactor.hasSelection)
+                        {
+                            targetHand = interactor;
+                            break;
+                        }
+                    }
+                }
+
+                if (targetHand != null)
+                {
+                    // 위치/물리 초기화 후 정확한 손에 집기
+                    spawnedNetObj.transform.position = targetHand.transform.position;
+                    spawnedNetObj.transform.rotation = targetHand.transform.rotation;
+
+                    var rb = spawnedNetObj.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.linearVelocity = Vector3.zero;
+                        rb.angularVelocity = Vector3.zero;
+                    }
+
+                    interactionManager?.SelectEnter((IXRSelectInteractor)targetHand, (IXRSelectInteractable)grabInteractable);
+                }
+            }
+        }
     }
 }
