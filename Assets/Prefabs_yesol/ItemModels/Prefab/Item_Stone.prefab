@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1159694711498851553}
   - component: {fileID: 2069199540715479617}
   - component: {fileID: 4538803448765606205}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3883830838874148328}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 7652090817238613867}
   - component: {fileID: 2671853784156400291}
   - component: {fileID: 9111188125694099213}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

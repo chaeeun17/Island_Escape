@@ -36,8 +36,13 @@ public class SOSManager : NetworkBehaviour
 
     private void Awake()
     {
+        Debug.Log($"[SOSManager] Awake 호출. Instance==null? {Instance == null}, this={GetInstanceID()}");
         if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        else
+        {
+            Debug.LogWarning($"[SOSManager] 중복 감지, Destroy 실행! this={GetInstanceID()}");
+            Destroy(gameObject);
+        }
     }
 
     public override void Spawned()

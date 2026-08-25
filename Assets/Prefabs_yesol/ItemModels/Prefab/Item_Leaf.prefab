@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8378783371665473159}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 3276588138856462373}
   - component: {fileID: 1584795511576658242}
   - component: {fileID: 4086625853586255203}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Leaf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 1943908745247610059}
   - component: {fileID: -6124638190479274335}
   - component: {fileID: 6034512701461615782}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Leaf
   m_TagString: Untagged
   m_Icon: {fileID: 0}

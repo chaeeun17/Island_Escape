@@ -373,6 +373,8 @@ public class NetworkPlayerStats : NetworkBehaviour
     private void ApplyVisibility(bool visible)
     {
         networkedHead.enabled = visible;
+
+        /*
         foreach(Renderer renderer in networkedRightHand)
         {
             renderer.enabled = visible;
@@ -381,6 +383,8 @@ public class NetworkPlayerStats : NetworkBehaviour
         {
             renderer.enabled = visible;
         }
+        */
+
         stateUI.enabled = visible;
         animatedHead.enabled = !visible;
     }

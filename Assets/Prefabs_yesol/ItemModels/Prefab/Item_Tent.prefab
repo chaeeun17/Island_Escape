@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6526770907285544512}
   - component: {fileID: 5667340211710424515}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SleepZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 1831573592500735069}
   - component: {fileID: 1912720951636306818}
   - component: {fileID: 964725456785837476}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Tent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 3755443821865985862}
   - component: {fileID: 7559525748777489420}
   - component: {fileID: 735535430740580420}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StlCMP_M_Tent_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 4816430595719582152}
   - component: {fileID: 4527014263625645958}
   - component: {fileID: 3284879713819793113}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StlCMP_M_Tent_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3147785804305319821}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 7931641426882375652}
   - component: {fileID: 5984583079351156310}
   - component: {fileID: 2714861561434397930}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StlCMP_M_Tent_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 6966613190866260072}
   - component: {fileID: -4613373113748602251}
   - component: {fileID: 924538784014785228}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Tent
   m_TagString: Untagged
   m_Icon: {fileID: 0}

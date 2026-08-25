@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8064046187370141530}
   - component: {fileID: 1948627660780365204}
   - component: {fileID: 5780091077453059578}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_FirePit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +352,7 @@ GameObject:
   - component: {fileID: 8484627530403612558}
   - component: {fileID: 8847158785346437496}
   - component: {fileID: 1054417957457917094}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stone Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 7691776316321783203}
   - component: {fileID: 6017690597066416608}
   - component: {fileID: 1843428243404724460}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stick Bundle (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +553,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7188333894715198689}
   - component: {fileID: 8432074242544241562}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -681,7 +681,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 907869801167040008}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -715,7 +715,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2049113830148384611}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -749,7 +749,7 @@ GameObject:
   - component: {fileID: 7924807734077887155}
   - component: {fileID: 7917268870229767268}
   - component: {fileID: 3892261441431543386}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stick Bundle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -857,6 +857,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3113536047526123876}
     m_Modifications:
+    - target: {fileID: 653792365239784793, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1583002366523852651, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: playOnAwake
       value: 0
@@ -865,9 +869,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_Campfire
       objectReference: {fileID: 0}
+    - target: {fileID: 1668042549742053530, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1751340534893261016, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: playOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822931433535532515, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3845997542604005772, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: playOnAwake
@@ -920,6 +932,10 @@ PrefabInstance:
     - target: {fileID: 8529723575973832795, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926058933661386296, guid: 5d453a1a138f3724a8b71a14d1280360, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

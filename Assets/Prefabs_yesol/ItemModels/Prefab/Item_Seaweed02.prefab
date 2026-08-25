@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -6224780538765466606}
   - component: {fileID: -9149709751201042507}
   - component: {fileID: 8648650652774561240}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Seaweed02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 6507861210899879818}
   - component: {fileID: 3024977415271336151}
   - component: {fileID: 3400538425492901649}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Seaweed02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1100206819121008466}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

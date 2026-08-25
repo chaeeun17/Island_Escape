@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1487113824995553333}
   - component: {fileID: 3058664524093239380}
   - component: {fileID: 5608687752281711029}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Clam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3856357002818395620}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 6200019169884091445}
   - component: {fileID: 345848859040897389}
   - component: {fileID: 2543436621460324943}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Clam
   m_TagString: Untagged
   m_Icon: {fileID: 0}

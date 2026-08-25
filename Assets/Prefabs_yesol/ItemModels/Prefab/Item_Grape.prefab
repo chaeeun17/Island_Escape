@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 110880111516314357}
   - component: {fileID: -7280294248988579161}
   - component: {fileID: 456892824390412507}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Grape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6049747615406646678}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 8753733744947143031}
   - component: {fileID: 1053919874163163536}
   - component: {fileID: 5020389692575532233}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

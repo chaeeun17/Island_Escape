@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3466495785304634101}
   - component: {fileID: 5257815572713883123}
   - component: {fileID: 7632604301502483966}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 38962103039894259}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 1168589549930576005}
   - component: {fileID: -2928023482717929655}
   - component: {fileID: 5470413429262763008}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Pet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -422,7 +422,7 @@ GameObject:
   - component: {fileID: 4355166135798301067}
   - component: {fileID: 677467335382248329}
   - component: {fileID: 8749965880556897508}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: cap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

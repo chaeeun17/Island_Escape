@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7657759872341608659}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5002737803139252366}
   - component: {fileID: 8141692509189437187}
   - component: {fileID: 3906349654722390931}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FishV3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: -7779878059075944130}
   - component: {fileID: 1931774304781960783}
   - component: {fileID: 46211418871579466}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Fish2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
