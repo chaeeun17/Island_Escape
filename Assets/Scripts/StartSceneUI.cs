@@ -82,12 +82,12 @@ public class StartSceneUI : MonoBehaviour
     private void OnRoomNameChanged(string roomName)
     { 
         sessionName = roomName;
-        sessionNameInput.text = roomName;
+        sessionNameInput.SetTextWithoutNotify(roomName);
     }
     private void OnRoomPasswordChanged(string roomPassword)
     {
         sessionPassword = roomPassword;
-        sessionPasswordInput.text = roomPassword;
+        sessionPasswordInput.SetTextWithoutNotify(roomPassword);
     }
     private string ChangeText(string s)
     {

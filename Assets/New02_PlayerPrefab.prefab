@@ -164,7 +164,7 @@ Transform:
   m_GameObject: {fileID: 102180991194412760}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.022, z: -0.491}
+  m_LocalPosition: {x: 0, y: -0.332, z: -0.491}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -229,10 +229,11 @@ Transform:
   m_GameObject: {fileID: 194397098599247679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4123664163689560250}
   - {fileID: 6286903555935342247}
   - {fileID: 2121402871045088333}
   - {fileID: 8653612929909724655}
@@ -1523,7 +1524,7 @@ Transform:
   m_GameObject: {fileID: 2453947179762120596}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.261, z: 0.26}
+  m_LocalPosition: {x: 0, y: -0.048999995, z: 0.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2906,7 +2907,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4123664163689560250}
   - {fileID: 2762682804770467936}
   - {fileID: 2431240234865759927}
   - {fileID: 4431677544889963613}
@@ -2984,6 +2984,7 @@ MonoBehaviour:
   uiManager: {fileID: 3697573881986140967}
   _IsEscapeFailed:
     _value: 0
+  avatarHeightSync: {fileID: -7911152443943381442}
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3101,7 +3102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkCountdown
   helicopterController: {fileID: 0}
   countdownText: {fileID: 2260950223963328409}
-  realMinutesPerGameDay: 10
+  realMinutesPerGameDay: 0.1
 --- !u!114 &1366045897206673347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3137,6 +3138,14 @@ MonoBehaviour:
   avatarBodyRoot: {fileID: 5317829829436036228}
   xrOrigin: {fileID: 0}
   avatarDefaultEyeHeight: 0.55
+  playerCharacterController: {fileID: 5631152598068217068}
+  ownAvatarLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  ownAvatarLayerName: OwnAvatar
+  hideTargetNames:
+  - Hair
+  - Blueberry
   avatarLeftHandVisual: {fileID: 4560472575201020466}
   avatarRightHandVisual: {fileID: 8075795579028742842}
   handGrowDamping: 0.5
@@ -3176,7 +3185,10 @@ MonoBehaviour:
   - {fileID: 596924150848502867}
   - {fileID: 1448526881583816869}
   inventoryPanel: {fileID: 2560138103958378904}
-  filterButtons: []
+  filterButtons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   defaultColor: {r: 1, g: 0.8, b: 0.3, a: 1}
   detailPanel: {fileID: 8894235027705177779}
@@ -3988,7 +4000,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: -1.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2938211466965490072}
@@ -4730,7 +4742,7 @@ Transform:
   m_GameObject: {fileID: 8379405286018969364}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.31, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4855,8 +4867,8 @@ Transform:
   m_GameObject: {fileID: 8469021512719885061}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
-  m_LocalPosition: {x: 0, y: 0.67, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalPosition: {x: 0, y: 0.36000004, z: 0}
+  m_LocalScale: {x: 85, y: 85, z: 85}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4431677544889963613}
@@ -6592,6 +6604,10 @@ PrefabInstance:
     - target: {fileID: 6542586957784959138, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 5912227291983129096}
+    - target: {fileID: 6542586957784959138, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: FilterItems
       objectReference: {fileID: 0}
     - target: {fileID: 7219007464976357495, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6706,8 +6722,16 @@ PrefabInstance:
       value: 3220581445
       objectReference: {fileID: 0}
     - target: {fileID: 7998224960375508402, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998224960375508402, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 5912227291983129096}
+    - target: {fileID: 7998224960375508402, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: FilterItems
       objectReference: {fileID: 0}
     - target: {fileID: 8225840604264804138, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: iconImage
@@ -6720,6 +6744,10 @@ PrefabInstance:
     - target: {fileID: 8644049077506569902, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 5912227291983129096}
+    - target: {fileID: 8644049077506569902, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: FilterItems
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7885260428967692955, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
@@ -6958,7 +6986,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 38952214719630331}
+    m_TransformParent: {fileID: 4431677544889963613}
     m_Modifications:
     - target: {fileID: 306739248109495377, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
       propertyPath: m_text
@@ -7062,15 +7090,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7659746486222793266, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7659746486222793266, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7659746486222793266, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7659746486222793266, guid: c219863e93fae26448dfc0d1fa46b6bf, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -7269,6 +7297,10 @@ PrefabInstance:
     - target: {fileID: 1367711683958343721, guid: 293f19b365397264eb8b4770dff46253, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916191720589635596, guid: 293f19b365397264eb8b4770dff46253, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2218557386531389523, guid: 293f19b365397264eb8b4770dff46253, type: 3}
       propertyPath: m_Enabled

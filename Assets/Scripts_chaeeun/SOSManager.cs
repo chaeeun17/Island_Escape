@@ -11,6 +11,8 @@ public class SOSManager : NetworkBehaviour
 {
     public static SOSManager Instance { get; private set; }
 
+    [SerializeField] TimeManager timeManager;
+
     [Header("🧪 디버그/테스트 모드")]
     [Tooltip("체크 시 게임 시작 즉시 강제로 미션 완료 신호를 전체 플레이어에게 보냅니다.")]
     [SerializeField] private bool testForceComplete = false;
@@ -200,6 +202,8 @@ public class SOSManager : NetworkBehaviour
         
         if (tutorialNoticeUI != null) tutorialNoticeUI.SetActive(false);
         if (successCutsceneObject != null) successCutsceneObject.SetActive(true);
+
+        if (timeManager != null) timeManager.StartTimeChange();
 
         OnTutorialCompleted?.Invoke();
     }
