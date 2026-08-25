@@ -284,7 +284,7 @@ public class Player : NetworkBehaviour
 
                     // 3. ���� ��ǥ�� (0, 0, 0)���� ���߾� �� ĳ���� ��ġ�� ��Ȯ�� ��ġ��ŵ�ϴ
                     Transform mouth = _netHead.Find("MouthZone");
-                    xrOrigin.transform.localPosition = new Vector3(0, mouth.transform.localPosition.y, 0);
+                    xrOrigin.transform.localPosition = new Vector3(0,0, 0);
                     xrOrigin.transform.localRotation = Quaternion.identity;
 
                     InputHandler.Instance._localHead = xrOrigin.transform.Find("Camera Offset/Main Camera");
