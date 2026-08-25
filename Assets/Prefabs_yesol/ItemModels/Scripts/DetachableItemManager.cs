@@ -1,15 +1,15 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
-using Fusion; // Photon Fusion ÇÊ¼ö
+using Fusion; // Photon Fusion í•„ìˆ˜
 
 public class DetachableItemManager : NetworkBehaviour
 {
     [System.Serializable]
     public struct DetachablePartInfo
     {
-        public NetworkObject partPrefab; // ºĞ¸®µÇ¾î »ı±æ ³×Æ®¿öÅ© ÀÚ½Ä ÇÁ¸®ÆÕ
-        public Transform spawnPoint;     // »ı°Ü³¯ À§Ä¡ (¸ŞÀÎ ¿ÀºêÁ§Æ® ³»ÀÇ ÀÚ½Ä Transform)
+        public NetworkObject partPrefab; // ë¶„ë¦¬ë˜ì–´ ìƒê¸¸ ë„¤íŠ¸ì›Œí¬ ìì‹ í”„ë¦¬íŒ¹
+        public Transform spawnPoint;     // ìƒê²¨ë‚  ìœ„ì¹˜ (ë©”ì¸ ì˜¤ë¸Œì íŠ¸ ë‚´ì˜ ìì‹ Transform)
     }
 
     [Header("Detachable Parts Settings")]
@@ -17,7 +17,7 @@ public class DetachableItemManager : NetworkBehaviour
 
     private XRGrabInteractable mainInteractable;
 
-    // ³×Æ®¿öÅ© »óÅÂ µ¿±âÈ­ (ÀÌÁß ½ÇÇà ¹æÁö)
+    // ë„¤íŠ¸ì›Œí¬ ìƒíƒœ ë™ê¸°í™” (ì´ì¤‘ ì‹¤í–‰ ë°©ì§€)
     [Networked] private NetworkBool IsDetached { get; set; }
 
     private void Awake()
@@ -28,10 +28,10 @@ public class DetachableItemManager : NetworkBehaviour
 
     private void OnItemActivated(ActivateEventArgs args)
     {
-        // ÀÌ¹Ì ºĞ¸®µÇ¾úÀ¸¸é ¹«½Ã
+        // ì´ë¯¸ ë¶„ë¦¬ë˜ì—ˆìœ¼ë©´ ë¬´ì‹œ
         if (IsDetached) return;
 
-        // XR Trigger¸¦ ´©¸¥ Å¬¶óÀÌ¾ğÆ®°¡ È£½ºÆ®(StateAuthority)¿¡°Ô ºĞ¸® ¿äÃ»
+        // XR Triggerë¥¼ ëˆ„ë¥¸ í´ë¼ì´ì–¸íŠ¸ê°€ í˜¸ìŠ¤íŠ¸(StateAuthority)ì—ê²Œ ë¶„ë¦¬ ìš”ì²­
         if (HasStateAuthority)
         {
             DetachAllParts();
@@ -51,7 +51,7 @@ public class DetachableItemManager : NetworkBehaviour
 
     private void DetachAllParts()
     {
-        // 1. Áßº¹ ½ÇÇà ¹æÁö ÇÃ·¡±×
+        // 1. ì¤‘ë³µ ì‹¤í–‰ ë°©ì§€ í”Œë˜ê·¸
         IsDetached = true;
 
         NetworkObject handle = Runner.Spawn(
@@ -75,7 +75,7 @@ public class DetachableItemManager : NetworkBehaviour
             Object.InputAuthority
             );
 
-        // 3. ¼­·ÎÀÇ ÂüÁ¶ ¼³Á¤ (NetworkId Àü´Ş)
+        // 3. ì„œë¡œì˜ ì°¸ì¡° ì„¤ì • (NetworkId ì „ë‹¬)
         var handleScript = handle.GetComponent<HandlePart>();
         handleScript.InitPedestalReference(pedestal);
 
@@ -84,6 +84,14 @@ public class DetachableItemManager : NetworkBehaviour
 
     private void OnDestroy()
     {
+        // ğŸŒŸ íŒŒê´´ ì „ì— ì¸í„°ë™ì…˜ ë§¤ë‹ˆì €ì—ê²Œ ê°•ì œë¡œ ë†“ê²Œ í•¨
+        if (mainInteractable.interactionManager != null && mainInteractable.isSelected)
+        {
+            mainInteractable.interactionManager.CancelInteractableSelection(
+                (UnityEngine.XR.Interaction.Toolkit.Interactables.IXRSelectInteractable)mainInteractable
+            );
+        }
+
         if (mainInteractable != null)
         {
             mainInteractable.activated.RemoveListener(OnItemActivated);
@@ -105,7 +113,7 @@ public class DetachableItemManager : NetworkBehaviour
     private Rigidbody mainRigidbody;
     // private bool isActivated = false;
 
-    // ³×Æ®¿öÅ© »óÅÂ µ¿±âÈ­ º¯¼ö (¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡°Ô ºĞ¸® ¿©ºÎ °øÀ¯)
+    // ë„¤íŠ¸ì›Œí¬ ìƒíƒœ ë™ê¸°í™” ë³€ìˆ˜ (ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ë¶„ë¦¬ ì—¬ë¶€ ê³µìœ )
     [Networked] private NetworkBool isActivated { get; set; }
 
     void Awake()
@@ -130,7 +138,7 @@ public class DetachableItemManager : NetworkBehaviour
     {
         if (isActivated) return;
 
-        // Fusion ±ÇÇÑ Ã¼Å©: State Authority(È£½ºÆ®)°¡ ¾Æ´Ï¶ó¸é ±ÇÇÑ ¿äÃ» ¶Ç´Â ¼­¹ö RPC È£Ãâ ÇÊ¿ä
+        // Fusion ê¶Œí•œ ì²´í¬: State Authority(í˜¸ìŠ¤íŠ¸)ê°€ ì•„ë‹ˆë¼ë©´ ê¶Œí•œ ìš”ì²­ ë˜ëŠ” ì„œë²„ RPC í˜¸ì¶œ í•„ìš”
         if (!HasStateAuthority)
         {
             RPC_RequestDetach();
@@ -152,8 +160,8 @@ public class DetachableItemManager : NetworkBehaviour
     {
         foreach (var child in childInteractables)
         {
-            // ÀÚ½Ä ¿ÀºêÁ§Æ® °¢°¢ÀÌ µ¶¸³µÈ 'NetworkObject'¶ó¸é Fusion Àü¿ë ºĞ¸® ¹æ½ÄÀ» ¾²°Å³ª,
-            // ´Ü¼ø ½Ã°¢Àû ¿ÀºêÁ§Æ®¶ó¸é SetParent(null) ÈÄ NetworkTransformÀ» °»½ÅÇØÁÖ¾î¾ß ÇÕ´Ï´Ù.
+            // ìì‹ ì˜¤ë¸Œì íŠ¸ ê°ê°ì´ ë…ë¦½ëœ 'NetworkObject'ë¼ë©´ Fusion ì „ìš© ë¶„ë¦¬ ë°©ì‹ì„ ì“°ê±°ë‚˜,
+            // ë‹¨ìˆœ ì‹œê°ì  ì˜¤ë¸Œì íŠ¸ë¼ë©´ SetParent(null) í›„ NetworkTransformì„ ê°±ì‹ í•´ì£¼ì–´ì•¼ í•©ë‹ˆë‹¤.
             child.transform.SetParent(null);
 
             if (child.TryGetComponent<Rigidbody>(out var rb))
