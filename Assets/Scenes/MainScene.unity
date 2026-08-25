@@ -8067,6 +8067,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 326941340732666519, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
+      propertyPath: m_RaycastMask.m_Bits
+      value: 2147483873
+      objectReference: {fileID: 0}
+    - target: {fileID: 326941340732666519, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}
@@ -8181,6 +8185,10 @@ PrefabInstance:
     - target: {fileID: 6099919438341047227, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521133034350328119, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
+      propertyPath: m_RaycastMask.m_Bits
+      value: 2147483873
       objectReference: {fileID: 0}
     - target: {fileID: 8521133034350328119, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_InteractionLayers.m_Bits

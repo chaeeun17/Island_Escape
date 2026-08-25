@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7526109995467898229}
   - component: {fileID: 1977278577905853410}
   - component: {fileID: 2579701739643218543}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 3082763885707828354}
   - component: {fileID: -616394578318174149}
   - component: {fileID: 7874426441204100841}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8731303930940276551}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

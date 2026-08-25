@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3409304688181351114}
   - component: {fileID: 5642051869696985798}
   - component: {fileID: 8834560600738850030}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: -3394828411077904229}
   - component: {fileID: -8735313739840579625}
   - component: {fileID: 5245283451064164000}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Trash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5561466171929503939}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

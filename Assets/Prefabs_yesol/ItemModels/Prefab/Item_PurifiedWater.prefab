@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7398977681572848774}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 723704333716305549}
   - component: {fileID: 8797927190405712006}
   - component: {fileID: 6724416503035432535}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PurifiedWater
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 7667194083301073480}
   - component: {fileID: 7752831495489389516}
   - component: {fileID: 7849721760942952173}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 4246929936369904108}
   - component: {fileID: 7809204454205282174}
   - component: {fileID: 4901106895101863972}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_PurifiedWater
   m_TagString: Untagged
   m_Icon: {fileID: 0}

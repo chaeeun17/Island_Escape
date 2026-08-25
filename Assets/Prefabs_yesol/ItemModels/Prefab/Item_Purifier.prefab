@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3209933801176805151}
   - component: {fileID: 2875746516933358838}
   - component: {fileID: 8527513333568919728}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: rope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 2494934487688785234}
   - component: {fileID: 1602787292266356380}
   - component: {fileID: 4216857673808316041}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 9111840050301907391}
   - component: {fileID: 8003403772664060842}
   - component: {fileID: 3435079220997646297}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: big water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 4235150813163188930}
   - component: {fileID: 4608081474816135769}
   - component: {fileID: 4795836213413747537}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3739409069047819027}
   - component: {fileID: 1392894672586128554}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3063120434027587800}
   - component: {fileID: 7679297938916859834}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 362912419158524361}
   - component: {fileID: 7007731729597505394}
   - component: {fileID: 2451174329912206326}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Purifier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -845,7 +845,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7587928197163589673}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -878,7 +878,7 @@ GameObject:
   - component: {fileID: 1797046090051850380}
   - component: {fileID: 1297532680163133033}
   - component: {fileID: 1072173873180495573}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -967,7 +967,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8658232256998675866}
   - component: {fileID: 2253443326244647218}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1020,7 +1020,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3576140454846854090}
   - component: {fileID: 2630901153797595983}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1074,7 +1074,7 @@ GameObject:
   - component: {fileID: 2177252360068329938}
   - component: {fileID: 2735167071432852339}
   - component: {fileID: 1851576530956694414}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: vinyl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1167,7 +1167,7 @@ GameObject:
   - component: {fileID: 9035952630315778090}
   - component: {fileID: 1367761117668194867}
   - component: {fileID: 2893034754707878198}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pet_lower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1369,7 +1369,7 @@ GameObject:
   - component: {fileID: 4679615111992074534}
   - component: {fileID: 1010560614984591357}
   - component: {fileID: 4195688796689636747}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: big can
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1480,7 +1480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4652838511480444511}
   - component: {fileID: 6247056257334174276}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1532,7 +1532,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 922085332828005997}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

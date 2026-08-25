@@ -366,6 +366,7 @@ public class NetworkGrabItem : NetworkBehaviour
 
     private void OnIsGrabbedChanged()
     {
+        Debug.Log($"🔥 OnIsGrabbedChanged 발동! IsGrabbed={IsGrabbed}, _isPendingDetach={_isPendingDetach}");
         if (!IsGrabbed && _isPendingDetach)
         {
             // 🌟 Host의 확정 값이 도착했으니 얼려두던 로컬 오버라이드 해제
@@ -422,25 +423,65 @@ public class NetworkGrabItem : NetworkBehaviour
         if (IsGrabbed && HasStateAuthority)
         {
             Transform grabberHand = ResolveGrabberHand();
+
+            // 🌟 진단용 로그 (틱마다 찍히면 너무 많으니 필요시 주석 처리)
+            Debug.Log($"[GrabItem:{name}] Hold 중. GrabbingPlayer={GrabbingPlayer}, grabberHand={(grabberHand == null ? "NULL" : grabberHand.name)}, HandPos={(grabberHand != null ? grabberHand.position.ToString() : "N/A")}");
+
             if (grabberHand != null)
             {
                 Vector3 targetPos = grabberHand.position + grabberHand.rotation * GrabOffsetPosition;
                 Quaternion targetRot = grabberHand.rotation * GrabOffsetRotation;
 
                 if (_networkRb != null)
-                {
                     _networkRb.Teleport(targetPos, targetRot);
-                }
                 else
                 {
                     transform.position = targetPos;
                     transform.rotation = targetRot;
                 }
-
-                // 🌟 아래 두 줄(중복 Teleport, 디버그 로그) 삭제
-                // _networkRb.Teleport(targetPos, targetRot);
-                // Debug.Log($"[Grab 중] transform.position={transform.position}, _rb.position={_rb.position}");
             }
+        }
+    }
+
+    private bool _pendingVelocityApply = false;
+    private Vector3 _pendingVelocity;
+    private Vector3 _pendingAngularVelocity;
+
+    private void ApplyDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
+    {
+        try
+        {
+            if (_networkRb != null)
+            {
+                _networkRb.Teleport(finalPos, finalRot); // 이것만으로 위치/회전 충분
+            }
+            else
+            {
+                transform.position = finalPos;
+                transform.rotation = finalRot;
+            }
+
+            // 🌟 isKinematic은 여기서 직접 건드리지 않음 (FixedUpdateNetwork가 IsGrabbed 값 기준으로 알아서 처리)
+            _pendingVelocity = velocity;
+            _pendingAngularVelocity = angularVelocity;
+            _pendingVelocityApply = true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[NetworkGrabItem] ApplyDetach 중 예외 발생: {e}");
+        }
+        finally
+        {
+            IsGrabbed = false; // 이 값이 바뀌면 다음 FixedUpdateNetwork에서 isKinematic이 자연스럽게 false로 전환됨
+            GrabOffsetPosition = Vector3.zero;
+            GrabOffsetRotation = Quaternion.identity;
+            GrabbingPlayer = PlayerRef.None;
+            GrabbingHandSide = GrabHand.None;
+            GrabStartWorldPosition = Vector3.zero;
+            GrabStartWorldRotation = Quaternion.identity;
+            GrabStartTime = 0f;
+            IsFarAttach = false;
+            GrabEaseInTime = 0f;
         }
     }
     private void OnDestroy()
@@ -462,12 +503,16 @@ public class NetworkGrabItem : NetworkBehaviour
 
         if (networkObject == null || !networkObject.HasInputAuthority || player == null) return;
 
+        // 🌟 네트워크 아바타 손(player.NetLeftHand/NetRightHand)이 아니라
+        //    로컬 XR Origin의 실제 트래킹 손(InputHandler)과 비교해야 함
         GrabHand handSide = GrabHand.None;
-        if (interactorTransform == player.NetLeftHand || interactorTransform.IsChildOf(player.NetLeftHand))
+        if (InputHandler.Instance._localLeftHand != null &&
+            (interactorTransform == InputHandler.Instance._localLeftHand || interactorTransform.IsChildOf(InputHandler.Instance._localLeftHand)))
         {
             handSide = GrabHand.Left;
         }
-        else if (interactorTransform == player.NetRightHand || interactorTransform.IsChildOf(player.NetRightHand))
+        else if (InputHandler.Instance._localRightHand != null &&
+                 (interactorTransform == InputHandler.Instance._localRightHand || interactorTransform.IsChildOf(InputHandler.Instance._localRightHand)))
         {
             handSide = GrabHand.Right;
         }
@@ -540,7 +585,6 @@ public class NetworkGrabItem : NetworkBehaviour
         _pendingFinalRotation = finalRot;
 
         RPC_RequestDetach(finalPos, finalRot, throwVelocity, throwAngularVelocity);
-        Debug.Log("IsGrabbed : " + IsGrabbed);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -549,51 +593,6 @@ public class NetworkGrabItem : NetworkBehaviour
         ApplyDetach(finalPos, finalRot, velocity, angularVelocity);
     }
 
-    // 🌟 Host에서만 실행: 위치 확정 → Kinematic 해제 → 속도 적용 → 상태 초기화, 이 순서를 하나의 메서드 안에서 원자적으로 보장
-    private void ApplyDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
-    {
-        try
-        {
-            if (_networkRb != null)
-            {
-                _networkRb.Teleport(finalPos, finalRot);
-            }
-            else
-            {
-                transform.position = finalPos;
-                transform.rotation = finalRot;
-            }
-
-            if (_rb != null)
-            {
-                // 🌟 Kinematic → Non-Kinematic 전환 전, Rigidbody 내부 위치를 명시적으로 강제 동기화
-                _rb.position = finalPos;
-                _rb.rotation = finalRot;
-                Physics.SyncTransforms(); // 물리 엔진에 즉시 반영 강제
-
-                _rb.isKinematic = false;
-                _rb.linearVelocity = velocity;
-                _rb.angularVelocity = angularVelocity;
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"[NetworkGrabItem] ApplyDetach 중 예외 발생: {e}");
-        }
-        finally
-        {
-            IsGrabbed = false;
-            GrabOffsetPosition = Vector3.zero;
-            GrabOffsetRotation = Quaternion.identity;
-            GrabbingPlayer = PlayerRef.None;
-            GrabbingHandSide = GrabHand.None;
-            GrabStartWorldPosition = Vector3.zero;
-            GrabStartWorldRotation = Quaternion.identity;
-            GrabStartTime = 0f;
-            IsFarAttach = false;
-            GrabEaseInTime = 0f;
-        }
-    }
     private (Vector3 offsetPos, Quaternion offsetRot) CalculateAttachOffset(Transform hand)
     {
         Transform attachPoint = _grabInteractable.attachTransform != null

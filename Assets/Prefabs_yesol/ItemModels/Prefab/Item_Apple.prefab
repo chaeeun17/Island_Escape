@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8886240821081048592}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: -2610026762715940559}
   - component: {fileID: 1149283369421694860}
   - component: {fileID: -2015408470995535735}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_Apple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 739638164208969291}
   - component: {fileID: 4582518625920280431}
   - component: {fileID: 235863334215691724}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

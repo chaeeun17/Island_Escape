@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1260206482569968328}
   - component: {fileID: 1694432300480472883}
   - component: {fileID: 6785712121774550095}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7645489007074511999}
   - component: {fileID: 4481191140191493092}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 2431831802903594109}
   - component: {fileID: 6494359641110735817}
   - component: {fileID: 88397339247333983}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: vinyl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 4336419646978791952}
   - component: {fileID: 4874568388264547446}
   - component: {fileID: 1390630122686638169}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: big water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,7 +338,8 @@ GameObject:
   - component: {fileID: 8229211454538703684}
   - component: {fileID: 2840166259393884738}
   - component: {fileID: 5665283463073937431}
-  m_Layer: 0
+  - component: {fileID: 1469577140196765293}
+  m_Layer: 7
   m_Name: Item_Purifier_old
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -587,6 +588,80 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
+--- !u!114 &1469577140196765293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688515175735757111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a35f6cfbfba9b548aaa00d52cfe8a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable
+  m_InteractionManager: {fileID: 0}
+  m_Colliders: []
+  m_InteractionLayers:
+    m_Bits: 1
+  m_DistanceCalculationMode: 1
+  m_SelectMode: 0
+  m_FocusMode: 1
+  m_CustomReticle: {fileID: 0}
+  m_AllowGazeInteraction: 0
+  m_AllowGazeSelect: 0
+  m_OverrideGazeTimeToSelect: 0
+  m_GazeTimeToSelect: 0.5
+  m_OverrideTimeToAutoDeselectGaze: 0
+  m_TimeToAutoDeselectGaze: 3
+  m_AllowGazeAssistance: 0
+  m_FirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstFocusEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastFocusExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FocusEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FocusExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
+  m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!1 &4197855845859595237
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,7 +672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3734474819196815978}
   - component: {fileID: 7500352245558800764}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -649,7 +724,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8653311694046980052}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -683,7 +758,7 @@ GameObject:
   - component: {fileID: 1097763721077884349}
   - component: {fileID: 6113166452467739715}
   - component: {fileID: 805472312880981368}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -773,7 +848,7 @@ GameObject:
   - component: {fileID: 1577913306301693619}
   - component: {fileID: 3443371231707732469}
   - component: {fileID: 909035838927986817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: rope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -865,7 +940,7 @@ GameObject:
   - component: {fileID: 4679212073938739006}
   - component: {fileID: 4087846761748592309}
   - component: {fileID: 947424144093309960}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: big can
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1008,7 +1083,7 @@ GameObject:
   - component: {fileID: 4623344455962683481}
   - component: {fileID: 2865323958114350570}
   - component: {fileID: 4316128101969509035}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pet_lower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1235,7 +1310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 963463459735947551}
   - component: {fileID: 8464197983602007346}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1288,7 +1363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5591133611995509672}
   - component: {fileID: 3085184704282951324}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1343,7 +1418,7 @@ GameObject:
   - component: {fileID: 8730679142208976706}
   - component: {fileID: 8428405410343146009}
   - component: {fileID: 2284670540868685395}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
