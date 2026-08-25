@@ -3797,6 +3797,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76b1940b860be084b852db244cbb549c, type: 3}
+--- !u!114 &1080111934 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2521517098938557160, guid: 76b1940b860be084b852db244cbb549c, type: 3}
+  m_PrefabInstance: {fileID: 1080111933}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49bb062d45180da4aa963bde17b84948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeManager
 --- !u!1001 &1094030050
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4167,6 +4178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88763b21a85e99344bf10fb8c3cd28bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SOSManager
+  timeManager: {fileID: 1080111934}
   testForceComplete: 0
   totalRequiredSlots: 1
   tutorialNoticeUI: {fileID: 1415681648}
