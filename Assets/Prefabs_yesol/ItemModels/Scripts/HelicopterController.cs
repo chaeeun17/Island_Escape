@@ -84,26 +84,20 @@ public class HelicopterController : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        // 상태 업데이트 로직은 State Authority(Host)에서만 수행
         if (!Object.HasStateAuthority) return;
 
         switch (CurrentState)
         {
             case EHelicopterState.Approaching:
-                if (helicopterObject != null)
-                {
-                    helicopterObject.SetActive(true);
-                }
+                // 🌟 SetActive 제거 (OnStateChanged로 이동)
                 MoveTowardsWaypoint(hoverWaypoint.position, () =>
                 {
-                    // 목표 지점 도착 시 호버링 상태로 전환 및 타이머 시작
                     CurrentState = EHelicopterState.Hovering;
                     EscapeTimer = TickTimer.CreateFromSeconds(Runner, hoverDuration);
                 });
                 break;
 
             case EHelicopterState.Hovering:
-                // 남은 시간이 끝나면 이탈 상태로 전환
                 if (EscapeTimer.Expired(Runner))
                 {
                     CurrentState = EHelicopterState.Departing;
@@ -113,10 +107,46 @@ public class HelicopterController : NetworkBehaviour
             case EHelicopterState.Departing:
                 MoveTowardsWaypoint(escapeWaypoint.position, () =>
                 {
-                    // 탈출 완료 후 세션 마무리 처리
                     OnHelicopterEscaped();
                     CurrentState = EHelicopterState.Inactive;
                 });
+                break;
+        }
+    }
+
+    // 상태 변경 시 모든 클라이언트에서 실행 (Fusion 2 OnChangedRender)
+    private void OnStateChanged()
+    {
+        switch (CurrentState)
+        {
+            case EHelicopterState.Approaching:
+                if (helicopterObject != null)
+                    helicopterObject.SetActive(true); // 🌟 이제 모든 클라이언트에서 실행됨
+
+                if (engineAudioSource != null && !engineAudioSource.isPlaying)
+                    engineAudioSource.Play();
+
+                if (Object.HasStateAuthority)
+                {
+                    NotifyAllPlayersApproaching();
+                }
+                break;
+
+            case EHelicopterState.Hovering:
+                if (ropeLadderObject != null)
+                    ropeLadderObject.SetActive(true);
+                break;
+
+            case EHelicopterState.Departing:
+                // 탈출 연출 시작
+                break;
+
+            case EHelicopterState.Inactive:
+                // 🌟 다음 라운드를 위해 여기서 끄는 것도 고려
+                if (helicopterObject != null)
+                    helicopterObject.SetActive(false);
+                if (ropeLadderObject != null)
+                    ropeLadderObject.SetActive(false);
                 break;
         }
     }
@@ -145,33 +175,6 @@ public class HelicopterController : NetworkBehaviour
         else
         {
             _escapedPlayers.Remove(player);
-        }
-    }
-
-    // 상태 변경 시 모든 클라이언트에서 실행 (Fusion 2 OnChangedRender)
-    private void OnStateChanged()
-    {
-        switch (CurrentState)
-        {
-            case EHelicopterState.Approaching:
-                if (engineAudioSource != null && !engineAudioSource.isPlaying)
-                    engineAudioSource.Play();
-
-                // 🌟 모든 플레이어 프리팹의 알림 함수 호출은 StateAuthority에서만
-                if (Object.HasStateAuthority)
-                {
-                    NotifyAllPlayersApproaching();
-                }
-                break;
-
-            case EHelicopterState.Hovering:
-                if (ropeLadderObject != null)
-                    ropeLadderObject.SetActive(true); // 사다리 투하 연출/활성화
-                break;
-
-            case EHelicopterState.Departing:
-                // 탈출 연출 시작 (예: VR 카메라 Fade Out 준비)
-                break;
         }
     }
 

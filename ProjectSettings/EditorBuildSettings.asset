@@ -21,17 +21,14 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: 11dfdcdf45159214fa8fc762f1441abf
   - enabled: 0
-    path: Assets/Scenes_chaeeun/GameScene_New 1.unity
-    guid: 409dac7d59007df4495043bed1a49f97
-  - enabled: 0
     path: Assets/Scenes/GameScene_New.unity
     guid: 95b2828d7c462b0408c5f32ac46c5f4c
   - enabled: 0
+    path: Assets/Scenes_chaeeun/GameScene_New 1.unity
+    guid: 409dac7d59007df4495043bed1a49f97
+  - enabled: 0
     path: Assets/Scenes/GameScene.unity
     guid: 3183e63ee011c0f479e36493565cb0ae
-  - enabled: 0
-    path: Assets/Scenes_chaeeun/StartScene 1.unity
-    guid: 16ef982d55d3e4d44bc19242f5551d3c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1f094618a7dcf2947af164e778d17fad, type: 2}

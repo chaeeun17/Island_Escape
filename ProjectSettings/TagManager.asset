@@ -55,6 +55,9 @@ TagManager:
   - name: UpperMain
     uniqueID: 1752934789
     locked: 0
+  - name: Ray
+    uniqueID: 2690449301
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1
