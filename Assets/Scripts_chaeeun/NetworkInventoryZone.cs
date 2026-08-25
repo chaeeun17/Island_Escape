@@ -1,57 +1,69 @@
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class NetworkInventoryZone : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] private Collider zoneCollider; // 이 Zone의 트리거 콜라이더 (인스펙터 연결)
+    private readonly HashSet<NetworkObject> _processedObjects = new HashSet<NetworkObject>();
+
+    // 🌟 이 Zone이 내 로컬 플레이어에 붙어있는지 판별용 (남의 아바타에 붙은 Zone 복제본이 반응하면 안 됨)
+    private NetworkObject _ownerNetworkObject;
+
+    private void Awake()
     {
-        // 들어온 오브젝트가 XRGrabInteractable을 가지고 있는지 확인
-        XRGrabInteractable grabInteractable = other.GetComponentInParent<XRGrabInteractable>();
-        ItemRemove item = other.GetComponentInParent<ItemRemove>();
-
-        if (item == null) return;
-
-        if (grabInteractable != null)
-        {
-            // 중복 리스너 등록 방지를 위해 기존 이벤트 제거 후 추가
-            grabInteractable.selectExited.RemoveListener(OnItemReleasedInZone);
-            grabInteractable.selectExited.AddListener(OnItemReleasedInZone);
-        }
+        if (zoneCollider == null) zoneCollider = GetComponent<Collider>();
+        _ownerNetworkObject = GetComponentInParent<NetworkObject>();
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnEnable()
     {
-        XRGrabInteractable grabInteractable = other.GetComponentInParent<XRGrabInteractable>();
-
-        if (grabInteractable != null)
-        {
-            // 영역을 벗어나면 이벤트 해제ㅁㅊ
-            grabInteractable.selectExited.RemoveListener(OnItemReleasedInZone);
-        }
+        // 🌟 Client에서는 Physics.Simulate()가 돌지 않아(ClientPhysicsSimulation.Disabled) 트리거
+        //    콜백(OnTriggerEnter/Exit)이 불안정하게 발생/누락되는 문제가 있었다.
+        //    대신 "실제로 이 아이템을 쥐고 있던 로컬 유저가 놓는 순간" 확실히 발생하는
+        //    NetworkGrabItem.LocallyReleased 콜백을 구독해서, 놓은 위치가 내 Zone 범위 안인지 직접 검사한다.
+        NetworkGrabItem.LocallyReleased += HandleItemLocallyReleased;
     }
 
-   // 인벤토리 영역 안에서 손을 놓았을 때 실행될 함수
-    private void OnItemReleasedInZone(SelectExitEventArgs args)
+    private void OnDisable()
     {
-        IXRInteractable releasedItem = args.interactableObject;
-        GameObject itemGameObject = releasedItem.transform.gameObject;
+        NetworkGrabItem.LocallyReleased -= HandleItemLocallyReleased;
+    }
 
-        // [포톤 퓨전 네트워크 오브젝트 검사]
+    private void HandleItemLocallyReleased(NetworkGrabItem item, Vector3 releasePosition)
+    {
+        if (item == null || zoneCollider == null) return;
+
+        // 🌟 이 Zone은 네트워크 오브젝트가 아니라 모든 클라이언트(호스트 포함)에서 각자 로컬로
+        //    실행되므로, 같은 프로세스 안에 있는 남의 아바타에 붙은 Zone 복제본도 이 이벤트를
+        //    구독하고 있다. 내 로컬 플레이어의 Zone일 때만 반응해야 남의 인벤토리에 잘못 들어가지 않는다.
+        if (_ownerNetworkObject == null || !_ownerNetworkObject.HasInputAuthority) return;
+
+        // 🌟 이 Zone에 보관 가능한 아이템만 대상으로 함 (기존 OnTriggerEnter의 ItemRemove 체크와 동일한 조건)
+        if (item.GetComponent<ItemRemove>() == null) return;
+
+        if (!zoneCollider.bounds.Contains(releasePosition)) return;
+
+        var grabInteractable = item.GetComponent<XRGrabInteractable>();
+        if (grabInteractable == null) return;
+
+        TrySaveAndDespawn(grabInteractable);
+    }
+
+    private void TrySaveAndDespawn(XRGrabInteractable grabInteractable)
+    {
+        if (grabInteractable == null) return;
+
+        GameObject itemGameObject = grabInteractable.transform.gameObject;
         NetworkObject netObj = itemGameObject.GetComponentInParent<NetworkObject>();
-        if (netObj == null) return;
+        if (netObj == null || netObj.Runner == null) return;
 
-        // 메모리 누수 방지 및 중복 호출 차단을 위해 리스너 즉시 제거
-        if (releasedItem is XRGrabInteractable grabItem)
-        {
-            grabItem.selectExited.RemoveListener(OnItemReleasedInZone);
-        }
+        if (_processedObjects.Contains(netObj)) return;
+        _processedObjects.Add(netObj);
 
-        // 🌟 1. 3D 오브젝트 이름에서 "(Clone)" 제거 및 깔끔하게 정리
         string cleanItemName = itemGameObject.name.Replace("(Clone)", "").Trim();
 
-        // 🌟 2. [데이터 저장 처리] - 이름 기반으로 SO를 찾아서 로컬 가방에 넣기!
         if (NetworkInventory.Instance != null)
         {
             NetworkInventory.Instance.AddItemByName(cleanItemName);
@@ -60,23 +72,27 @@ public class NetworkInventoryZone : MonoBehaviour
         else
         {
             Debug.LogError("🚨 NetworkInventory.Instance가 존재하지 않습니다!");
+            _processedObjects.Remove(netObj);
             return;
         }
 
-        // 🌟 3. 네트워크 상에서 3D 오브젝트 제거 (Despawn)
-        // (단, Despawn은 StateAuthority 권한이 필요하므로 RPC를 거치거나 HasStateAuthority 체크)
-        if (netObj.Runner != null && netObj.Runner.IsRunning)
+        if (netObj.HasStateAuthority)
         {
-            if (netObj.HasStateAuthority)
+            netObj.Runner.Despawn(netObj);
+        }
+        else
+        {
+            // 🌟 Host 토폴로지에서는 StateAuthority(Host)만 Despawn을 실제로 수행할 수 있음.
+            //    RequestStateAuthority()는 Host 모드에서 클라이언트로 권한을 넘겨주지 않으므로,
+            //    Host에 Despawn을 대신 요청하는 RPC를 사용해야 함.
+            NetworkGrabItem grabItemNetComp = netObj.GetComponentInChildren<NetworkGrabItem>();
+            if (grabItemNetComp != null)
             {
-                netObj.Runner.Despawn(netObj);
+                grabItemNetComp.RPC_RequestDespawn();
             }
             else
             {
-                // 내가 호스트가 아니라 클라이언트라면 호스트에게 Despawn 요청 RPC 호출 또는 RequestStateAuthority 필요
-                // Fusion 기본 설정에서 Client가 잡고있는 상호작용 오브젝트의 권한을 얻는 경우가 많습니다.
-                netObj.RequestStateAuthority();
-                netObj.Runner.Despawn(netObj);
+                Debug.LogError($"🚨 [{netObj.name}]에 NetworkGrabItem이 없어 Despawn 요청을 보낼 수 없습니다!");
             }
         }
     }

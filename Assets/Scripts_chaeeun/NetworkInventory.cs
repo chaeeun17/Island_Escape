@@ -37,14 +37,16 @@ public class NetworkInventory : NetworkBehaviour
 
     public override void Spawned()
     {
+        Debug.Log($"[NetworkInventory] Spawned 호출. Object.Id={Object.Id}, HasInputAuthority={HasInputAuthority}, InputAuthority={Object.InputAuthority}, Runner.LocalPlayer={Runner.LocalPlayer}");
         if (!HasInputAuthority)
         {
             enabled = false;
+            Debug.Log($"[NetworkInventory] 비활성화됨 (내 소유 아님). Object.Id={Object.Id}");
             return;
         }
 
         Instance = this;
-        Debug.Log("✅ [NetworkInventory] 내 인벤토리 싱글톤 Instance 등록 완료");
+        Debug.Log($"✅ [NetworkInventory] Instance로 등록됨! Object.Id={Object.Id}, GetInstanceID={GetInstanceID()}");
 
         if (detailPanel != null) detailPanel.SetActive(false);
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4259261671916716256}
   - component: {fileID: 5344002363892201074}
   - component: {fileID: 8513104314958990881}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 2331886616691978123}
   - component: {fileID: 5989282916522446091}
   - component: {fileID: 4621514415231975624}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Float
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9106186634915541398}
   - component: {fileID: 8081423916978669513}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 260017165199838166}
   - component: {fileID: 5882455266920697698}
   - component: {fileID: 5911160020517059092}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4635283939554066626}
   - component: {fileID: 4891647831665686830}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Line_Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3953845477678958228}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Secondary GrabPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8375290396180645960}
   - component: {fileID: 1731718290737838251}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FloatHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -507,7 +507,7 @@ GameObject:
   - component: {fileID: -7664078849597231522}
   - component: {fileID: -7087934003001875711}
   - component: {fileID: 7205122504265961205}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_FishingRod
   m_TagString: Fishingrod
   m_Icon: {fileID: 0}
@@ -912,7 +912,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 240952092862330538}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GrabPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}

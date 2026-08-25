@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 6025561372632287898}
   - component: {fileID: 2092727440290611083}
   - component: {fileID: 3949147429464105225}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: InventoryZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643a74a1cee9a114c9e3a0195315a51f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkInventoryZone
+  zoneCollider: {fileID: 2092727440290611083}
 --- !u!1 &194397098599247679
 GameObject:
   m_ObjectHideFlags: 0
