@@ -71,6 +71,7 @@ public class Player : NetworkBehaviour
 
     private void OnRescuedChanged()
     {
+        Debug.Log($"🔥 OnRescuedChanged 호출됨! IsRescued={IsRescued}, HasInputAuthority={HasInputAuthority}");
         if (IsRescued && HasInputAuthority)
         {
             vfc.StartFadeToWhite();
@@ -79,6 +80,10 @@ public class Player : NetworkBehaviour
             if (uiManager != null)
             {
                 uiManager.ShowSuccessUI(); // 실제 함수명으로 교체 필요
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ NetworkUIManager 컴포넌트를 못 찾음!");
             }
         }
     }
@@ -413,15 +418,4 @@ public class Player : NetworkBehaviour
 
         Debug.Log($"🚀 [Player {Object.InputAuthority.PlayerId}] CustomNetworkCharacterController 텔레포트 완료 -> {targetPos}");
     }
-
-    /*
-    private void OnRescuedChanged()
-    {
-        if (IsRescued && HasInputAuthority)
-        {
-            vfc.StartFadeToWhite(); // 탈출 성공 연출 (필요에 따라 다른 함수로 교체)
-            successCanvas.enabled = true;
-        }
-    }
-    */
 }

@@ -61,6 +61,9 @@ public class AvatarHeightSync : NetworkBehaviour
             HideOwnAvatarFromSelf();
         }
     }
+    [Header("Own Avatar Hiding")]
+    [SerializeField] private string[] hideTargetNames; // 예: "Head_Mesh", "Body_Mesh" 등 숨길 자식 오브젝트 이름들
+
     private void HideOwnAvatarFromSelf()
     {
         int ownLayer = LayerMask.NameToLayer(ownAvatarLayerName);
@@ -70,9 +73,17 @@ public class AvatarHeightSync : NetworkBehaviour
             return;
         }
 
-        // 헤드/바디 메쉬만 자기 눈엔 안 보이게 (손은 보통 VR에서 계속 보여주는 게 자연스러움)
-        SetLayerRecursively(avatarHeadRoot, ownLayer);
-        SetLayerRecursively(avatarBodyRoot, ownLayer);
+        if (hideTargetNames == null || hideTargetNames.Length == 0)
+        {
+            Debug.LogWarning("hideTargetNames가 비어있습니다. 숨길 자식 오브젝트 이름을 인스펙터에서 지정하세요.");
+            return;
+        }
+
+        foreach (string targetName in hideTargetNames)
+        {
+            SetLayerByName(avatarHeadRoot, targetName, ownLayer);
+            SetLayerByName(avatarBodyRoot, targetName, ownLayer);
+        }
 
         // 로컬 카메라의 culling mask에서 해당 레이어 제외
         if (xrOrigin != null && xrOrigin.Camera != null)
@@ -80,6 +91,25 @@ public class AvatarHeightSync : NetworkBehaviour
             xrOrigin.Camera.cullingMask &= ~(1 << ownLayer);
         }
     }
+
+    // root 이하에서 이름이 targetName과 일치하는 자식(자기 자신 포함)만 찾아서 레이어 변경
+    private void SetLayerByName(Transform root, string targetName, int layer)
+    {
+        if (root == null) return;
+
+        if (root.name == targetName)
+        {
+            root.gameObject.layer = layer;
+            // 이 오브젝트 자체는 찾았지만, 그 아래 자식들도 같이 숨겨야 한다면 재귀 유지
+            foreach (Transform child in root)
+                SetLayerRecursively(child, layer);
+            return; // 찾았으면 더 깊이 이름 매칭할 필요 없음 (원하면 return 제거하고 계속 탐색 가능)
+        }
+
+        foreach (Transform child in root)
+            SetLayerByName(child, targetName, layer);
+    }
+
     private void SetLayerRecursively(Transform root, int layer)
     {
         if (root == null) return;

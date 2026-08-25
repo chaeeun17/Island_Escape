@@ -130,7 +130,7 @@ public class NetworkUIManager : NetworkBehaviour
         }
 
         // 세션 종료 후 각자 로컬에서 로비 씬으로 이동 (네트워크와 무관하게 개별 실행)
-        SceneManager.LoadScene("StartScene");
+        SceneManager.LoadScene("StartScene 1");
     }
 
     public void ShowApproachNotice()
