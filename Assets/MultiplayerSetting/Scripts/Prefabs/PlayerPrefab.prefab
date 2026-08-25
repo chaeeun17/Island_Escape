@@ -1012,6 +1012,7 @@ MonoBehaviour:
   - {fileID: 3697573881986140967}
   - {fileID: 6484348692411538944}
   - {fileID: 1366045897206673347}
+  - {fileID: 924141019326294027}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
   ForceRemoteRenderTimeframe: 0
@@ -1051,6 +1052,7 @@ MonoBehaviour:
   uiManager: {fileID: 0}
   _IsEscapeFailed:
     _value: 0
+  avatarHeightSync: {fileID: 0}
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
