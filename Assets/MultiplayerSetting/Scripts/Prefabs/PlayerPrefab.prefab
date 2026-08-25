@@ -1002,6 +1002,7 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects:
+  - {fileID: 2445058923432115713}
   - {fileID: 7376098549160000187}
   - {fileID: 3285251341334749594}
   NetworkedBehaviours:
@@ -1011,7 +1012,6 @@ MonoBehaviour:
   - {fileID: 3697573881986140967}
   - {fileID: 6484348692411538944}
   - {fileID: 1366045897206673347}
-  - {fileID: 2728010740476956936}
   - {fileID: 2875365956900375625}
   - {fileID: 8149334577586579723}
   ForceRemoteRenderTimeframe: 0
@@ -1048,6 +1048,9 @@ MonoBehaviour:
     _value: 0
   vfc: {fileID: 0}
   successCanvas: {fileID: 0}
+  uiManager: {fileID: 0}
+  _IsEscapeFailed:
+    _value: 0
 --- !u!143 &5631152598068217068
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1141,6 +1144,9 @@ MonoBehaviour:
   headTransform: {fileID: 0}
   itemInventoryPanel: {fileID: 7618243762592921881}
   craftMenuPanel: {fileID: 8541122246649605062}
+  notifyPanel: {fileID: 0}
+  failPanel: {fileID: 0}
+  successPanel: {fileID: 0}
   bButtonAction: {fileID: 530629899127318567, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   yButtonAction: {fileID: -7108236239894351648, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!114 &6484348692411538944
@@ -3579,6 +3585,10 @@ PrefabInstance:
       propertyPath: iconImage
       value: 
       objectReference: {fileID: 8967095116655826740}
+    - target: {fileID: 7885260428967692955, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+      propertyPath: SortKey
+      value: 2123844081
+      objectReference: {fileID: 0}
     - target: {fileID: 8225840604264804138, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
       propertyPath: iconImage
       value: 
@@ -3636,17 +3646,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!114 &2728010740476956936 stripped
+--- !u!114 &2445058923432115713 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7591764845688907154, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7885260428967692955, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}
   m_PrefabInstance: {fileID: 5512558466310452378}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7618243762592921881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88bee7c9e9a76ef4f9e2d3dab10f772f, type: 3}
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkInventory
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!114 &3167406681609982000 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7454698935946208426, guid: c9f3ceb6b00e54641aa9a2da60efe748, type: 3}

@@ -289,13 +289,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2392522242292446107}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5983175766724248649}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!33 &5882455266920697698
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -303,7 +303,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2392522242292446107}
-  m_Mesh: {fileID: 1650999862491994477, guid: 9ff38ddb0b45d8f4197e89d41086b85f, type: 3}
+  m_Mesh: {fileID: -2124705421725058983, guid: 9ae64aab25166124ba90219981696f1b, type: 3}
 --- !u!23 &5911160020517059092
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -506,7 +506,7 @@ GameObject:
   - component: {fileID: 6037144445964847580}
   - component: {fileID: -7664078849597231522}
   - component: {fileID: -7087934003001875711}
-  - component: {fileID: -6050648778204612198}
+  - component: {fileID: 7205122504265961205}
   m_Layer: 0
   m_Name: Item_FishingRod
   m_TagString: Fishingrod
@@ -744,7 +744,7 @@ MonoBehaviour:
   m_AutoFindParentInteractableInHierarchy: 0
   m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 240952092862330538}
-  m_SecondaryAttachTransform: {fileID: 3953845477678958228}
+  m_SecondaryAttachTransform: {fileID: 0}
   m_UseDynamicAttach: 0
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
@@ -793,7 +793,7 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
-  m_FarAttachMode: 0
+  m_FarAttachMode: 1
   m_LimitLinearVelocity: 0
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
@@ -811,8 +811,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishingCaster
   lineRenderer: {fileID: 1065056097862220819}
-  redFish: {fileID: 0}
-  blueFish: {fileID: 0}
+  redFish: {fileID: 8155519088799159642, guid: 056c5e717343b8746bfe5318cc53a714, type: 3}
+  blueFish: {fileID: 6989118519755742221, guid: 035c9d27efc1a294895db239f662d12c, type: 3}
+  redFishItem: {fileID: 11400000, guid: be07eb5cdedb8f94ba8f32fb4ee8ea4c, type: 2}
+  blueFishItem: {fileID: 11400000, guid: eac67776684d5ce408fbb18af791ab87, type: 2}
   _waitingTime: 0
   _catchTime: 0
   _targetWaitTime: 0
@@ -861,7 +863,7 @@ MonoBehaviour:
   - {fileID: 28882398602848383}
   - {fileID: 6037144445964847580}
   - {fileID: -7087934003001875711}
-  - {fileID: -6050648778204612198}
+  - {fileID: 7205122504265961205}
   - {fileID: 1731718290737838251}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-7087934003001875711
@@ -876,7 +878,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26264c815c9794b469d5bd762325e59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
---- !u!114 &-6050648778204612198
+  velocitySampleCount: 5
+  _networkRb: {fileID: 0}
+--- !u!114 &7205122504265961205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -885,14 +889,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 5339471088910090483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &8215252059664144682
 GameObject:
   m_ObjectHideFlags: 0

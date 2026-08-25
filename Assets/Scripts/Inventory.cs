@@ -9,7 +9,8 @@ public class Inventory: MonoBehaviour
 {
     public SLot[] itemSlots;
     public static Inventory Instance;
-
+    [Header("UI Panel")]
+    public GameObject uiPanel;
     [Header("Filter Buttons UI")]
     public Button[] filterButtons;     // �ν����Ϳ��� �Ҵ��� ��ư �迭 (0:��ü, 1:���, 2:����, 3:����)
     public Color selectedColor = Color.yellow;  // ���õǾ��� ���� ���� 
@@ -183,6 +184,14 @@ public class Inventory: MonoBehaviour
         if (detailDescText != null) detailDescText.text = item.getItemDescription();
     }
 
+    public void ToggleInventory()
+    {
+        if (uiPanel != null)
+        {
+            // 현재 꺼져있으면 켜고, 켜져있으면 끕니다.
+            uiPanel.SetActive(!uiPanel.activeSelf);
+        }
+    }
 
 }
 

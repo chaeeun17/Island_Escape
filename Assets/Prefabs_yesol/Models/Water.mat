@@ -42,11 +42,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FadeDistance: 0.5
+    - _FadeDistance: 0
     - _FoamAmount: 0
-    - _FoamCutoff: 50
-    - _FoamScale: 300
-    - _FoamSpeed: 0.007
+    - _FoamCutoff: 100
+    - _FoamScale: 0
+    - _FoamSpeed: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _SoftEdge: 20

@@ -27,6 +27,11 @@ public class FishingCaster : NetworkBehaviour
     public GameObject redFish;
     public GameObject blueFish;
 
+    [Header("FishItem")]
+    [Tooltip("인벤토리에 추가될 물고기 아이템 데이터")]
+    public Item redFishItem;
+    public Item blueFishItem;
+
     [Header("Fishing State Values")]
     private FishingManager subject;
 
@@ -183,6 +188,16 @@ public class FishingCaster : NetworkBehaviour
 
         if (distance <= reelResetThreshold)
         {
+            if (isCatch)
+            {
+                Debug.Log("[Fishing Debug] 낚시 성공 : 물고기를 성공적으로 낚아 올렸습니다!");
+                AddFishToInventory();
+            }
+            else
+            {
+                // 추가된 실패 디버그 로그 (입질이 오기 전에 당겼거나, 이미 놓친 후 당긴 경우)
+                Debug.Log("[Fishing Debug] 낚시 실패 : 허탕을 쳤습니다. 입질이 없거나 물고기가 도망갔습니다.");
+            }
             ResetFloat();
             return;
         }
@@ -282,5 +297,43 @@ public class FishingCaster : NetworkBehaviour
             var command = UnityEngine.InputSystem.XR.Haptics.SendHapticImpulseCommand.Create(0, intensity, duration);
             device.ExecuteCommand(ref command);
         }
+    }
+
+    public void AddFishToInventory()
+    {
+        //  수정됨: Inventory.Instance -> NetworkInventory.Instance
+        Debug.Log($"[Fishing Debug] AddFishToInventory 실행됨! 물고기 타입: {fishType}, 인벤토리 존재 여부: {NetworkInventory.Instance != null}");
+
+        //  수정됨: Inventory.Instance -> NetworkInventory.Instance
+        if (fishType == Fish.NONE || NetworkInventory.Instance == null)
+        {
+            Debug.LogWarning("[Fishing Debug]  인벤토리가 없거나 물고기 타입이 설정되지 않았습니다.");
+            return;
+        }
+
+        Item caughtFish = null;
+        switch (fishType)
+        {
+            case Fish.RED:
+                caughtFish = redFishItem;
+                break;
+            case Fish.BLUE:
+                caughtFish = blueFishItem;
+                break;
+        }
+
+        if (caughtFish == null)
+        {
+            Debug.LogWarning($"[Fishing Debug]  {fishType} 물고기를 낚았지만, Inspector의 Fish Item 슬롯이 비어있습니다!");
+            return;
+        }
+
+        Item itemToAdd = Instantiate(caughtFish);
+        itemToAdd.set_Item_Count(1);
+
+        //  수정됨: Inventory.Instance -> NetworkInventory.Instance
+        NetworkInventory.Instance.AddItem(itemToAdd);
+
+        Debug.Log($"[Fishing Debug]  {fishType} 물고기를 낚았습니다! 인벤토리에 추가 완료.");
     }
 }
