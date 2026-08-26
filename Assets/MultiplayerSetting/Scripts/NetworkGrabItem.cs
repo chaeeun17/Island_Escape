@@ -360,6 +360,23 @@ public class NetworkGrabItem : NetworkBehaviour
     private XRGrabInteractable _grabInteractable;
     private Rigidbody _rb;
 
+    // 🌟 씬에 미리 배치된(scene-placed) 아이템은 씬이 로드되자마자 Unity가 Awake/LateUpdate를
+    //    바로 호출하는데, Fusion이 이 오브젝트에 Spawned()를 호출해 [Networked] 프로퍼티를
+    //    쓸 수 있게 만드는 건 그보다 나중이다. 그 사이에 LateUpdate에서 IsGrabbed 등을 읽으면
+    //    "Networked properties can only be accessed when Spawned() has been called" 예외가 나서
+    //    Host로 Create하자마자 튕긴다. Spawned()가 호출된 뒤에만 접근하도록 플래그로 막는다.
+    private bool _isSpawned = false;
+
+    public override void Spawned()
+    {
+        _isSpawned = true;
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        _isSpawned = false;
+    }
+
     // 🌟 다른 클라이언트 복제용
     [Networked, OnChangedRender(nameof(OnIsGrabbedChanged))]
     private NetworkBool IsGrabbed { get; set; }
@@ -657,6 +674,8 @@ public class NetworkGrabItem : NetworkBehaviour
 
     private void LateUpdate()
     {
+        if (!_isSpawned) return; // Spawned() 이전에는 [Networked] 프로퍼티(IsGrabbed 등)에 접근할 수 없다
+
         if (_isLocalGrabbing && _localGrabbingHand != null)
         {
             Vector3 idealPos = _localGrabbingHand.position + _localGrabbingHand.rotation * _localOffsetPosition;
@@ -784,5 +803,20 @@ public class NetworkGrabItem : NetworkBehaviour
         GrabStartTime = startTime;
         IsFarAttach = isFarAttach;
         GrabEaseInTime = easeInTime;
+    }
+
+    // 🌟 Slot에서 스폰과 동시에 손에 쥐어주는 케이스 전용.
+    //    Runner.Spawn을 호출하는 Host(StateAuthority) 코드가 스폰 직후 같은 틱에서 바로 호출해,
+    //    "클라이언트가 로컬로 SelectEnter → RPC_RequestSetGrabState를 보내고 Host가 받아서 처리"하는
+    //    한 번의 RPC 왕복을 기다리지 않고 즉시 IsGrabbed를 확정한다.
+    //    스폰 위치가 이미 손 위치(Slot.cs의 spawnPos = handTransform.position)이므로 오프셋은 0으로 둔다.
+    //    (클라이언트가 뒤이어 실제 SelectEnter를 하면 CalculateAttachOffset로 계산된 정확한 오프셋으로 다시 갱신됨)
+    public void ServerInitGrab(PlayerRef player, bool isLeftHand)
+    {
+        if (Object == null || !Object.HasStateAuthority) return;
+
+        GrabHand handSide = isLeftHand ? GrabHand.Left : GrabHand.Right;
+        ApplyGrabState(true, Vector3.zero, Quaternion.identity, player, handSide,
+                       transform.position, transform.rotation, (float)Runner.SimulationTime, false, 0f);
     }
 }

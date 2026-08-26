@@ -281,6 +281,19 @@ public class NetworkInventory : NetworkBehaviour
 
         if (spawnedNetObj != null)
         {
+            // 🌟 Host는 자기 자신이 스폰한 이 오브젝트를 즉시 렌더링하므로, 여기서 바로 IsGrabbed를
+            //    확정해야 Host 화면에서 스폰과 동시에 손을 따라 움직인다. 이걸 안 하면 클라이언트가
+            //    로컬 SelectEnter → RPC_RequestSetGrabState를 보내고 Host가 받을 때까지(RPC 왕복 1회)
+            //    Host 화면에서는 아이템이 스폰 위치에 그대로 멈춰 있는 것처럼 보인다.
+            if (!isGroundItem)
+            {
+                var grabItem = spawnedNetObj.GetComponentInChildren<NetworkGrabItem>();
+                if (grabItem != null)
+                {
+                    grabItem.ServerInitGrab(requestingPlayer, isLeftHand);
+                }
+            }
+
             RPC_OnItemSpawned(spawnedNetObj, requestingPlayer, isGroundItem, isLeftHand);
         }
     }
