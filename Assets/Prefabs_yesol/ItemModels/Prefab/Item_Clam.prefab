@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
   velocitySampleCount: 5
-  _networkRb: {fileID: 0}
+  _networkRb: {fileID: 2543436621460324943}
 --- !u!114 &345848859040897389
 MonoBehaviour:
   m_ObjectHideFlags: 0

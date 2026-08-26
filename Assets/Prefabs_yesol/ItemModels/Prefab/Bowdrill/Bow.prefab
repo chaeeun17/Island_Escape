@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1437159602108572311}
   - component: {fileID: 8031251286422969603}
   - component: {fileID: 4129174937613322801}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -273,7 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5837065940522214844}
   - component: {fileID: 7670686581770405635}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 831683394067134740}
   - component: {fileID: 4685006809935125581}
   - component: {fileID: 5400355549512995921}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "B\xE9zierCurve"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +419,7 @@ GameObject:
   - component: {fileID: 2032740558044486625}
   - component: {fileID: 2225552106347837060}
   - component: {fileID: 6237035927504172098}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RopeEnd2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -508,7 +508,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3012004055641273910}
   - component: {fileID: 1409513439078712244}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3227076671684441384}
   - component: {fileID: 6649800516103651668}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -618,7 +618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6152800102707309924}
   - component: {fileID: 5996721031178832067}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 2253315971445743332}
   - component: {fileID: 8656523121957051253}
   - component: {fileID: 9102578342485516310}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -764,7 +764,7 @@ GameObject:
   - component: {fileID: 9125641068359152426}
   - component: {fileID: 2304377643953325398}
   - component: {fileID: 5232373740673683499}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RopeEnd1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -853,7 +853,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5208460919750778924}
   - component: {fileID: 7804983338475754822}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Interact
   m_TagString: Bow
   m_Icon: {fileID: 0}
@@ -907,7 +907,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6230666511593662086}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4054529228775131347}
   - component: {fileID: 4408034638514145413}
   - component: {fileID: 8147739648661018436}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RopeEnd2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 4012813196143789738}
   - component: {fileID: 5642220642817011764}
   - component: {fileID: 4272574831639637227}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 562297878417355047}
   - component: {fileID: 6969322717706975245}
   - component: {fileID: 7997262380932422725}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Handle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 8018751806018313998}
   - component: {fileID: 671602574030129920}
   - component: {fileID: 5953365022215873915}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 3570808470748322305}
   - component: {fileID: 5591255359334858618}
   - component: {fileID: 2691644058635267189}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RopeEnd1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -462,7 +462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4422883293050158123}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttachTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 1952180629476454919}
   - component: {fileID: 221774328307111821}
   - component: {fileID: 3925699850350339238}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "B\xE9zierCurve"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -591,7 +591,7 @@ GameObject:
   - component: {fileID: 4248702203397031376}
   - component: {fileID: 5081251874494804324}
   - component: {fileID: -1111461426539788561}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Item_BowDrill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

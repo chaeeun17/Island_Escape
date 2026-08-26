@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6483073566053133561}
   - component: {fileID: 4507309285007173075}
   - component: {fileID: 3516981714650235291}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Handle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 5083384106444039177}
   - component: {fileID: 8195840124319398128}
   - component: {fileID: 7449401443838344726}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Handle_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7758916442875073230}
   - component: {fileID: 1977992113725564316}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5902010018890419920}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Handle Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 5793397027498926921}
   - component: {fileID: 5452771713864278027}
   - component: {fileID: 6725676399365572060}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

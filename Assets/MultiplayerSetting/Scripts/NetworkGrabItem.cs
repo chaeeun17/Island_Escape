@@ -372,6 +372,13 @@ public class NetworkGrabItem : NetworkBehaviour
             // 🌟 Host의 확정 값이 도착했으니 얼려두던 로컬 오버라이드 해제
             //    이 시점부터는 NetworkRigidbody3D의 정상 보간(Teleport로 확정된 finalPos 기준)에 맡김
             _isPendingDetach = false;
+
+            // 🌟 그랩 중 켜뒀던 로컬 시뮬레이션(예측)을 여기서 해제.
+            //    Host의 detach 확정이 도착한 뒤에 꺼야 위치가 안정된 상태에서 넘어감.
+            if (!Object.HasStateAuthority)
+            {
+                Runner.SetIsSimulated(Object, false);
+            }
         }
     }
     [Networked] private Vector3 GrabOffsetPosition { get; set; }
@@ -398,6 +405,12 @@ public class NetworkGrabItem : NetworkBehaviour
 
     private Player _cachedGrabberPlayer;
 
+    public bool IsCurrentlyGrabbed => IsGrabbed;
+    public PlayerRef CurrentGrabber => GrabbingPlayer;
+    public bool IsLocalGrabbing => _isLocalGrabbing; // 로컬 전용, 네트워크 지연 없음
+                                                     // 기존 IsLocalGrabbing 대신, 혹은 추가로
+    public bool IsLocallyOwnedAction => _isLocalGrabbing || _isPendingDetach;
+
     // 🌟 던지기 속도 계산용 샘플 버퍼
     private readonly Queue<(Vector3 pos, Quaternion rot, float time)> _velocitySamples = new Queue<(Vector3, Quaternion, float)>();
 
@@ -408,6 +421,13 @@ public class NetworkGrabItem : NetworkBehaviour
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _rb = GetComponent<Rigidbody>();
         if (_networkRb == null) _networkRb = GetComponent<NetworkRigidbody3D>();
+
+        // 🌟 XRI 자체 Throw On Detach 기능을 끈다. 이 스크립트가 놓는 순간 속도를 직접 계산해서
+        //    RPC_RequestDetach -> ApplyDetach(Host)로 Rigidbody에 적용하는 커스텀 시스템을 이미 가지고 있다.
+        //    XRI의 내장 throw 로직은 이걸 모르고 별도로 자기 스스로 Rigidbody.velocity를 건드리려 하는데,
+        //    클라이언트는 ApplyDetach가 로컬에서 실행되지 않아(Host에서만 RPC로 실행됨) 그랩 중 켜둔
+        //    isKinematic=true가 놓은 뒤에도 그대로 남아있어 "Cannot throw a kinematic Rigidbody..." 예외가 난다.
+        _grabInteractable.throwOnDetach = false;
 
         _grabInteractable.selectEntered.AddListener(OnGrabEntered);
         _grabInteractable.selectExited.AddListener(OnGrabExited);
@@ -443,17 +463,13 @@ public class NetworkGrabItem : NetworkBehaviour
         }
     }
 
-    private bool _pendingVelocityApply = false;
-    private Vector3 _pendingVelocity;
-    private Vector3 _pendingAngularVelocity;
-
     private void ApplyDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
     {
         try
         {
             if (_networkRb != null)
             {
-                _networkRb.Teleport(finalPos, finalRot); // 이것만으로 위치/회전 충분
+                _networkRb.Teleport(finalPos, finalRot); // 이것만으로 위치+회전 반영 충분
             }
             else
             {
@@ -461,10 +477,14 @@ public class NetworkGrabItem : NetworkBehaviour
                 transform.rotation = finalRot;
             }
 
-            // 🌟 isKinematic은 여기서 직접 건드리지 않음 (FixedUpdateNetwork가 IsGrabbed 값 기준으로 알아서 처리)
-            _pendingVelocity = velocity;
-            _pendingAngularVelocity = angularVelocity;
-            _pendingVelocityApply = true;
+            if (_rb != null)
+            {
+                // 🌟 _rb.position / _rb.rotation 직접 대입 제거
+                // 🌟 Physics.SyncTransforms() 제거 (Teleport가 이미 처리)
+                _rb.isKinematic = false;
+                _rb.linearVelocity = velocity;
+                _rb.angularVelocity = angularVelocity;
+            }
         }
         catch (System.Exception e)
         {
@@ -520,6 +540,15 @@ public class NetworkGrabItem : NetworkBehaviour
         _localGrabbingHand = interactorTransform;
         _isLocalGrabbing = true;
 
+        // 🌟 StateAuthority(Host)가 아닌 클라이언트가 잡았을 경우, 이 아이템을 로컬 시뮬레이션에
+        //    잠깐 포함시켜야 NetworkRigidbody3D.Render()가 매 프레임 위치를 되돌리지 않는다.
+        //    (InterpolationTarget이 없는 상태에서 IsInSimulation이 false면 Fusion이 계속
+        //     transform을 네트워크 스냅샷 위치로 강제로 스냅시켜, 손을 따라가도 곧바로 되돌아감)
+        if (!Object.HasStateAuthority)
+        {
+            Runner.SetIsSimulated(Object, true);
+        }
+
         var (offsetPos, offsetRot) = CalculateAttachOffset(_localGrabbingHand);
         _localOffsetPosition = offsetPos;
         _localOffsetRotation = offsetRot;
@@ -539,6 +568,12 @@ public class NetworkGrabItem : NetworkBehaviour
         SetGrabState(true, _localOffsetPosition, _localOffsetRotation, Runner.LocalPlayer, handSide,
                      _localGrabStartPosition, _localGrabStartRotation, _localGrabStartTime, _localIsFarAttach, easeInTime);
     }
+
+    // 🌟 이 아이템을 실제로 쥐고 있던 로컬 유저가 놓는 순간 발생.
+    //    Zone 등이 selectExited에 별도 리스너를 등록해 감지하는 대신 이걸 구독하면,
+    //    Client에서 Physics.Simulate()가 아예 돌지 않아(ClientPhysicsSimulation.Disabled) 트리거
+    //    콜백(OnTriggerEnter/Exit) 자체가 불안정한 문제를 피하고, 확실히 발생하는 이 콜백에 의존할 수 있다.
+    public static event System.Action<NetworkGrabItem, Vector3> LocallyReleased;
 
     // 필드 추가
     private bool _isPendingDetach = false;
@@ -585,12 +620,21 @@ public class NetworkGrabItem : NetworkBehaviour
         _pendingFinalRotation = finalRot;
 
         RPC_RequestDetach(finalPos, finalRot, throwVelocity, throwAngularVelocity);
+
+        LocallyReleased?.Invoke(this, finalPos);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_RequestDetach(Vector3 finalPos, Quaternion finalRot, Vector3 velocity, Vector3 angularVelocity)
     {
         ApplyDetach(finalPos, finalRot, velocity, angularVelocity);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_RequestDespawn()
+    {
+        if (Object != null && Object.IsValid && Runner != null)
+            Runner.Despawn(Object);
     }
 
     private (Vector3 offsetPos, Quaternion offsetRot) CalculateAttachOffset(Transform hand)
@@ -667,6 +711,16 @@ public class NetworkGrabItem : NetworkBehaviour
             }
 
             Physics.SyncTransforms(); // 🌟 다른 사람이 잡고 있는 걸 보는 화면에서도 동일하게 동기화
+        }
+        else
+        {
+            // 🌟 아무도 안 잡고 있는 상태(가만히 있거나 낙하 중인 proxy)에서는 Fusion의
+            //    NetworkRigidbody3D.Render()가 InterpolationTarget 없이 이 transform을 직접 움직이는데,
+            //    Render()는 Physics.SyncTransforms()를 호출하지 않는다.
+            //    이 프로젝트는 Physics 자동 동기화를 쓰지 않으므로, 여기서 동기화를 안 해주면
+            //    다음 물리 스텝 전까지 콜라이더(raycast/트리거 판정용)가 화면에 보이는 위치와
+            //    어긋난 채로 남아있게 된다 (재그랩 시 raycast 위치 불일치, InventoryZone 트리거 미감지의 원인).
+            Physics.SyncTransforms();
         }
     }
     private void RecordVelocitySample()

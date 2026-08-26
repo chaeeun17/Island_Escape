@@ -81,7 +81,7 @@ public class PlayerHelicopterRider : NetworkBehaviour
 
         if (!wasAttached)
         {
-            if (playerScript != null) playerScript.IsEscaped = true;
+            if (playerScript != null) playerScript.SetEscaped(true);
             SetLocomotionEnabled(false);
         }
 
@@ -100,7 +100,7 @@ public class PlayerHelicopterRider : NetworkBehaviour
 
         if (_grabbingHandsToRung.Count == 0)
         {
-            if (playerScript != null) playerScript.IsEscaped = false;
+            if (playerScript != null) playerScript.SetEscaped(false);
 
             _localIsAttached = false;
             _localTargetRung = null;

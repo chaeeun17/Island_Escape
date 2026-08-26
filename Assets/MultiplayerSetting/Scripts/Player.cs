@@ -119,6 +119,28 @@ public class Player : NetworkBehaviour
         }
     }
 
+    // 🌟 [Networked] 프로퍼티는 StateAuthority(보통 Host)만 써야 정상적으로 다른 피어에 복제됨.
+    //    PlayerHelicopterRider가 클라이언트에서 직접 IsEscaped를 대입하면 그 클라이언트 로컬에만
+    //    반영되고 Host에는 반영이 안 돼서(Host의 FixedUpdateNetwork가 여전히 IsEscaped=false로 보고
+    //    CharacterController 이동 로직을 계속 돌려버림), Host 화면에서는 사다리를 못 잡은 것처럼 보인다.
+    public void SetEscaped(bool escaped)
+    {
+        if (Object.HasStateAuthority)
+        {
+            IsEscaped = escaped;
+        }
+        else
+        {
+            RPC_RequestSetEscaped(escaped);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestSetEscaped(bool escaped)
+    {
+        IsEscaped = escaped;
+    }
+
     private void Awake()
     {
         _cc = GetComponent<CustomNetworkCharacterController>();

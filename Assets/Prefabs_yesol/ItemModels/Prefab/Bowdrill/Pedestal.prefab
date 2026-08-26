@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 831388515220805651}
   - component: {fileID: 1039801535104438543}
   - component: {fileID: 8537279333609475918}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: flare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4847,7 +4847,7 @@ GameObject:
   - component: {fileID: 1065038984626351342}
   - component: {fileID: 1353080708007818630}
   - component: {fileID: 1869216730849798842}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Burst02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9706,7 +9706,7 @@ GameObject:
   - component: {fileID: 648165186866253272}
   - component: {fileID: -2620012226135088314}
   - component: {fileID: 6149675453480888089}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pedestal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9993,7 +9993,7 @@ GameObject:
   - component: {fileID: 2519158386191984556}
   - component: {fileID: 6181984304860625225}
   - component: {fileID: 5688508453102386233}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CompleteFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14829,7 +14829,7 @@ GameObject:
   - component: {fileID: 2119240592778764599}
   - component: {fileID: 3182077359324200488}
   - component: {fileID: 8005226145214128398}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CompleteFire_Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19665,7 +19665,7 @@ GameObject:
   - component: {fileID: 2904213397263540900}
   - component: {fileID: 4213461178886902721}
   - component: {fileID: 922503978326581380}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: flare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24501,7 +24501,7 @@ GameObject:
   - component: {fileID: 5918565517770849038}
   - component: {fileID: 6337922584980819817}
   - component: {fileID: 2805076040458169619}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Burst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29413,7 +29413,7 @@ GameObject:
   - component: {fileID: 7340034960586833363}
   - component: {fileID: 5249225844457003105}
   - component: {fileID: 85314777767160773}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FX_CompleteFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34254,7 +34254,7 @@ GameObject:
   - component: {fileID: 4276436243699951667}
   - component: {fileID: 7537410678705528673}
   - component: {fileID: 3638436368796463637}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34344,7 +34344,7 @@ GameObject:
   - component: {fileID: 7230665359171615389}
   - component: {fileID: 8722055967066139796}
   - component: {fileID: 7722793836990795385}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FX_StartFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39184,7 +39184,7 @@ GameObject:
   - component: {fileID: 6672206651708225333}
   - component: {fileID: 4339263637389993789}
   - component: {fileID: 3631544727893702486}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StartFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44020,7 +44020,7 @@ GameObject:
   - component: {fileID: 5055951397301200860}
   - component: {fileID: 78833719463688194}
   - component: {fileID: 3459336086270980044}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Burst02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48873,7 +48873,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3345082478750666466}
   - component: {fileID: 1491741313723188513}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FirePoint
   m_TagString: Pedestal
   m_Icon: {fileID: 0}
@@ -48927,7 +48927,7 @@ GameObject:
   - component: {fileID: 5545173628416765267}
   - component: {fileID: 5520364174952036863}
   - component: {fileID: 7027161391562758363}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Burst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
