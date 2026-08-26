@@ -2681,6 +2681,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1994094112748805253, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
+      propertyPath: m_text
+      value: Approach closely to the tent.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1994094112748805253, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
+      propertyPath: m_margin.z
+      value: 14.703369
+      objectReference: {fileID: 0}
     - target: {fileID: 2860096706407241328, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -2724,6 +2732,18 @@ PrefabInstance:
     - target: {fileID: 4110212460977018345, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -3.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281928456038371799, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281928456038371799, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 7.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281928456038371799, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -14.2
       objectReference: {fileID: 0}
     - target: {fileID: 4538123504242029228, guid: 9ed78370da1afc94fa098da455b7fb83, type: 3}
       propertyPath: m_LocalScale.x
@@ -8162,15 +8182,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2848720900698956439, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.13667
-      objectReference: {fileID: 0}
-    - target: {fileID: 2848720900698956439, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2848720900698956439, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -49.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2848720900698956439, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30.1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2848720900698956439, guid: c71ad421b2871ea4586513b0460a4d39, type: 3}
       propertyPath: m_LocalRotation.w
