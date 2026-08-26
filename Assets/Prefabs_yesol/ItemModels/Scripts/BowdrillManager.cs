@@ -73,7 +73,7 @@ public class BowdrillManager : NetworkBehaviour
         // 서버/호스트에서만 트리거 카운트를 올리도록 제어 (중복 카운트 방지)
         if (!HasStateAuthority) return;
 
-        if (!isCompleted && handleEndPart.isOnPedestal && other.CompareTag("Bow"))
+        if (!isCompleted && other.CompareTag("Bow"))
         {
             count++;
         }
