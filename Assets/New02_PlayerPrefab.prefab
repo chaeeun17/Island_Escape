@@ -3104,7 +3104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkCountdown
   helicopterController: {fileID: 0}
   countdownText: {fileID: 2260950223963328409}
-  realMinutesPerGameDay: 0.1
+  realMinutesPerGameDay: 5
 --- !u!114 &1366045897206673347
 MonoBehaviour:
   m_ObjectHideFlags: 0

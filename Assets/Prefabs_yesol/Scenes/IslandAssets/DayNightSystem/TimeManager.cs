@@ -43,9 +43,10 @@ public class TimeManager : MonoBehaviour
     }
 
     TimeService service;
+
     private void Start()
     {
-        StartTimeChange();
+        skyboxMaterial.SetFloat("_Blend", 0);
     }
 
     public void StartTimeChange()
