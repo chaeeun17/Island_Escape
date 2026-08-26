@@ -4726,7 +4726,6 @@ GameObject:
   - component: {fileID: 7802942459871217871}
   - component: {fileID: 7645597060719940636}
   - component: {fileID: 7197937161568559285}
-  - component: {fileID: 8121395114761309357}
   - component: {fileID: 834412366119414885}
   m_Layer: 0
   m_Name: VRFadeContoller
@@ -4807,27 +4806,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &8121395114761309357
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8379405286018969364}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &834412366119414885
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -126,9 +126,27 @@ public class NetworkTent : NetworkBehaviour
 
     private void SetPlayerVisibility(Player player, bool isVisible)
     {
-        Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
+        Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
         foreach (Renderer rend in renderers)
         {
+            if (rend == null) continue;
+
+            string objName = rend.gameObject.name.ToLower();
+            string parentName = rend.transform.parent != null ? rend.transform.parent.name.ToLower() : "";
+
+            if (objName.Contains("reviverange") || objName.Contains("revive") || parentName.Contains("reviverange"))
+            {
+                rend.enabled = false;
+                continue;
+            }
+
+            // 2. 🌟 Body(Blueberry) 하위에 있는 '두 번째 Hair'만 무조건 끔
+            if (objName == "hair" && (parentName.Contains("blueberry") || parentName.Contains("body")))
+            {
+                rend.enabled = false;
+                continue;
+            }
+
             rend.enabled = isVisible;
         }
     }
