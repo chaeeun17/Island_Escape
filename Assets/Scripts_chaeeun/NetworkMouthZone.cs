@@ -1,77 +1,72 @@
 using UnityEngine;
 using Fusion;
 
+[RequireComponent(typeof(Collider))]
 public class NetworkMouthZone : NetworkBehaviour
 {
+    private bool isEating = false;
+    private NetworkPlayerStats myPlayerStats;
+
+    private void Awake()
+    {
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.isTrigger = true;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+    }
+
+    public override void Spawned()
+    {
+        // 내 머리가 속한 플레이어의 Stats 컴포넌트 캐싱
+        myPlayerStats = GetComponentInParent<NetworkPlayerStats>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        // 1. 내 캐릭터(Local Player)의 입에 들어왔을 때만 감지
-        if (!Object.HasInputAuthority) return;
+        // 🌟 물리/삭제 권한을 가진 호스트(StateAuthority)에서만 충돌 판정 수행
+        if (Runner == null || !Runner.IsServer) return;
 
-        NetworkObject itemNetworkObj = other.GetComponentInParent<NetworkObject>();
-        if (itemNetworkObj == null) return;
+        if (isEating) return;
 
-        // 2. 프리팹/오브젝트 이름에서 "(Clone)" 제거
-        string cleanPrefabName = itemNetworkObj.gameObject.name.Replace("(Clone)", "").Trim();
+        // 1. 닿은 오브젝트의 NetworkObject 확인
+        NetworkObject itemNetObj = other.GetComponentInParent<NetworkObject>();
+        if (itemNetObj == null) return;
+
+        // 2. 이 입의 주인인 플레이어 스탯 컴포넌트 확인
+        if (myPlayerStats == null) myPlayerStats = GetComponentInParent<NetworkPlayerStats>();
+        if (myPlayerStats == null || myPlayerStats.IsPlayerFainted()) return;
 
         // 3. SO 로드
-        Item itemSO = Resources.Load<Item>($"Items/{cleanPrefabName}");
-        if (itemSO == null)
+        string cleanName = itemNetObj.gameObject.name.Replace("(Clone)", "").Trim();
+        Item itemSO = Resources.Load<Item>($"Items/{cleanName}");
+        if (itemSO == null) itemSO = Resources.Load<Item>($"Items/Item_{cleanName}");
+        if (itemSO == null) itemSO = Resources.Load<Item>(cleanName);
+
+        if (itemSO == null) return;
+
+        ItemType type = itemSO.GetItemType();
+
+        // 4. 음식 타입 확인 후 해당 플레이어에게 스탯 적용 RPC 전송 & 아이템 삭제
+        if (type == ItemType.RawFood || type == ItemType.Water || type == ItemType.CookedFood)
         {
-            return;
-        }
+            isEating = true;
 
-        // 4. 먹을 수 있는 타입인지 확인 후 로컬 스탯 적용 + 호스트에 Despawn 요청
-        if (ApplyEatEffect(itemSO))
-        {
-            // 호스트에게 아이템 삭제(Despawn) 요청 RPC
-            RPC_RequestEat(itemNetworkObj);
-        }
-    }
+            // 🌟 이 입의 주인(InputAuthority)에게만 스탯 변경 RPC 실행
+            myPlayerStats.RPC_ApplyEatEffect(type);
 
-    /// <summary>
-    /// 로컬 플레이어의 스탯 회복/감소 처리
-    /// </summary>
-    private bool ApplyEatEffect(Item itemSO)
-    {
-        if (NetworkPlayerStats.LocalInstance == null)
-        {
-            Debug.LogWarning("❌ NetworkPlayerStats.LocalInstance를 찾을 수 없습니다.");
-            return false;
-        }
+            // 호스트가 아이템 Despawn
+            Runner.Despawn(itemNetObj);
+            Debug.Log($"🍽️ [Host] {cleanName} 먹기 처리 완료 -> 대상 플레이어에게 스탯 반영");
 
-        switch (itemSO.GetItemType())
-        {
-            case ItemType.RawFood:
-                NetworkPlayerStats.LocalInstance.ReduceStamina(20);
-                Debug.Log("🤢 (날음식)을 먹었습니다! 체력 감소");
-                return true;
-
-            case ItemType.Water:
-                NetworkPlayerStats.LocalInstance.RestoreThirst(20);
-                Debug.Log("💧 (물/음료)을 마셨습니다! 갈증 회복");
-                return true;
-
-            case ItemType.CookedFood:
-                NetworkPlayerStats.LocalInstance.RestoreHunger(20);
-                Debug.Log("🍎 (음식)을 먹었습니다! 배고픔 회복");
-                return true;
-
-            default:
-                Debug.Log("📦 먹을 수 있는 아이템이 아닙니다.");
-                return false;
+            Invoke(nameof(ResetEatingState), 0.5f);
         }
     }
 
-    /// <summary>
-    /// 호스트(StateAuthority)에서 실행되어 네트워크 오브젝트를 안전하게 제거하는 RPC
-    /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_RequestEat(NetworkObject itemNetworkObj)
+    private void ResetEatingState()
     {
-        if (itemNetworkObj != null && Runner != null && Runner.IsRunning)
-        {
-            Runner.Despawn(itemNetworkObj);
-        }
+        isEating = false;
     }
 }

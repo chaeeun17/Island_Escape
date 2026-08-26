@@ -24,7 +24,7 @@ public class NetworkPlayerStats : NetworkBehaviour
 
     [Header("Faint/Revive Animaton")]
     [SerializeField] private Animator animator;
-    [SerializeField] private float reviveAnimationDuration = 2.0f; // 실제 애니메이션 클립 길이에 맞춰 조정
+    [SerializeField] private float reviveAnimationDuration = 2.0f;
     private Coroutine controlLockCoroutine;
 
     [Networked, OnChangedRender(nameof(OnVisibilityChanged))]
@@ -59,7 +59,6 @@ public class NetworkPlayerStats : NetworkBehaviour
     private float staminaTimer;
 
     private bool isVignetteOn = false;
-
     private WarningVignetteController wvc;
 
     public override void Spawned()
@@ -68,13 +67,10 @@ public class NetworkPlayerStats : NetworkBehaviour
         {
             LocalInstance = this;
 
-            // 🌟 로컬 전용 변수는 그대로 직접 세팅
             CurrentHunger = maxHunger;
             CurrentThirst = maxThirst;
             CurrentStamina = maxStamina;
 
-            // 🌟 [Networked] 프로퍼티는 권한에 맞게 라우팅
-            //SetSurvivalStarted(true);
             SetFainted(false);
         }
 
@@ -85,7 +81,11 @@ public class NetworkPlayerStats : NetworkBehaviour
             SOSManager.Instance.OnTutorialCompleted += StartSurvivalTimer;
         }
 
-        wvc = GameObject.Find("Global Volume").GetComponent<WarningVignetteController>();
+        GameObject globalVolume = GameObject.Find("Global Volume");
+        if (globalVolume != null)
+        {
+            wvc = globalVolume.GetComponent<WarningVignetteController>();
+        }
     }
 
     public void StartSurvival()
@@ -122,7 +122,7 @@ public class NetworkPlayerStats : NetworkBehaviour
     }
 
     // ==========================================
-    // 🌟 [Networked] 프로퍼티 쓰기 전용 헬퍼 (권한에 맞게 직접 쓰기/RPC 자동 분기)
+    // [Networked] 프로퍼티 쓰기 전용 헬퍼
     // ==========================================
     private void SetSurvivalStarted(bool value)
     {
@@ -168,30 +168,33 @@ public class NetworkPlayerStats : NetworkBehaviour
 
         UpdateStatTexts();
 
-        if (!isVignetteOn)
+        if (wvc != null)
         {
-            if (CurrentHunger <= warningThreshold)
+            if (!isVignetteOn)
             {
-                WarningVignetteOn(Stats.HUNGER);
-                isVignetteOn = true;
+                if (CurrentHunger <= warningThreshold)
+                {
+                    WarningVignetteOn(Stats.HUNGER);
+                    isVignetteOn = true;
+                }
+                else if (CurrentThirst <= warningThreshold)
+                {
+                    WarningVignetteOn(Stats.THIRST);
+                    isVignetteOn = true;
+                }
+                else if (CurrentStamina <= warningThreshold)
+                {
+                    WarningVignetteOn(Stats.STAMINA);
+                    isVignetteOn = true;
+                }
             }
-            else if (CurrentThirst <= warningThreshold)
+            else
             {
-                WarningVignetteOn(Stats.THIRST);
-                isVignetteOn = true;
-            }
-            else if (CurrentStamina <= warningThreshold)
-            {
-                WarningVignetteOn(Stats.STAMINA);
-                isVignetteOn = true;
-            }
-        }
-        else
-        {
-            if (CurrentHunger > warningThreshold && CurrentThirst > warningThreshold && CurrentStamina > warningThreshold)
-            {
-                WarningVignetteOff();
-                isVignetteOn = false;
+                if (CurrentHunger > warningThreshold && CurrentThirst > warningThreshold && CurrentStamina > warningThreshold)
+                {
+                    WarningVignetteOff();
+                    isVignetteOn = false;
+                }
             }
         }
 
@@ -303,12 +306,12 @@ public class NetworkPlayerStats : NetworkBehaviour
 
     private void WarningVignetteOn(Stats stats)
     {
-        wvc.EnableWarningVignette(stats);
+        if (wvc != null) wvc.EnableWarningVignette(stats);
     }
 
     private void WarningVignetteOff()
     {
-        wvc.DisableWarningVignette();
+        if (wvc != null) wvc.DisableWarningVignette();
     }
 
     public void Revive()
@@ -372,21 +375,9 @@ public class NetworkPlayerStats : NetworkBehaviour
 
     private void ApplyVisibility(bool visible)
     {
-        networkedHead.enabled = visible;
-
-        /*
-        foreach(Renderer renderer in networkedRightHand)
-        {
-            renderer.enabled = visible;
-        }
-        foreach (Renderer renderer in networkedLeftHand)
-        {
-            renderer.enabled = visible;
-        }
-        */
-
-        stateUI.enabled = visible;
-        animatedHead.enabled = !visible;
+        if (networkedHead != null) networkedHead.enabled = visible;
+        if (stateUI != null) stateUI.enabled = visible;
+        if (animatedHead != null) animatedHead.enabled = !visible;
     }
 
     private void OnFaintedChanged()
@@ -398,11 +389,11 @@ public class NetworkPlayerStats : NetworkBehaviour
             Player player = GetComponent<Player>();
             if (player != null) player.SetControlLocked(true);
 
-            GetComponent<Player>().SetNetworkTransformHead(false);
+            if (player != null) player.SetNetworkTransformHead(false);
             SetHeadVisible(false);
             animator.SetTrigger(IsDeadHash);
 
-            if (HasInputAuthority)
+            if (HasInputAuthority && vfc != null)
             {
                 vfc.StartFadeToWhite();
             }
@@ -417,14 +408,14 @@ public class NetworkPlayerStats : NetworkBehaviour
 
             if (HasInputAuthority)
             {
-                vfc.StartFadeToTransparent();
+                if (vfc != null) vfc.StartFadeToTransparent();
 
-                // 🌟 부활 애니메이션 재생 동안 조작 잠금 
                 if (controlLockCoroutine != null) StopCoroutine(controlLockCoroutine);
                 controlLockCoroutine = StartCoroutine(LockControlDuringRevive());
             }
         }
     }
+
     private IEnumerator LockControlDuringRevive()
     {
         Player player = GetComponent<Player>();
@@ -432,7 +423,74 @@ public class NetworkPlayerStats : NetworkBehaviour
         yield return new WaitForSeconds(reviveAnimationDuration);
 
         SetHeadVisible(true);
-        if (player != null) player.SetControlLocked(false);
-        GetComponent<Player>().SetNetworkTransformHead(true);
+        if (player != null)
+        {
+            player.SetControlLocked(false);
+            player.SetNetworkTransformHead(true);
+        }
+    }
+
+    // =========================================================================
+    // 🌟 아이템 섭취 & 제거 처리 (클라이언트/호스트 공용)
+    // =========================================================================
+
+    public void RequestEatItem(NetworkObject itemNetObj, ItemType itemType)
+    {
+        // 1. 내 로컬 스탯 먼저 변경 (본인 캐릭터에만 적용)
+        switch (itemType)
+        {
+            case ItemType.RawFood:
+                ReduceStamina(20);
+                Debug.Log($"🤢 날음식 섭취: 스태미나 -> {CurrentStamina}");
+                break;
+            case ItemType.Water:
+                RestoreThirst(20);
+                Debug.Log($"💧 음료 섭취: 갈증 -> {CurrentThirst}");
+                break;
+            case ItemType.CookedFood:
+                RestoreHunger(20);
+                Debug.Log($"🍎 음식 섭취: 배고픔 -> {CurrentHunger}");
+                break;
+        }
+
+        // 2. 호스트에게 아이템 Despawn 요청
+        if (Runner != null && Runner.IsRunning && itemNetObj != null)
+        {
+            RPC_DespawnEatenItem(itemNetObj);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_DespawnEatenItem(NetworkObject itemNetObj)
+    {
+        if (itemNetObj != null && Runner != null && Runner.IsRunning)
+        {
+            Debug.Log($"🗑️ [Host] 아이템 제거 완료: {itemNetObj.name}");
+            Runner.Despawn(itemNetObj);
+        }
+    }
+
+    // =========================================================================
+    // 🌟 호스트가 충돌 감지 후 해당 플레이어에게만 스탯 적용을 명령하는 RPC
+    // =========================================================================
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_ApplyEatEffect(ItemType itemType)
+    {
+        switch (itemType)
+        {
+            case ItemType.RawFood:
+                ReduceStamina(20);
+                Debug.Log($"🤢 날음식 섭취 -> 내 스태미나: {CurrentStamina}");
+                break;
+            case ItemType.Water:
+                RestoreThirst(20);
+                Debug.Log($"💧 음료 섭취 -> 내 갈증: {CurrentThirst}");
+                break;
+            case ItemType.CookedFood:
+                RestoreHunger(20);
+                Debug.Log($"🍎 음식 섭취 -> 내 배고픔: {CurrentHunger}");
+                break;
+        }
     }
 }
