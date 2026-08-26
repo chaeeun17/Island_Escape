@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using Fusion;
 
+[RequireComponent(typeof(Collider))]
 public class NetworkTent : NetworkBehaviour
 {
     [Networked] private NetworkBool isPlayerSleeping { get; set; }
@@ -13,12 +14,28 @@ public class NetworkTent : NetworkBehaviour
     [Header("퇴장 위치")]
     [SerializeField] private Transform exitPoint;
 
+    private void Awake()
+    {
+        // 1. 트리거 콜라이더 보장
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.isTrigger = true;
+
+        // 2. 🌟 클라이언트/호스트 모두에서 충돌을 감지하도록 Kinematic Rigidbody 필수 부착
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+        rb.isKinematic = true;
+        rb.useGravity = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         // 1. ReviveRange 무시
-        if (other.gameObject.name.Contains("ReviveRange") || 
-             other.gameObject.name.Contains("Sphere")||
-            (other.transform.parent != null && other.transform.parent.name.Contains("ReviveRange")))
+        string otherName = other.gameObject.name.ToLower();
+        string parentName = other.transform.parent != null ? other.transform.parent.name.ToLower() : "";
+        if (otherName.Contains("reviverange") || otherName.Contains("sphere") || parentName.Contains("reviverange"))
         {
             return;
         }
@@ -33,12 +50,18 @@ public class NetworkTent : NetworkBehaviour
 
         if (sleepingState) return;
 
-        // 4. 플레이어 컴포넌트 검사
+        // 4. 플레이어 탐색 (XR Origin 카메라 리그 또는 아바타 바디)
         Player enteringPlayer = other.GetComponentInParent<Player>();
+        if (enteringPlayer == null && NetworkPlayerStats.LocalInstance != null)
+        {
+            // XR Origin 하위의 로컬 카메라/컨트롤러가 닿았을 경우 대비
+            enteringPlayer = NetworkPlayerStats.LocalInstance.GetComponent<Player>();
+        }
+
         if (enteringPlayer == null || enteringPlayer.Object == null || !enteringPlayer.Object.IsValid) return;
 
-        // 5. 내 로컬 플레이어일 때만 수면 요청
-        if (enteringPlayer.HasInputAuthority)
+        // 5. 🌟 클라이언트(내 캐릭터) 또는 서버(호스트)에서 감지 시 수면 요청
+        if (enteringPlayer.HasInputAuthority || Runner.IsServer)
         {
             RPC_RequestSleep(enteringPlayer.Object.InputAuthority);
         }
@@ -56,9 +79,10 @@ public class NetworkTent : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_BroadcastSleepSequence(PlayerRef sleepingPlayerRef)
     {
-        foreach (var player in FindObjectsOfType<Player>())
+        Player[] allPlayers = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        foreach (var player in allPlayers)
         {
-            if (player.Object != null && player.Object.InputAuthority == sleepingPlayerRef)
+            if (player != null && player.Object != null && player.Object.InputAuthority == sleepingPlayerRef)
             {
                 StartCoroutine(SleepRoutine(player));
                 break;
@@ -72,7 +96,7 @@ public class NetworkTent : NetworkBehaviour
 
         if (isMyPlayer)
         {
-            Debug.Log("[텐트] 수면 시퀀스 시작...");
+            Debug.Log("⛺ [텐트] 로컬 플레이어 수면 시작");
             sleepingPlayer.SetInputEnabled(false);
 
             // 1. 암전
@@ -99,7 +123,7 @@ public class NetworkTent : NetworkBehaviour
 
             sleepingPlayer.SetInputEnabled(true);
 
-            // 🌟 1회용이므로 텐트 네트워크 디스폰 요청
+            // 텐트 네트워크 디스폰 요청
             RPC_RequestDespawn();
 
             // 5. 화면 밝아짐
@@ -110,6 +134,7 @@ public class NetworkTent : NetworkBehaviour
         }
         else
         {
+            // 다른 플레이어 화면에서 숨기기
             SetPlayerVisibility(sleepingPlayer, false);
 
             yield return new WaitForSeconds(fadeDuration + sleepDelay);
@@ -120,6 +145,7 @@ public class NetworkTent : NetworkBehaviour
                 sleepingPlayer.transform.rotation = exitPoint.rotation;
             }
 
+            // 다른 플레이어 화면에서 정상 복구
             SetPlayerVisibility(sleepingPlayer, true);
         }
     }
@@ -134,13 +160,14 @@ public class NetworkTent : NetworkBehaviour
             string objName = rend.gameObject.name.ToLower();
             string parentName = rend.transform.parent != null ? rend.transform.parent.name.ToLower() : "";
 
+            // ReviveRange 계열 렌더러 무조건 끔
             if (objName.Contains("reviverange") || objName.Contains("revive") || parentName.Contains("reviverange"))
             {
                 rend.enabled = false;
                 continue;
             }
 
-            // 2. 🌟 Body(Blueberry) 하위에 있는 '두 번째 Hair'만 무조건 끔
+            // Body(Blueberry) 하위 Hair 렌더러 무조건 끔
             if (objName == "hair" && (parentName.Contains("blueberry") || parentName.Contains("body")))
             {
                 rend.enabled = false;
