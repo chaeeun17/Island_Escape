@@ -3061,9 +3061,9 @@ MonoBehaviour:
   stateUI: {fileID: 3295850459551376598}
   networkedHead: {fileID: 7470500107274796381}
   vfc: {fileID: 834412366119414885}
-  hungerDecreaseInterval: 3
+  hungerDecreaseInterval: 3.5
   thirstDecreaseInterval: 3
-  staminaDecreaseInterval: 3
+  staminaDecreaseInterval: 4
   hungerText: {fileID: 1814322675690837691}
   thirstText: {fileID: 650980548954281533}
   staminaText: {fileID: 972207458055445936}
@@ -3211,6 +3211,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3e99705776135ff4a9ef36fe0b85b5d9, type: 2}
   - {fileID: 11400000, guid: 18281ee3d8a27194985a33b08b4ed501, type: 2}
   - {fileID: 11400000, guid: 6772d93bc6364c84e81628d89906937e, type: 2}
+  - {fileID: 11400000, guid: f9453c6245d985548bcbd15a86dadbe4, type: 2}
 --- !u!1 &4664735668597634432
 GameObject:
   m_ObjectHideFlags: 0

@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: -2928023482717929655, guid: 3a6c8faa364ea344d9f9ead711beb9e1, type: 3}
     - target: {fileID: 4004469819576526421, guid: 08eb3bbaf2c48c448a4023e31f93ddd1, type: 3}
       propertyPath: itemPrefabs.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4004469819576526421, guid: 08eb3bbaf2c48c448a4023e31f93ddd1, type: 3}
       propertyPath: 'itemPrefabs.Array.data[0]'
@@ -271,6 +271,10 @@ PrefabInstance:
       propertyPath: branch
       value: 
       objectReference: {fileID: -616394578318174149, guid: 36e22b93634682649980a9d9c109e7ba, type: 3}
+    - target: {fileID: 8925234786077685275, guid: 08eb3bbaf2c48c448a4023e31f93ddd1, type: 3}
+      propertyPath: clamDensity
+      value: 0.04
+      objectReference: {fileID: 0}
     - target: {fileID: 8925234786077685275, guid: 08eb3bbaf2c48c448a4023e31f93ddd1, type: 3}
       propertyPath: terrainMesh
       value: 
@@ -1690,7 +1694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4233,7 +4237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SOSManager
   timeManager: {fileID: 1080111934}
   testForceComplete: 0
-  totalRequiredSlots: 1
+  totalRequiredSlots: 10
   tutorialNoticeUI: {fileID: 1415681648}
   successCutsceneObject: {fileID: 2086901594}
   socketInteractors:

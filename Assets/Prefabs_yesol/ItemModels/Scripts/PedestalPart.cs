@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class PedestalPart : NetworkBehaviour
 {
-    // Inspector â���� ������ �ִ� Ư�� ParticleSystem�� ���� �巡���ؼ� �־��ݴϴ�.
     [Header("Child References")]
     [SerializeField] private ParticleSystem startParticleSystem;
     [SerializeField] private ParticleSystem completeParticleSystem;
 
-    // �ܺ�(������ ��)���� ������ �� �ִ� ���� �޼���
     public void PlayStartParticle()
     {
         if (startParticleSystem != null)
