@@ -479,8 +479,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BowdrillManager
   handlePart: {fileID: 5452771713864278027}
   handleEndPart: {fileID: 7449401443838344726}
-  startBurn: 15
-  completeBurn: 60
+  startBurn: 5
+  completeBurn: 10
   _count: 0
 --- !u!114 &5122266996268040119
 MonoBehaviour:
@@ -495,7 +495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkGrabItem
   velocitySampleCount: 5
-  _networkRb: {fileID: 0}
+  _networkRb: {fileID: 6725676399365572060}
 --- !u!114 &5793397027498926921
 MonoBehaviour:
   m_ObjectHideFlags: 0
