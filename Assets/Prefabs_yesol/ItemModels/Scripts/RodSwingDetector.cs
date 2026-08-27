@@ -90,31 +90,24 @@ public class RodSwingDetector : NetworkBehaviour
             Debug.Log("��ư ���� -> ĳ���� ��û!");
 
             Vector3 dir = (rodTip.forward * 0.9f + CurrentVelocity.normalized * 0.1f).normalized;
-            float speed = CurrentSpeed * 2f;
+            Vector3 castVelocity = dir * CurrentSpeed * 2f;
 
-            // 🌟 월드 공간 속도 벡터를 그대로 보내면 안 된다. 클라이언트의 로컬(지연 없는) rodTip
-            //    기준으로 계산한 방향을, RPC가 Host에서 실제 처리되는(=Cast()가 실행되는) 시점에
-            //    그대로 적용하면 문제가 생긴다. 그 사이 클라이언트가 낚싯대를 계속 휘두르고 있었다면,
-            //    Cast()가 스폰 위치/회전으로 사용하는 (지연된) rodTip.rotation은 이미 이 방향과
-            //    어긋난 상태라서 "찌가 낚싯대가 가리키는 방향과 다르게 날아가는" 현상이 발생한다.
-            //    그래서 rodTip의 로컬 축 기준 방향(회전에 무관한 값)과 속력만 전달하고,
-            //    실제 월드 벡터는 Cast()가 스폰 포즈로 쓰는 것과 동일한 rodTip.rotation을 이용해
-            //    Host 쪽에서 그 자리에서 다시 계산한다. 이러면 스폰 방향과 던지는 방향이 항상 일치한다.
-            Vector3 localDir = rodTip.InverseTransformDirection(dir);
-
-            // ���ÿ��� ���� ĳ���� ������/�ӵ��� State Authority�� ����
-            RPC_RequestCast(localDir, speed);
+            // 🌟 Host의 rodTip은 네트워크로 복제된(지연된) 값이라, 클라이언트가 실제로 트리거를
+            //    놓은 "그 순간"의 낚싯대 위치/회전과 다를 수 있다(휘두르는 동작 중이라 특히 심함).
+            //    velocity만 넘기고 Host가 자기 rodTip으로 스폰 포즈를 다시 읽으면, 서로 다른
+            //    시점의 값이 섞여서 찌가 엉뚱한(심하면 반대) 방향으로 날아간다. 그래서 스폰
+            //    위치/회전까지 클라이언트가 놓은 순간의 값 그대로 함께 전달해서 기준을 통일한다.
+            RPC_RequestCast(rodTip.position, rodTip.rotation, castVelocity);
         }
     }
 
     // ĳ���� ���� RPC (State Authority���� Spawn ����)
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_RequestCast(Vector3 localDir, float speed)
+    private void RPC_RequestCast(Vector3 spawnPos, Quaternion spawnRot, Vector3 velocity)
     {
-        if (caster != null && caster.rodTip != null)
+        if (caster != null)
         {
-            Vector3 velocity = caster.rodTip.TransformDirection(localDir) * speed;
-            caster.Cast(velocity);
+            caster.Cast(spawnPos, spawnRot, velocity);
         }
     }
 

@@ -5,10 +5,10 @@ using Fusion;
 
 public enum FloatState
 {
-    Ready,      // ³¬½Ë´ë¿¡ ºÙ¾îÀÖÀ½
-    Flying,     // ³¯¾Æ°¡´Â Áß
-    Floating,   // ¹° À§¿¡ ¶°ÀÖÀ½
-    Reeling     // È¸¼ö Áß
+    Ready,      // ï¿½ï¿½ï¿½Ë´ë¿¡ ï¿½Ù¾ï¿½ï¿½ï¿½ï¿½ï¿½
+    Flying,     // ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½ï¿½
+    Floating,   // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    Reeling     // È¸ï¿½ï¿½ ï¿½ï¿½
 }
 public enum Fish
 {
@@ -20,15 +20,15 @@ public enum Fish
 
 public class FishingCaster : NetworkBehaviour
 {
-    [Header("Line Renderer (³¬½ËÁÙ)")]
-    public LineRenderer lineRenderer; // Inspector¿¡¼­ LineRenderer ¿¬°á
+    [Header("Line Renderer (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)")]
+    public LineRenderer lineRenderer; // Inspectorï¿½ï¿½ï¿½ï¿½ LineRenderer ï¿½ï¿½ï¿½ï¿½
 
     [Header("Fish")]
     public GameObject redFish;
     public GameObject blueFish;
 
     [Header("FishItem")]
-    [Tooltip("ÀÎº¥Åä¸®¿¡ Ãß°¡µÉ ¹°°í±â ¾ÆÀÌÅÛ µ¥ÀÌÅÍ")]
+    [Tooltip("ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public Item redFishItem;
     public Item blueFishItem;
 
@@ -44,15 +44,15 @@ public class FishingCaster : NetworkBehaviour
     [HideInInspector] public float hapticTimer;
 
     [Header("Float Reference")]
-    [Tooltip("³¬½Ë´ë ³¡ ÀÚ½Ä¿¡ ºÙ¾îÀÖ´Â ´Ü¼ø Visual¿ë ´õ¹Ì Âî")]
+    [Tooltip("ï¿½ï¿½ï¿½Ë´ï¿½ ï¿½ï¿½ ï¿½Ú½Ä¿ï¿½ ï¿½Ù¾ï¿½ï¿½Ö´ï¿½ ï¿½Ü¼ï¿½ Visualï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½")]
     public GameObject dummyFloat;
 
-    [Tooltip("´øÁ³À» ¶§ »ý¼ºÇÒ ½ÇÁ¦ NetworkFloat Prefab")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ NetworkFloat Prefab")]
     public NetworkObject floatPrefab;
 
     public Transform rodTip;
 
-    // ÇöÀç »ý¼ºµÇ¾î ³¯¾Æ°¡°í ÀÖ´Â ½ÇÁ¦ ÂîÀÇ ÂüÁ¶
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Networked] private NetworkObject activeFloatObj { get; set; }
     private FlyingFloat currentFlyingFloat;
 
@@ -63,7 +63,7 @@ public class FishingCaster : NetworkBehaviour
 
     [Networked] public FloatState state { get; set; } = FloatState.Ready;
 
-    [Header("Áøµ¿ ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [Range(0, 1)][SerializeField] private float intensity = 0.5f;
     [SerializeField] private float duration = 0.2f;
     private XRGrabInteractable grabInteractable;
@@ -73,7 +73,7 @@ public class FishingCaster : NetworkBehaviour
         grabInteractable = GetComponent<XRGrabInteractable>();
     }
 
-    // ³¬½ËÁÙ À§Ä¡ °»½ÅÀº ½Ã°¢Àû ¿ä¼ÒÀÌ¹Ç·Î Update¿¡¼­ ·»´õ¸µ ÇÁ·¹ÀÓ¸¶´Ù Ã³¸®
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ Updateï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     private void Update()
     {
         UpdateLineRenderer();
@@ -83,17 +83,17 @@ public class FishingCaster : NetworkBehaviour
     {
         if (lineRenderer == null || rodTip == null) return;
 
-        // Âî°¡ ³¯¾Æ°¡°Å³ª ¹°¿¡ ¶°ÀÖ°Å³ª È¸¼ö ÁßÀÏ ¶§ ³¬½ËÁÙ Ç¥½Ã
+        // ï¿½î°¡ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö°Å³ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
         if (state != FloatState.Ready && activeFloatObj != null)
         {
             if (!lineRenderer.enabled) lineRenderer.enabled = true;
 
-            lineRenderer.SetPosition(0, rodTip.position); // ½ÃÀÛÁ¡: ³¬½Ë´ë ³¡
-            lineRenderer.SetPosition(1, activeFloatObj.transform.position); // ³¡Á¡: ½ÇÁ¦ Âî À§Ä¡
+            lineRenderer.SetPosition(0, rodTip.position); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½Ë´ï¿½ ï¿½ï¿½
+            lineRenderer.SetPosition(1, activeFloatObj.transform.position); // ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡
         }
         else
         {
-            // Ready »óÅÂÀÌ°Å³ª Âî°¡ ¾øÀ» ¶§´Â ³¬½ËÁÙ ¼û±è
+            // Ready ï¿½ï¿½ï¿½ï¿½ï¿½Ì°Å³ï¿½ ï¿½î°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (lineRenderer.enabled) lineRenderer.enabled = false;
         }
     }
@@ -126,13 +126,19 @@ public class FishingCaster : NetworkBehaviour
         }
     }
 
-    public void Cast(Vector3 velocity)
+    // ðŸŒŸ spawnPos/spawnRotì„ ì¸ìžë¡œ ë°›ëŠ”ë‹¤ - Hostì—ì„œ ì´ ì‹œì ì˜ rodTip.position/rotationì„ ë‹¤ì‹œ
+    //    ì½ìœ¼ë©´ ì•ˆ ëœë‹¤. í´ë¼ì´ì–¸íŠ¸ê°€ ìºìŠ¤íŒ…í•  ë•ŒëŠ” RPCë¡œ ë„˜ì–´ì˜¤ëŠ” ê°’ì´ë¼, Hostì˜ rodTipì€
+    //    ë„¤íŠ¸ì›Œí¬ë¡œ ë³µì œëœ(ì§€ì—°ëœ) ê°’ì´ë¼ì„œ í´ë¼ì´ì–¸íŠ¸ê°€ ì‹¤ì œë¡œ ë†“ì€ ìˆœê°„ì˜ ë‚šì‹¯ëŒ€ ë°©í–¥ê³¼ ë‹¤ë¥¼ ìˆ˜ ìžˆë‹¤.
+    //    ê·¸ëŸ¬ë©´ velocity(ê·¸ ìˆœê°„ ê¸°ì¤€ìœ¼ë¡œ ê³„ì‚°ë¨)ì™€ ìŠ¤í° í¬ì¦ˆê°€ ì„œë¡œ ë‹¤ë¥¸ ì‹œì  ê¸°ì¤€ì´ ë˜ì–´
+    //    ì°Œê°€ ì—‰ëš±í•œ(ì‹¬í•˜ë©´ ë°˜ëŒ€) ë°©í–¥ìœ¼ë¡œ ë‚ ì•„ê°€ ë³´ì¸ë‹¤. ê·¸ëž˜ì„œ í´ë¼ì´ì–¸íŠ¸ê°€ ë†“ì€ "ê·¸ ìˆœê°„"ì˜
+    //    rodTip ê°’ì„ ê·¸ëŒ€ë¡œ ì „ë‹¬ë°›ì•„ ìŠ¤í° ìœ„ì¹˜/íšŒì „/ì†ë„ë¥¼ ì „ë¶€ ê°™ì€ ê¸°ì¤€ìœ¼ë¡œ ë§žì¶˜ë‹¤.
+    public void Cast(Vector3 spawnPos, Quaternion spawnRot, Vector3 velocity)
     {
         if (!HasStateAuthority) return;
 
         if (dummyFloat != null) dummyFloat.SetActive(false);
 
-        activeFloatObj = Runner.Spawn(floatPrefab, rodTip.position, rodTip.rotation, Object.InputAuthority, (runner, obj) =>
+        activeFloatObj = Runner.Spawn(floatPrefab, spawnPos, spawnRot, Object.InputAuthority, (runner, obj) =>
         {
             FlyingFloat ff = obj.GetComponent<FlyingFloat>();
             if (ff != null)
@@ -150,7 +156,7 @@ public class FishingCaster : NetworkBehaviour
 
         state = FloatState.Flying;
 
-        // Ä³½ºÆÃ Á÷ÈÄ ³¬½ËÁÙ Áï½Ã ÄÑ±â
+        // Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½
         if (lineRenderer != null) lineRenderer.enabled = true;
     }
 
@@ -190,13 +196,13 @@ public class FishingCaster : NetworkBehaviour
         {
             if (isCatch)
             {
-                Debug.Log("[Fishing Debug] ³¬½Ã ¼º°ø : ¹°°í±â¸¦ ¼º°øÀûÀ¸·Î ³¬¾Æ ¿Ã·È½À´Ï´Ù!");
+                Debug.Log("[Fishing Debug] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·È½ï¿½ï¿½Ï´ï¿½!");
                 AddFishToInventory();
             }
             else
             {
-                // Ãß°¡µÈ ½ÇÆÐ µð¹ö±× ·Î±× (ÀÔÁúÀÌ ¿À±â Àü¿¡ ´ç°å°Å³ª, ÀÌ¹Ì ³õÄ£ ÈÄ ´ç±ä °æ¿ì)
-                Debug.Log("[Fishing Debug] ³¬½Ã ½ÇÆÐ : ÇãÅÁÀ» ÃÆ½À´Ï´Ù. ÀÔÁúÀÌ ¾ø°Å³ª ¹°°í±â°¡ µµ¸Á°¬½À´Ï´Ù.");
+                // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å³ï¿½, ï¿½Ì¹ï¿½ ï¿½ï¿½Ä£ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
+                Debug.Log("[Fishing Debug] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             }
             ResetFloat();
             return;
@@ -209,7 +215,7 @@ public class FishingCaster : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        // ÀÌ¹Ì ¸±¸µ(È¸¼ö) ÁßÀÎ »óÅÂ¶ó¸é ¹°¿¡ ºÎµúÇôµµ ¸ØÃßÁö ¾Êµµ·Ï °¡µå
+        // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½(È¸ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (state == FloatState.Reeling) return;
 
         state = FloatState.Floating;
@@ -235,7 +241,7 @@ public class FishingCaster : NetworkBehaviour
     }
     public void ResetFloat()
     {
-        Debug.LogWarning($"[Debug] ResetFloat()°¡ ½ÇÇàµÇ¾ú½À´Ï´Ù! ÇöÀç State: {state}");
+        Debug.LogWarning($"[Debug] ResetFloat()ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! ï¿½ï¿½ï¿½ï¿½ State: {state}");
 
         if (!HasStateAuthority) return;
 
@@ -258,20 +264,20 @@ public class FishingCaster : NetworkBehaviour
 
         state = FloatState.Ready;
 
-        // ¸®¼Â ½Ã ³¬½ËÁÙ ²ô±â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (lineRenderer != null) lineRenderer.enabled = false;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Unreliable, TickAligned = false)]
     public void RPC_TriggerHaptic()
     {
-        // ·ÎÄÃ VR ÄÁÆ®·Ñ·¯ Áøµ¿ ½ÇÇà
+        // ï¿½ï¿½ï¿½ï¿½ VR ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         TriggerHaptic();
     }
 
     public void TriggerHaptic()
     {
-        Debug.Log("Trigger µÇ¾ú½À´Ï´Ù");
+        Debug.Log("Trigger ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½");
         if (HasStateAuthority && grabInteractable != null && grabInteractable.isSelected)
         {
             var interactor = grabInteractable.firstInteractorSelecting;
@@ -281,7 +287,7 @@ public class FishingCaster : NetworkBehaviour
                 string interactorName = interactor.transform.name.ToLower();
                 string targetHand = interactorName.Contains("right") ? "RightHand" : "LeftHand";
 
-                Debug.Log("ÇÝÆ½ Áøµ¿!");
+                Debug.Log("ï¿½ï¿½Æ½ ï¿½ï¿½ï¿½ï¿½!");
                 SEManager.Instance.PlayFish();
                 SendInputSystemHaptic(targetHand, intensity, duration);
             }
@@ -301,13 +307,13 @@ public class FishingCaster : NetworkBehaviour
 
     public void AddFishToInventory()
     {
-        //  ¼öÁ¤µÊ: Inventory.Instance -> NetworkInventory.Instance
-        Debug.Log($"[Fishing Debug] AddFishToInventory ½ÇÇàµÊ! ¹°°í±â Å¸ÀÔ: {fishType}, ÀÎº¥Åä¸® Á¸Àç ¿©ºÎ: {NetworkInventory.Instance != null}");
+        //  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: Inventory.Instance -> NetworkInventory.Instance
+        Debug.Log($"[Fishing Debug] AddFishToInventory ï¿½ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½: {fishType}, ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {NetworkInventory.Instance != null}");
 
-        //  ¼öÁ¤µÊ: Inventory.Instance -> NetworkInventory.Instance
+        //  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: Inventory.Instance -> NetworkInventory.Instance
         if (fishType == Fish.NONE || NetworkInventory.Instance == null)
         {
-            Debug.LogWarning("[Fishing Debug]  ÀÎº¥Åä¸®°¡ ¾ø°Å³ª ¹°°í±â Å¸ÀÔÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogWarning("[Fishing Debug]  ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
@@ -324,16 +330,16 @@ public class FishingCaster : NetworkBehaviour
 
         if (caughtFish == null)
         {
-            Debug.LogWarning($"[Fishing Debug]  {fishType} ¹°°í±â¸¦ ³¬¾ÒÁö¸¸, InspectorÀÇ Fish Item ½½·ÔÀÌ ºñ¾îÀÖ½À´Ï´Ù!");
+            Debug.LogWarning($"[Fishing Debug]  {fishType} ï¿½ï¿½ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Inspectorï¿½ï¿½ Fish Item ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
 
         Item itemToAdd = Instantiate(caughtFish);
         itemToAdd.set_Item_Count(1);
 
-        //  ¼öÁ¤µÊ: Inventory.Instance -> NetworkInventory.Instance
+        //  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: Inventory.Instance -> NetworkInventory.Instance
         NetworkInventory.Instance.AddItem(itemToAdd);
 
-        Debug.Log($"[Fishing Debug]  {fishType} ¹°°í±â¸¦ ³¬¾Ò½À´Ï´Ù! ÀÎº¥Åä¸®¿¡ Ãß°¡ ¿Ï·á.");
+        Debug.Log($"[Fishing Debug]  {fishType} ï¿½ï¿½ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½Ï´ï¿½! ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Ï·ï¿½.");
     }
 }
