@@ -341,11 +341,24 @@ public class NetworkPlayerStats : NetworkBehaviour
     {
         isFainted = false;
         isRevived = true;
+
+        // 🌟 CurrentHunger/Thirst/Stamina는 [Networked]가 아니라 각 피어(특히 InputAuthority를
+        //    가진 당사자)에 로컬로만 존재하는 값이다. DoRevive()는 항상 Host(StateAuthority)에서
+        //    실행되므로, 여기서 그냥 대입하면 Host 자신이 들고 있는 로컬 사본만 바뀌고 정작
+        //    매 프레임 CheckFaintConditions()를 도는 당사자 클라이언트의 값은 그대로 0에 남아있어
+        //    부활하자마자 다시 기절해버린다. InputAuthority를 가진 당사자에게 직접 리셋을 요청한다.
+        RPC_ResetStatsAfterRevive();
+
+        SetHeadVisible(true);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    private void RPC_ResetStatsAfterRevive()
+    {
         CurrentHunger = maxHunger / 2;
         CurrentStamina = maxStamina / 2;
         CurrentThirst = maxThirst / 2;
-
-        SetHeadVisible(true);
+        UpdateStatTexts();
     }
 
     public bool IsPlayerFainted()

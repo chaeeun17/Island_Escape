@@ -479,8 +479,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BowdrillManager
   handlePart: {fileID: 5452771713864278027}
   handleEndPart: {fileID: 7449401443838344726}
-  startBurn: 5
-  completeBurn: 10
+  startBurn: 15
+  completeBurn: 45
   _count: 0
 --- !u!114 &5122266996268040119
 MonoBehaviour:
