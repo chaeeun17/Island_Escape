@@ -150,6 +150,16 @@ public class NetworkCampfire : NetworkBehaviour
         if (fxCampfire != null)
         {
             fxCampfire.SetActive(isLit);
+
+            // 🌟 fxCampfire 하위 ParticleSystem들이 playOnAwake=false로 되어 있어
+            //    SetActive(true)만으로는 재생되지 않는다. 명시적으로 Play()/Stop()을 호출해야 한다.
+            //    루트에서 Play()/Stop()을 호출하면 기본값(withChildren: true)으로 자식 파티클까지 함께 처리된다.
+            var fireParticles = fxCampfire.GetComponent<ParticleSystem>();
+            if (fireParticles != null)
+            {
+                if (isLit) fireParticles.Play();
+                else fireParticles.Stop();
+            }
         }
 
         UpdateFireCoroutine();
