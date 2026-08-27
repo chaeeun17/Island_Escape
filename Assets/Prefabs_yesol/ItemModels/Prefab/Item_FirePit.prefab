@@ -119,12 +119,12 @@ MonoBehaviour:
   fxCampfire: {fileID: 8805273948518743791}
   normalWoodObject: {fileID: 8553188346482679750}
   burntWoodObject: {fileID: 5050404715829478414}
-  fireDuration: 10
+  fireDuration: 60
   soFolderPath: Items/
   cookTime: 3
   healRadius: 1.5
   restTickInterval: 2
-  staminaRestoreAmount: 5
+  staminaRestoreAmount: 1
   playerLayer:
     serializedVersion: 2
     m_Bits: 4294967295
