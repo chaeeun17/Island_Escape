@@ -19,6 +19,13 @@ public class NetworkUIManager : NetworkBehaviour
     [SerializeField] private InputActionReference yButtonAction; // 왼손 (Y)
 
     private NetworkObject parentPlayerNetObj;
+    // 🌟 bButtonAction/yButtonAction은 XRI 공용 InputActionReference라, 이 프로세스(게임 클라이언트)
+    //    전체에서 공유되는 액션이다. Enable()을 호출한 적 없는 인스턴스(=내 소유가 아닌 다른
+    //    플레이어의 복제본)까지 Despawn 시점에 무조건 Disable()을 호출해버리면, 그 시점에 이
+    //    액션을 정상적으로 쓰고 있던 "진짜 로컬 플레이어"의 B/Y 입력까지 전역으로 함께 꺼져버리고
+    //    다시 켜주는 코드가 없어 세션 내내 복구되지 않는다. 실제로 RegisterInputEvents()를
+    //    호출해서 Enable()한 적이 있는 경우에만 짝을 맞춰 해제하도록 막는다.
+    private bool _inputEventsRegistered;
 
     // 🌟 Fusion NetworkObject 생성(Spawn) 시점에 입력 권한 체크
     public override void Spawned()
@@ -54,10 +61,18 @@ public class NetworkUIManager : NetworkBehaviour
             yButtonAction.action.Enable();
             yButtonAction.action.performed += OnYButtonPressed;
         }
+
+        _inputEventsRegistered = true;
     }
 
     private void UnregisterInputEvents()
     {
+        // 🌟 Enable()한 적 없는(=내 소유가 아니었던) 인스턴스면 아무것도 하지 않는다.
+        //    그렇지 않으면 이 프로세스에서 공유 중인 액션을 다른 누군가가 정상적으로 쓰고 있어도
+        //    같이 Disable() 되어버린다.
+        if (!_inputEventsRegistered) return;
+        _inputEventsRegistered = false;
+
         if (bButtonAction != null)
         {
             bButtonAction.action.performed -= OnBButtonPressed;

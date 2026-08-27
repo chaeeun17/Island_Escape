@@ -419,13 +419,18 @@ public class NetworkPlayerStats : NetworkBehaviour
         {
             animator.SetTrigger(RevivedHash);
 
-            if (HasInputAuthority)
+            // 🌟 화면 페이드는 본인(기절했던 당사자)의 카메라에만 의미가 있으므로 HasInputAuthority로 제한.
+            if (HasInputAuthority && vfc != null)
             {
-                if (vfc != null) vfc.StartFadeToTransparent();
-
-                if (controlLockCoroutine != null) StopCoroutine(controlLockCoroutine);
-                controlLockCoroutine = StartCoroutine(LockControlDuringRevive());
+                vfc.StartFadeToTransparent();
             }
+
+            // 🌟 _controlLocked 해제는 HasInputAuthority로 제한하면 안 된다. Host(StateAuthority)도
+            //    이 클라이언트 캐릭터의 이동을 권위적으로 시뮬레이션하므로, Host가 들고 있는
+            //    _controlLocked 로컬 사본도 반드시 풀어줘야 한다. 안 그러면 클라이언트 본인은
+            //    풀렸다고 생각해도 Host가 계속 입력을 무시해서 실제로는 조작이 안 된다.
+            if (controlLockCoroutine != null) StopCoroutine(controlLockCoroutine);
+            controlLockCoroutine = StartCoroutine(LockControlDuringRevive());
         }
     }
 

@@ -268,7 +268,11 @@ public class FishingCaster : NetworkBehaviour
         if (lineRenderer != null) lineRenderer.enabled = false;
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Unreliable, TickAligned = false)]
+    // 🌟 RpcTargets.StateAuthority였던 걸 InputAuthority로 수정.
+    //    Host(StateAuthority)가 물림을 감지하고 이 RPC를 보내는데, 원래 대상이 StateAuthority였던
+    //    탓에 Host 자기 자신에게만 실행되고(루프백) 실제로 낚싯대를 쥐고 있는 클라이언트에게는
+    //    전혀 전달되지 않았다. 진동은 실제로 컨트롤러를 쥔 사람(InputAuthority)에게 가야 한다.
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority, Channel = RpcChannel.Unreliable, TickAligned = false)]
     public void RPC_TriggerHaptic()
     {
         // ���� VR ��Ʈ�ѷ� ���� ����
@@ -278,7 +282,9 @@ public class FishingCaster : NetworkBehaviour
     public void TriggerHaptic()
     {
         Debug.Log("Trigger �Ǿ����ϴ�");
-        if (HasStateAuthority && grabInteractable != null && grabInteractable.isSelected)
+        // 🌟 이 코드는 이제 InputAuthority(실제로 낚싯대를 쥔 사람)에서 실행되므로,
+        //    HasStateAuthority가 아니라 HasInputAuthority로 체크해야 한다.
+        if (HasInputAuthority && grabInteractable != null && grabInteractable.isSelected)
         {
             var interactor = grabInteractable.firstInteractorSelecting;
 
